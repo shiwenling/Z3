@@ -1,0 +1,121 @@
+/* You can add global styles to this file, and also import other style files */
+html{
+  height: 100%;
+}
+body{
+  min-width: 1000px;
+  height:100%;
+  position: relative;
+  margin:0;
+  padding:0;
+  /*background-image: url("img/bg.jpg");*/
+  /*background-size: cover;*/
+  /*min-height: 700px;*/
+
+}
+/*中间内容*/
+.content{
+  margin-top:50px;
+  min-height:600px;
+  min-width: 1000px;
+}
+/*form*/
+.form-inline{
+  margin-bottom:15px;
+}
+.form-inline label,.form-inline input, .form-inline button{
+  font-size: 14px;
+  font-weight: normal;
+}
+.form-group select{
+  height: 33px;
+  padding-top: 6px;
+  border-bottom-width: 0px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-bottom: 6px;
+  border-radius: .25rem;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+/*ul*/
+.nav-tabs{
+  padding-top:15px;
+  font-size: 14px;
+}
+.nav-tabs>li.active>a{
+  color: #0265d8;
+}
+.nav-tabs>li.active>a:hover{
+  color: #0265d8;
+}
+.nav-tabs li a{
+  color: black;
+}
+.nav-tabs li a:hover{
+  color: #0265d8;
+}
+/*表格部分*/
+.panel {
+  margin: 0 20px;
+  font-size: 12px;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  /*border-bottom: 0.8px solid #ddd;*/
+}
+.panel>.panel-body+.table {
+  border-bottom: 1px solid #ddd;
+}
+.panel-body{
+  padding: 15px 0;
+}
+table {
+  margin-bottom: 15px !important;
+  border-bottom: 0.8px solid #ddd;
+}
+/*按钮小图标样式*/
+.glyphicon-search{
+  color: #F2A53A;
+}
+.glyphicon-plus {
+  color: #5DAC81;
+}
+.glyphicon-refresh, .glyphicon-edit, .glyphicon-trash, .glyphicon-link, .glyphicon-retweet{
+  color: #666;
+}
+.glyphicon-edit:hover,.glyphicon-trash:hover, .glyphicon-link:hover, .glyphicon-retweet:hover{
+  color: #F2A53A;
+}
+/*操作按钮*/
+.action{
+  margin-right:15px;
+}
+
+/*按钮样式*/
+.btn{
+  /*padding: 6px 6px;*/
+  font-size: 14px !important;
+  padding: 6px 6px !important;
+}
+
+
+/*modal样式*/
+.modal input,.modal textarea,.modal label, .modal select option{
+  font-size: 12px;
+  font-weight: normal;
+}
+.modal-footer .btn{
+  font-size: 14px;
+}
+/*modal取消按钮*/
+.cancle{
+  background-color: gainsboro;
+}
+.form-group .control-label{
+  padding-top: 5px;
+  padding-right: 0px;
+}
+
+

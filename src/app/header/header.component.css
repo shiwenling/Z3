@@ -1,0 +1,59 @@
+/*导航样式*/
+.header{
+  position: fixed;
+  top:0;
+  width: 100%;
+  height: 50px;
+  background-color: white;
+  z-index: 100;
+}
+nav a{
+  border-radius: 0;
+}
+.navbar {
+  margin-bottom: 0px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid gainsboro;
+}
+/*ul li:first-child{*/
+  /*background:none;*/
+/*}*/
+li{
+  display: inline-block;
+  width:115px;
+}
+/*li:first-child{*/
+  /*background-color: #F2F2F2;*/
+/*}*/
+li a{
+  display: inline-block;
+  width:115px;
+  padding: 8px;
+  text-align: center;
+  color: black ;
+  font-size: 14px;
+
+}
+
+li a:visited,a:link{
+  text-decoration: none;
+  color: black ;
+}
+li a:hover{
+  text-decoration: none;
+  background-color: gainsboro;
+  color:#309be5;
+}
+li a:active{
+  color:#309be5;
+}
+
+.active{
+  background-color: gainsboro;
+
+}
+/*nav a.clickOn{*/
+  /*background-color: #3DD689;*/
+  /*color: #ffffff;*/
+/*}*/
+

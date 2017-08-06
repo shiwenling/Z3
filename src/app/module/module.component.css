@@ -1,0 +1,39 @@
+/*table部分*/
+.left-table{
+  float:left;
+  width:60%;
+  min-width:570px;
+}
+.right-table{
+  float: right;
+  width:40%;
+  min-width:400px;
+}
+
+
+/*select{*/
+  /*height: 33px;*/
+  /*padding-top: 6px;*/
+  /*border-bottom-width: 0px;*/
+  /*padding-left: 12px;*/
+  /*padding-right: 12px;*/
+  /*padding-bottom: 6px;*/
+  /*border-radius: .25rem;*/
+  /*border: 1px solid #ccc;*/
+  /*box-shadow: inset 0 1px 1px rgba(0,0,0,.075);*/
+  /*-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);*/
+/*}*/
+.form-inline input{
+  width:115px;
+}
+/*right-table*/
+/*.noPage {*/
+  /*border-bottom:none;*/
+/*}*/
+
+
+
+
+
+
+

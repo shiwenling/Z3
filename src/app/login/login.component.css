@@ -1,0 +1,50 @@
+.wrap{
+background-image: url("../../img/bg.jpg");
+background-size: cover;
+/*height:700px;*/
+position: relative;
+min-width: 1200px;
+min-height: 700px;
+height: 100%
+
+}
+
+.glyphicon {
+  top: 0px;
+}
+.container{
+  min-width: 300px;
+  text-align: center;
+  width: 300px;
+  height: auto;
+  background-color: #F2F2F2;
+  position: absolute;
+  top: 20%;
+  right: 15%;
+  width: 18%
+}
+h1{
+  margin: 10px 0;
+}
+h4{
+  margin-bottom: 60px;
+  /*color: #fff;*/
+}
+.form-group{
+  margin-bottom: 30px;
+}
+.form-control{
+  height: 40px;
+}
+/*input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {*/
+/*background-color: rgb(250, 255, 189);*/
+/*background-image: none;*/
+/*color: rgb(0, 0, 0);*/
+/*}*/
+.login, .reset{
+  width: 120px;
+  margin-bottom: 30px;
+}
+ .reset{
+   margin-left: 10px;
+ }

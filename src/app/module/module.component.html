@@ -1,0 +1,305 @@
+<!--<app-header></app-header>-->
+<div class="content">
+  <div class="left-table">
+    <div class="panel panel-default">
+    <!--<div class="panel-heading">Panel heading</div>-->
+      <div class="panel-body">
+        <div class="list-op" id="list_op">
+          <form class="form-inline">
+            <div class="form-group">
+              <label >应用系统：</label>
+              <select>
+                <option *ngFor="let module of modules">{{module.sysname}}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label >应用模块：</label>
+              <input type="text"  class="form-control" placeholder="应用模块名称">
+            </div>
+            <div class="form-group">
+              <button type="button" class="btn btn-default search" >
+                <span class="glyphicon glyphicon-search " aria-hidden="true"></span>查询
+              </button>
+              <span>|</span>
+              <button type="button" class="btn btn-default add" data-toggle="modal" data-target="#addModule" (click)="chooseModal('新增')">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>新增
+              </button>
+              <span>|</span>
+              <button type="button" class="btn btn-default refresh" >
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true" ></span>刷新
+              </button>
+            </div>
+          </form>
+        </div>
+        <table class="table table-striped table-hover" >
+          <tr>
+            <td></td>
+            <td>编号</td>
+            <td>模块名称</td>
+            <td>应用系统</td>
+            <td>创建人 </td>
+            <td>描述</td>
+            <td>操作</td>
+          </tr>
+          <tr  *ngFor="let module of modules | paginate: { itemsPerPage: 10, currentPage: page ,id:'1'}; let i =index;">
+            <td><input type="checkbox" ></td>
+            <td>{{i+1}}</td>
+            <td>{{module.modulename}}</td>
+            <td>{{module.sysname}}</td>
+            <td>{{module.principal}}</td>
+            <td>{{module.comments}}</td>
+            <td>
+              <a class="action" data-toggle="modal" data-target="#addModule" (click)="chooseModal('修改')">
+                <i class="glyphicon glyphicon-edit" data-toggle="tooltip" title="修改"></i>
+              </a>
+              <a class="action">
+                <i class="glyphicon glyphicon-trash" data-toggle="tooltip" title="删除"></i>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="page = $event" maxSize="6"
+                             directionLinks="true" autoHide="true"  id="1">
+        </pagination-controls>
+      </div>
+    </div>
+  </div>
+
+  <!--right table-->
+  <div class="right-table">
+    <ul class="nav nav-tabs">
+      <li role="presentation"  [ngClass]="{'active': isShow1}" (click)="choose1(isShow1)"><a >Schema</a></li>
+      <li role="presentation" [ngClass]="{'active': isShow2}" (click)="choose2(isShow2)"><a >核心表</a></li>
+    </ul>
+    <!--schema-->
+    <div class="panel panel-default noPage" *ngIf="isShow1">
+      <!--<div class="panel-heading">Panel heading</div>-->
+      <div class="panel-body">
+        <div class="list-op" >
+          <form class="form-inline">
+            <button type="button" class="btn btn-default add" data-toggle="modal" data-target="#schemaModal">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>新增
+            </button>
+            <button type="button" class="btn btn-default refresh" >
+              <span class="glyphicon glyphicon-refresh" aria-hidden="true" ></span>刷新
+            </button>
+          </form>
+        </div>
+        <table class="table table-striped table-hover" >
+          <tr>
+            <td><input type="checkbox" [(ngModel)]="isChecked"></td>
+            <td>数据库名</td>
+            <td>SCHEMA</td>
+            <td>密码状态 </td>
+            <td>功能</td>
+            <td>描述</td>
+            <td>操作</td>
+          </tr>
+          <tr  *ngFor="let schematable of schematables | paginate: { itemsPerPage: 10, currentPage: p ,id:'10'};" >
+            <td><input type="checkbox" [checked]="isChecked"></td>
+            <td>{{schematable.dbname}}</td>
+            <td>{{schematable.schema}}</td>
+            <td>{{schematable.psdstate}}</td>
+            <td>{{schematable.function}}</td>
+            <td>{{schematable.comments}}</td>
+            <td>
+              <a class="action" >
+                <i class="glyphicon glyphicon-retweet" data-toggle="tooltip" title="测试链接"></i>
+              </a>
+              <a class="action">
+                <i class="glyphicon glyphicon-trash" data-toggle="tooltip" title="删除"></i>
+              </a>
+            </td>
+          </tr>
+        </table>
+        <!--<pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="p = $event" maxSize="6"-->
+                             <!--directionLinks="true" autoHide="true"  id="10">-->
+        <!--</pagination-controls>-->
+      </div>
+    </div>
+    <!--核心表-->
+    <div class="panel panel-default" *ngIf="isShow2">
+      <!--<div class="panel-heading">Panel heading</div>-->
+      <div class="panel-body">
+        <div class="list-op" >
+          <form class="form-inline">
+            <button type="button" class="btn btn-default add" data-toggle="modal" data-target="#tableModal" (click)="chooseTable('新增')">
+              <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>新增
+            </button>
+            <button type="button" class="btn btn-default refresh" >
+              <span class="glyphicon glyphicon-refresh" aria-hidden="true" ></span>刷新
+            </button>
+          </form>
+        </div>
+        <table class="table table-striped table-hover" >
+          <tr>
+            <td><input type="checkbox" [(ngModel)]="isChecked"></td>
+            <td>表名</td>
+            <td>描述</td>
+            <td>操作</td>
+          </tr>
+          <tr  *ngFor="let schematable of schematables ">
+            <td><input type="checkbox" [checked]="isChecked"></td>
+            <td>{{schematable.tablename}}</td>
+            <td>{{schematable.comments}}</td>
+            <td>
+              <a class="action" data-toggle="modal" data-target="#tableModal" (click)="chooseTable('修改')">
+                <i class="glyphicon glyphicon-edit" data-toggle="tooltip" title="修改"></i>
+              </a>
+              <a class="action">
+                <i class="glyphicon glyphicon-trash" data-toggle="tooltip" title="删除"></i>
+              </a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <!--modal-->
+  <!--应用模块modal-->
+  <div class="modal fade" id="addModule" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h6 class="modal-title">{{title}}</h6>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="sysName" class="col-sm-2 control-label ">模块名称：</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="sysName" placeholder="请输入模块名称">
+              </div>
+            </div>
+            <div class="form-group">
+              <label  class="col-sm-2 control-label">应用系统:</label>
+              <div class="col-sm-10">
+                <select class="form-control" >
+                  <option *ngFor="let module of modules">{{module.sysname}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label  class="col-sm-2 control-label">负责人:</label>
+              <div class="col-sm-10">
+                <select class="form-control" >
+                  <option *ngFor="let module of modules">{{module.principal}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="sysDiscribe" class="col-sm-2 control-label">描述：</label>
+              <div class="col-sm-10">
+                <textarea  class="form-control" id="sysDiscribe"  row="10" placeholder="请输入应用模块的描述说明，长度不可大于40个字符"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary ">保存</button>
+          <button type="button" class="btn btn-default cancle" data-dismiss="modal">取消</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--关联schema modal-->
+  <div class="modal fade" id="schemaModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h6 class="modal-title">关联Schema</h6>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <!--<div class="panel-heading">Panel heading</div>-->
+            <div class="panel-body">
+              <div class="list-op" >
+                <form class="form-inline">
+                  <div class="form-group">
+                    <label >DB名称：</label>
+                    <select>
+                      <option *ngFor="let schematable of schematables">{{schematable.dbname}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label >Schema名：</label>
+                    <input type="text"  class="form-control" >
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-default search" >
+                      <span class="glyphicon glyphicon-search " aria-hidden="true"></span>查询
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <table class="table table-striped table-hover" >
+                <tr>
+                  <td><input type="checkbox" [(ngModel)]="isChecked"></td>
+                  <td>数据库名</td>
+                  <td>Schema名</td>
+                  <td>密码状态 </td>
+                </tr>
+                <tr  *ngFor="let schematable of schematables | paginate: { itemsPerPage: 10, currentPage: p ,id:'20'};">
+                  <td><input type="checkbox" [checked]="isChecked"></td>
+                  <td>{{schematable.dbname}}</td>
+                  <td>{{schematable.schema}}</td>
+                  <td>{{schematable.psdstate}}</td>
+                </tr>
+              </table>
+              <pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="getP($event)" maxSize="6"
+                                   directionLinks="true" autoHide="true"  id="20">
+              </pagination-controls>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary ">绑定</button>
+          <button type="button" class="btn btn-default cancle" data-dismiss="modal">取消</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--核心表modal-->
+  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h6 class="modal-title">{{title}}</h6>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-group">
+              <label for="sysName" class="col-sm-2 control-label ">核心表名称：</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="sysName" placeholder="请输入核心表名称">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="sysDiscribe" class="col-sm-2 control-label">描述：</label>
+              <div class="col-sm-10">
+                <textarea  class="form-control" id="sysDiscribe"  row="10" placeholder="请输入核心表的描述说明，长度不可大于40个字符"></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary ">保存</button>
+          <button type="button" class="btn btn-default cancle" data-dismiss="modal">取消</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+
+
+
+</div>
