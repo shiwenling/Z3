@@ -10,7 +10,7 @@ import {SystemService} from './system/system.service';
 import {ModuleService} from './module/module.service';
 
 import {Ng2PaginationModule} from 'ng2-pagination';
-import { DataTablesModule } from 'angular-datatables';
+// import { DataTablesModule } from 'angular-datatables';
 
 import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService } from './in-memory-data.service';
@@ -18,12 +18,16 @@ import {HttpModule} from '@angular/http';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 
+import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {TableService} from './table/table.service';
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -33,9 +37,10 @@ import { FooterComponent } from './footer/footer.component';
     AppRoutingModule,
     Ng2PaginationModule,
     ReactiveFormsModule,
-    DataTablesModule
+    // DataTablesModule,
+    NgbModule.forRoot()
   ],
-  providers: [SystemService, ModuleService],
+  providers: [SystemService, ModuleService,TableService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

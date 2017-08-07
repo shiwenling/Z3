@@ -1,7 +1,6 @@
 .wrap{
 background-image: url("../../img/bg.jpg");
 background-size: cover;
-/*height:700px;*/
 position: relative;
 min-width: 1200px;
 min-height: 700px;
@@ -9,9 +8,7 @@ height: 100%
 
 }
 
-.glyphicon {
-  top: 0px;
-}
+
 .container{
   min-width: 300px;
   text-align: center;
@@ -28,21 +25,16 @@ h1{
 }
 h4{
   margin-bottom: 60px;
-  /*color: #fff;*/
-}
-.form-group{
-  margin-bottom: 30px;
 }
 .form-control{
   height: 40px;
+  width:200px;
 }
-/*input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {*/
-/*background-color: rgb(250, 255, 189);*/
-/*background-image: none;*/
-/*color: rgb(0, 0, 0);*/
-/*}*/
+.input-group-addon{
+  padding-top:12px;
+}
 .login, .reset{
-  width: 120px;
+  width: 110px;
   margin-bottom: 30px;
 }
  .reset{

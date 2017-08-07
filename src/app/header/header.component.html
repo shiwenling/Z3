@@ -1,14 +1,38 @@
 <div>
   <div class="header">
-    <nav class="navbar">
-      <div class="container-fluid">
-        <ul class="nav">
-          <li [ngClass]="{'active':isClick1}" (click)="click1()"><a routerLink="/header/system"  routerLinkActive="active">应用系统管理</a></li>
-          <li [ngClass]="{'active':isClick2}" (click)="click2()"><a routerLink="/header/module" routerLinkActive="active" >应用模块管理</a></li>
-          <li [ngClass]="{'active':isClick3}" (click)="click3()"><a routerLink ="/header/table" routerLinkActive="active" >表结构变更管理</a></li>
-        </ul>
-      </div>
-    </nav>
+    <div class="container-fluid">
+      <ul class="nav">
+        <li  class="nav-item" [ngClass]="{'active':isClick1}" (click)="click1()">
+          <a class="nav-link" routerLink="/header/system"  routerLinkActive="active">应用系统管理</a>
+        </li>
+        <li  class="nav-item" [ngClass]="{'active':isClick2}" (click)="click2()">
+          <a class="nav-link" routerLink="/header/module" routerLinkActive="active" >应用模块管理</a>
+        </li>
+        <li  class="nav-item" [ngClass]="{'active':isClick3}" (click)="click3()">
+          <a class="nav-link" routerLink ="/header/table" routerLinkActive="active" >表结构变更管理</a>
+        </li>
+      </ul>
+    </div>
+
+
+
+
+    <!--<nav class="navbar  navbar-expand-lg navbar-light bg-light">-->
+      <!--<div class="container-fluid">-->
+      <!--&lt;!&ndash;<div class="collapse navbar-collapse" >&ndash;&gt;-->
+        <!--<ul class="navbar-nav mr-auto">-->
+          <!--<li  class="nav-item" [ngClass]="{'active':isClick1}" (click)="click1()">-->
+            <!--<a class="nav-link" routerLink="/header/system"  routerLinkActive="active">应用系统管理</a>-->
+          <!--</li>-->
+          <!--<li  class="nav-item" [ngClass]="{'active':isClick2}" (click)="click2()">-->
+            <!--<a class="nav-link" routerLink="/header/module" routerLinkActive="active" >应用模块管理</a>-->
+          <!--</li>-->
+          <!--<li  class="nav-item" [ngClass]="{'active':isClick3}" (click)="click3()">-->
+            <!--<a class="nav-link" routerLink ="/header/table" routerLinkActive="active" >表结构变更管理</a>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</div>-->
+    <!--</nav>-->
   </div>
 
 </div>

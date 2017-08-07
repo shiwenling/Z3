@@ -1,7 +1,6 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import { SystemService } from './system.service';
 import {System} from './system';
-import { PaginationService} from 'ng2-pagination';
 import {Subject} from 'rxjs/Subject';
 
 
@@ -13,13 +12,13 @@ import {User} from './user';
   selector: 'app-system',
   templateUrl: './system.component.html',
   styleUrls: ['./system.component.css'],
-  providers: [ SystemService, PaginationService ],
 })
 export class SystemComponent implements OnInit {
   @Output() searchContent = new EventEmitter<Object>();
   systems: System[];
   users: User[];
   page = 1;
+  isChecked:boolean;
   title:string ;
   total: number;
   system = new Subject<string>();
@@ -36,6 +35,7 @@ export class SystemComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSystems();
+    this.getUsers();
     this.getPage(1);
     this.getSearchTerm().subscribe((res) => {
       this.searchContent.emit(res);
@@ -43,6 +43,9 @@ export class SystemComponent implements OnInit {
   }
   getSystems(): void {
      this.systemService.getSystems().then(systems => this.systems = systems);
+     // this.systemService.getUsers().then(users => this.users = users);
+  }
+  getUsers(): void {
     this.systemService.getUsers().then(users => this.users = users);
   }
   getPage(page: number) {

@@ -22,7 +22,6 @@ export class HeaderComponent implements OnInit {
   }
 
   click1(){
-    // this.isClick1 = isClick;
     this.isClick1 = true;
     this.isClick2 = false;
     this.isClick3 = false;

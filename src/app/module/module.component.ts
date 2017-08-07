@@ -17,6 +17,7 @@ export class ModuleComponent implements OnInit {
   page:number = 1;
   p:number = 1;
   title:string;
+  isChecked:boolean;
   isShow1:boolean = true;
   isShow2:boolean = false;
   module = new Subject<string>();

@@ -1,0 +1,48 @@
+/*搜索条*/
+.search1{
+  width: 155px;
+  margin-right:5px;
+  /*margin-bottom: 10px*/
+}
+.search1 label{
+  width: 70px;
+}
+.search1 select{
+  width: 80px;
+}
+.search2-1{
+  margin-bottom: 10px;
+  /*margin-right:5px;*/
+}
+.search2-2{
+  /*margin-right:5px;*/
+}
+.search2-2 select,.search2-2 input{
+  width:150px;
+  margin-right: 5px;
+}
+.search3{
+  margin-right: 5px;
+}
+.search3 label{
+  width:56px;
+}
+.search3 input{
+  width:155px;
+}
+.search4 input{
+  width:130px;
+}
+
+
+/*日历图标*/
+.input-group{
+  margin-right:5px;
+}
+.input-group-addon {
+  cursor: pointer;
+}
+.input-group .form-control{
+  width:110px;
+  /*width: 200px;*/
+}

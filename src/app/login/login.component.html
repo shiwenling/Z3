@@ -3,27 +3,52 @@
     <h1>Z3</h1>
     <h4>SQL质量管控平台</h4>
     <form [formGroup]="loginForm">
-      <div class="form-group" >
-        <div class="input-group">
-          <span class="glyphicon glyphicon-user input-group-addon"></span>
-          <input type="text" class="form-control" id="name" required  name="name" formControlName="name" placeholder="用户名">
-          <!--<span class="help-block small">用户名输入有误</span>-->
-        </div>
-        <div *ngIf="formErrors['name']" class="alert alert-danger">
-          {{formErrors['name']}}
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="input-group">
-          <span class="glyphicon glyphicon-lock input-group-addon"></span>
-          <input type="password" class="form-control" id="password" required  name="password" formControlName="password" placeholder="密码">
-          <!--<span class="help-block small">密码输入有误</span>-->
-        </div>
-        <div *ngIf="formErrors.password" class="alert alert-danger">
-          {{formErrors.password}}
-        </div>
-      </div>
-      <button  class="btn btn-success  login" [disabled]="!loginForm.valid" routerLink="/header/system" routerLinkActive="active">登录</button>
+
+      <nav class="navbar navbar-light bg-light">
+        <form class="form-inline">
+          <div class="input-group">
+            <span class="input-group-addon fa fa-user" id="basic-addon1" ></span>
+            <input type="text" class="form-control" placeholder="用户名" aria-label="Username" aria-describedby="basic-addon1">
+          </div>
+          <div *ngIf="formErrors['name']" class="alert alert-danger">
+            {{formErrors['name']}}
+          </div>
+        </form>
+      </nav>
+      <nav class="navbar navbar-light bg-light">
+        <form class="form-inline">
+          <div class="input-group">
+            <span class="input-group-addon fa fa-lock" id="basic-addon2"></span>
+            <input type="password" class="form-control" placeholder="密码" aria-label="password" aria-describedby="basic-addon2">
+          </div>
+          <div *ngIf="formErrors.password" class="alert alert-danger">
+            {{formErrors.password}}
+          </div>
+        </form>
+      </nav>
+
+      <!--<div class="form-group" >-->
+        <!--<div class="input-group">-->
+          <!--<span class="glyphicon glyphicon-user input-group-addon"></span>-->
+          <!--<input type="text" class="form-control" id="name" required  name="name" formControlName="name" placeholder="用户名">-->
+          <!--&lt;!&ndash;<span class="help-block small">用户名输入有误</span>&ndash;&gt;-->
+        <!--</div>-->
+        <!--<div *ngIf="formErrors['name']" class="alert alert-danger">-->
+          <!--{{formErrors['name']}}-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="form-group">-->
+        <!--<div class="input-group">-->
+          <!--<span class="glyphicon glyphicon-lock input-group-addon"></span>-->
+          <!--<input type="password" class="form-control" id="password" required  name="password" formControlName="password" placeholder="密码">-->
+          <!--&lt;!&ndash;<span class="help-block small">密码输入有误</span>&ndash;&gt;-->
+        <!--</div>-->
+        <!--<div *ngIf="formErrors.password" class="alert alert-danger">-->
+          <!--{{formErrors.password}}-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<button  class="btn btn-success  login" [disabled]="!loginForm.valid" routerLink="/header/system" routerLinkActive="active">登录</button>-->
+      <button  class="btn btn-success  login"  routerLink="/header/system" routerLinkActive="active">登录</button>
       <button  class="btn btn-default reset" href="#">取消</button>
     </form>
   </div>
