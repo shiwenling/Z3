@@ -10,9 +10,7 @@ import {HeaderRoutingModule} from './header-routing';
 import {Ng2PaginationModule} from 'ng2-pagination';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-// import { DataTablesModule } from 'angular-datatables';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-// import {NgbdDatepickerPopup} from '../datepicker-popup';
 @NgModule({
   imports: [
     HeaderRoutingModule,
@@ -25,7 +23,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     SystemComponent,
     ModuleComponent,
     TableComponent
-    // NgbdDatepickerPopup
   ]
 })
 export class HeaderModule { }
