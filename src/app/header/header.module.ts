@@ -7,14 +7,14 @@ import {SystemComponent} from '../system/system.component';
 import {ModuleComponent} from '../module/module.component';
 import {TableComponent} from '../table/table.component';
 import {HeaderRoutingModule} from './header-routing';
-import {Ng2PaginationModule} from 'ng2-pagination';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {ProjectComponent} from '../project/project.component';
+
 @NgModule({
   imports: [
     HeaderRoutingModule,
-    Ng2PaginationModule,
     CommonModule,
     FormsModule,
     NgbModule
@@ -22,7 +22,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
   declarations: [
     SystemComponent,
     ModuleComponent,
-    TableComponent
+    TableComponent,
+    ProjectComponent
   ]
 })
 export class HeaderModule { }
