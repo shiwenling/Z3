@@ -8,20 +8,20 @@
             <label >应用系统：</label>
             <input type="text" #searchSys class="form-control" (keyup)="search(searchSys.value)" placeholder="应用系统名称">
           </div>
-          <div class="form-group">
+          <div class="form-group ">
             <label >数据库：</label>
             <input type="text"  class="form-control" placeholder="数据库名称">
           </div>
-          <div class="form-group">
-            <button type="button" class="btn btn-light" >
+          <div class="form-group ">
+            <button type="button" class="btn btn-secondary" >
               <span class="fa fa-search " aria-hidden="true"></span>查询
             </button>
             <span>|</span>
-            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#addModal" (click)="chooseModal('新增')">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addModal" (click)="chooseModal('新增')">
               <span class="fa fa-plus" aria-hidden="true" ></span>新增
             </button>
             <span>|</span>
-            <button type="button" class="btn btn-light" >
+            <button type="button" class="btn btn-secondary" >
               <span class="fa fa-refresh" aria-hidden="true" ></span>刷新
             </button>
           </div>
@@ -38,7 +38,7 @@
           <td>描述</td>
           <td>操作</td>
         </tr>
-        <tr  *ngFor="let system of systems | paginate: { itemsPerPage: 10, currentPage: page ,id:'1'}; let i =index;">
+        <tr  *ngFor="let system of systems |  slice:start:end; let i =index;">
           <td>{{i+1}}</td>
           <td>{{system.sysname}}</td>
           <td>{{system.creatror}}</td>
@@ -59,9 +59,10 @@
           </td>
         </tr>
       </table>
-      <pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="page = $event" maxSize="6"
-                           directionLinks="true" autoHide="true"  id="1">
-      </pagination-controls>
+      <ngb-pagination [collectionSize]="totalItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                      [rotate]="true" (pageChange)="pagination(page)">
+
+      </ngb-pagination>
     </div>
   </div>
 
@@ -78,13 +79,13 @@
         </div>
         <div class="modal-body">
           <form class="form-horizontal">
-            <div class="form-group">
-              <label for="sysName" class="col-sm-2 control-label ">应用系统名称：</label>
+            <div class="form-group row">
+              <label for="sysName" class="col-sm-2 control-label ">应用系统：</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="sysName" placeholder="请输入应用系统名称">
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label  class="col-sm-2 control-label">负责人:</label>
               <div class="col-sm-10">
                 <select class="form-control" >
@@ -92,7 +93,7 @@
                 </select>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label for="sysDiscribe" class="col-sm-2 control-label">描述：</label>
               <div class="col-sm-10">
                 <textarea  class="form-control" id="sysDiscribe"  row="10" placeholder="请输入应用系统的描述说明，长度不可大于40个字符"></textarea>
@@ -102,7 +103,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary ">保存</button>
-          <button type="button" class="btn btn-secondary cancle" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -112,26 +113,28 @@
 
 
   <!--关联数据库的modal-->
-  <div class="modal fade" id="dbModal" tabindex="-1" role="dialog" >
+  <div class="modal fade" id="dbModal" tabindex="-1" role="dialog" aria-labelledby="dbModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h6 class="modal-title">应用系统关联数据库</h6>
+          <h5 class="modal-title" id="dbModalLabel">应用系统关联数据库</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
-            <form class="form-inline">
-              <div class="form-group">
-                <label for="dbName">数据库：</label>
-                <input type="text" class="form-control" id="dbName" placeholder="数据库名称">
-              </div>
-              <button type="submit" class="btn btn-default search">
-                <span class="fa fa-search" aria-hidden="true"></span>查询
-              </button>
-            </form>
             <div class="panel panel-default ">
               <div class="panel-body">
-                <table class="table table-striped table-bordered table-hover">
+                <form class="form-inline ">
+                  <div class="form-group ">
+                    <label for="dbName">数据库：</label>
+                    <input type="text" class="form-control" id="dbName" placeholder="数据库名称">
+                  </div>
+                  <button type="submit" class="btn btn-secondary">
+                    <span class="fa fa-search" aria-hidden="true"></span>查询
+                  </button>
+                </form>
+                <table class="table table-striped table-hover">
                   <tr>
                     <td><input type="checkbox" [(ngModel)]="isChecked" /></td>
                     <td>数据库名</td>
@@ -139,7 +142,7 @@
                     <td>功能</td>
                     <td>描述</td>
                   </tr>
-                  <tr *ngFor="let system of systems | paginate: { itemsPerPage: 10, currentPage: page ,id:'3'};">
+                  <tr *ngFor="let system of systems | slice:start:end">
                     <td><input type="checkbox" [checked]="isChecked" /></td>
                     <td>{{system.dbname}}</td>
                     <td>{{system.host}}</td>
@@ -147,16 +150,16 @@
                     <td>{{system.comments}}</td>
                   </tr>
                 </table>
-                <br />
-                <pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="page = $event" maxSize="6"
-                                     directionLinks="true" autoHide="true"  id="3">
-                </pagination-controls>
+                <ngb-pagination [collectionSize]="dbItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                                [rotate]="true" (pageChange)="pagination(page)">
+
+                </ngb-pagination>
               </div>
             </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary">选择</button>
-          <button type="button" class="btn btn-default cancle" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

@@ -12,21 +12,20 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 // import { DataTablesModule } from 'angular-datatables';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {NgbdDatepickerPopup} from '../datepicker-popup';
+// import {NgbdDatepickerPopup} from '../datepicker-popup';
 @NgModule({
   imports: [
     HeaderRoutingModule,
     Ng2PaginationModule,
     CommonModule,
     FormsModule,
-    // DataTablesModule,
     NgbModule
   ],
   declarations: [
     SystemComponent,
     ModuleComponent,
-    TableComponent,
-    NgbdDatepickerPopup
+    TableComponent
+    // NgbdDatepickerPopup
   ]
 })
 export class HeaderModule { }

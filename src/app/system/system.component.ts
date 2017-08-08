@@ -17,7 +17,12 @@ export class SystemComponent implements OnInit {
   @Output() searchContent = new EventEmitter<Object>();
   systems: System[];
   users: User[];
-  page = 1;
+  page:number = 1;
+  start:number;
+  end:number;
+  dbItems:number = 14;
+  totalItems:number = 14;
+  pageSize:number = 10;
   isChecked:boolean;
   title:string ;
   total: number;
@@ -36,31 +41,30 @@ export class SystemComponent implements OnInit {
   ngOnInit(): void {
     this.getSystems();
     this.getUsers();
-    this.getPage(1);
+    this. pagination();
     this.getSearchTerm().subscribe((res) => {
       this.searchContent.emit(res);
     })
   }
   getSystems(): void {
      this.systemService.getSystems().then(systems => this.systems = systems);
-     // this.systemService.getUsers().then(users => this.users = users);
   }
   getUsers(): void {
     this.systemService.getUsers().then(users => this.users = users);
-  }
-  getPage(page: number) {
-    this.page = page;
-    this.total = 14;
   }
   search(term: string): void {
     this.system.next(term);
   }
   chooseModal(tit:string){
     if (tit == '新增'){
-      this.title='新增';
+      this.title='新增应用系统';
     }else if (tit =='修改'){
-      this.title = '修改模块';
+      this.title = '修改应用系统';
     }
+  }
+  pagination() {
+    this.start = (this.page-1) * this.pageSize;
+    this.end = (this.page)* this.pageSize;
   }
 
 

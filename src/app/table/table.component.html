@@ -2,80 +2,77 @@
   <div class="panel panel-default">
     <div class="panel-body">
       <div class="list-op" id="list_op">
-        <form class="form-inline">
+        <div class="form-inline">
           <div class="form-group">
-            <div class="search1" style="margin-bottom: 10px">
-              <label >状态：</label>
-              <select>
-                <option *ngFor="let project of projects">{{project.state}}</option>
-              </select>
-            </div>
-            <div class="search1">
-              <label >应用系统：</label>
-              <select>
-                <option *ngFor="let project of projects">{{project.sysname}}</option>
-              </select>
-            </div>
+            <label class="state">状态：</label>
+            <select>
+              <option *ngFor="let project of projects">{{project.state}}</option>
+            </select>
           </div>
           <div class="form-group">
-            <div class="search2-1">
-              <label >创建时间：</label>
-              <!--<div class="input-group" >-->
-                <!--<input class="form-control " placeholder="yyyy-mm-dd"-->
-                       <!--name="dp1" [(ngModel)]="newItem.startTime" ngbDatepicker #d1="ngbDatepicker">-->
-                <!--<div class="input-group-addon" (click)="d1.toggle()" >-->
-                  <!--<i class="fa fa-calendar" aria-hidden="true" ></i>-->
-                <!--</div>-->
-              <!--</div>-->
-              <ngbd-datepicker-popup></ngbd-datepicker-popup>
-              <label style="width:56px">至：</label>
-              <div class="input-group">
-                <input class="form-control " placeholder="yyyy-mm-dd"
-                       name="dp2" [(ngModel)]="newItem.startTime" ngbDatepicker #d2="ngbDatepicker">
-                <div class="input-group-addon" (click)="d2.toggle()" >
-                  <i class="fa fa-calendar" aria-hidden="true" ></i>
-                </div>
+            <label >创建时间：</label>
+            <div class="input-group" >
+              <input class="form-control " placeholder="yyyy-mm-dd"
+                       name="dp1" [(ngModel)]="newItem.startTime" ngbDatepicker #d1="ngbDatepicker">
+              <div class="input-group-addon" (click)="d1.toggle()" >
+                <i class="fa fa-calendar" aria-hidden="true" ></i>
               </div>
             </div>
-            <div class="search2-2">
-              <label >应用模块：</label>
-              <select>
-                <option *ngFor="let project of projects">{{project.modulename}}</option>
-              </select>
-              <label >项目ID：</label>
-              <input type="text"  class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="endtime">至：</label>
+            <div class="input-group">
+              <input class="form-control " placeholder="yyyy-mm-dd"
+                     name="dp2" [(ngModel)]="newItem.endTime" ngbDatepicker #d2="ngbDatepicker">
+              <div class="input-group-addon" (click)="d2.toggle()" >
+                <i class="fa fa-calendar" aria-hidden="true" ></i>
+              </div>
             </div>
           </div>
           <div class="form-group">
-            <div class="search3" style="margin-bottom: 10px">
-              <label >表名：</label>
-              <input type="text"  class="form-control" placeholder="项目创建/修改的表名">
-            </div>
-            <div class="search3">
+            <label class="tablename">表名：</label>
+            <input type="text"  class="form-control" placeholder="项目创建/修改的表名">
+          </div>
+          <div class="form-group">
+            <label >参与人：</label>
+            <input type="text"  class="form-control" placeholder="项目成员名称">
+          </div>
+        </div>
+        <div class="form-inline">
+          <div class="form-group">
+            <label >应用系统：</label>
+            <select>
+            <option *ngFor="let project of projects">{{project.sysname}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label >应用模块：</label>
+            <select>
+              <option *ngFor="let project of projects">{{project.modulename}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label >项目ID：</label>
+            <input type="text"  class="form-control" />
+          </div>
+          <div class="form-group">
               <label >项目名：</label>
               <input type="text"  class="form-control" />
-            </div>
           </div>
           <div class="form-group">
-            <div style="margin-bottom: 10px" class="search4">
-              <label >参与人：</label>
-              <input type="text"  class="form-control" placeholder="项目成员名称">
-            </div>
-            <div>
-              <button type="button" class="btn btn-default " >
-                <span class="glyphicon glyphicon-search " aria-hidden="true"></span>查询
+              <button type="button" class="btn btn-secondary " >
+                <span class="fa fa-search " aria-hidden="true"></span>查询
               </button>
               <span>|</span>
-              <button type="button" class="btn btn-default " >
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true" ></span>重置
+              <button type="button" class="btn btn-secondary " >
+                <span class="fa fa-refresh" aria-hidden="true" ></span>重置
               </button>
                 <span>|</span>
-              <button type="button" class="btn btn-default " data-toggle="modal" data-target="#projectModal" (click)="chooseModal('新增')">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>新增
+              <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#projectModal" (click)="chooseModal('新增')">
+                <span class="fa fa-plus" aria-hidden="true" ></span>新增
               </button>
-            </div>
           </div>
-        </form>
+        </div>
       </div>
       <table class="table table-striped table-hover" >
         <tr>
@@ -90,7 +87,7 @@
           <td>描述</td>
           <td>操作</td>
         </tr>
-        <tr  *ngFor="let project of projects  ">
+        <tr  *ngFor="let project of projects | slice: start:end ">
           <td>{{project.id}}</td>
           <td>{{project.projectname}}</td>
           <td>{{project.modulename}}</td>
@@ -105,10 +102,10 @@
               <i class="fa fa-eye" data-toggle="tooltip" title="查看"></i>
             </a>
             <a class="action" data-toggle="modal"  data-target="#projectModal" (click)="chooseModal('修改')" >
-              <i class="glyphicon glyphicon-edit" data-toggle="tooltip" title="修改"></i>
+              <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
             </a>
             <a class="action" >
-              <i class="glyphicon glyphicon-trash" data-toggle="tooltip" title="删除"></i>
+              <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
             </a>
             <a class="action" >
               <i class="fa fa-newspaper-o" data-toggle="tooltip" title="查看项目详情" ></i>
@@ -119,11 +116,8 @@
           </td>
         </tr>
       </table>
-      <ngb-pagination [collectionSize]="70" [pageSize]="5" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
-                      [rotate]="true" (pageChange)="loadPage($event)"></ngb-pagination>
-      <!--<pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="page = $event" maxSize="6"-->
-                           <!--directionLinks="true" autoHide="true"  id="1">-->
-      <!--</pagination-controls>-->
+      <ngb-pagination [collectionSize]="totalItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                      [rotate]="true" (pageChange)="pagination(page)"></ngb-pagination>
     </div>
   </div>
 
@@ -133,41 +127,41 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
+          <h5 class="modal-title">{{title}}</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h6 class="modal-title">{{title}}</h6>
         </div>
         <div class="modal-body">
           <form class="form-horizontal">
-            <div class="form-group">
+            <div class="form-group row">
               <label for="projectName" class="col-sm-2 control-label ">项目名称：</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="projectName" >
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label  for="moduleName" class="col-sm-2 control-label">模块名称:</label>
-              <div class="col-sm-8">
+              <div class="col-sm-7">
                 <input type="text" class="form-control" id="moduleName" >
               </div>
-              <button class="btn btn-default col-sm-2" data-toggle="modal" data-target="#moduleModal">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>选择模块
+              <button class="btn btn-secondary col-sm-2" data-toggle="modal" data-target="#moduleModal">
+                <span class="fa fa-plus" aria-hidden="true"></span>选择模块
               </button>
               <!--<button class="btn btn-success col-sm-2"  data-toggle="modal"  data-target="#moduleModal">选择模块</button>-->
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label for="sysDiscribe" class="col-sm-2 control-label">描述：</label>
               <div class="col-sm-10">
                 <textarea  class="form-control" id="sysDiscribe"  row="10" placeholder="请输入项目的描述说明，长度不可大于100个字符"></textarea>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label for="memberName" class="col-sm-2 control-label">项目成员:</label>
-              <div class="col-sm-8">
+              <div class="col-sm-7">
                 <input type="text" class="form-control" id="memberName" >
                 <!--<button class="btn btn-default"  data-toggle="modal"  data-target="#memberModal">选择成员</button>-->
               </div>
-              <button class="btn btn-default col-sm-2" data-toggle="modal" data-target="#memberModal">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>选择成员
+              <button class="btn btn-secondary col-sm-2" data-toggle="modal" data-target="#memberModal">
+                <span class="fa fa-plus" aria-hidden="true"></span>选择成员
               </button>
             </div>
           </form>
@@ -185,24 +179,23 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
+          <h5 class="modal-title">选择模块</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h6 class="modal-title">选择模块</h6>
         </div>
         <div class="modal-body">
           <form class="form-horizontal">
-            <div class="form-group">
+            <div class="form-group row">
               <label for="projectName" class="col-sm-2 control-label ">应用系统：</label>
               <div class="col-sm-10">
-                <!--<input type="text" class="form-control" id="projectName" >-->
-                <select>
+                <select class="form-control">
                   <option *ngFor="let project of projects">{{project.sysname}}</option>
                 </select>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label  class="col-sm-2 control-label">模块名称：</label>
               <div class="col-sm-10">
-                <select>
+                <select class="form-control">
                   <option *ngFor="let project of projects">{{project.modulename}}</option>
                 </select>
               </div>
@@ -225,21 +218,21 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
+          <h5 class="modal-title">选择项目成员</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h6 class="modal-title">选择项目成员</h6>
         </div>
         <div class="modal-body">
-          <form class="form-inline">
-            <div class="form-group">
-              <label for="name">姓名：</label>
-              <input type="text" class="form-control" id="name" >
-            </div>
-            <button type="submit" class="btn btn-default search">
-              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>查询
-            </button>
-          </form>
           <div class="panel panel-default">
             <div class="panel-body">
+              <form class="form-inline modalsearch">
+                <div class="form-group">
+                  <label for="name">姓名：</label>
+                  <input type="text" class="form-control" id="name" >
+                </div>
+                <button type="submit" class="btn btn-secondary search">
+                  <span class="fa fa-search" aria-hidden="true"></span>查询
+                </button>
+              </form>
               <table class="table table-striped table-bordered table-hover">
                 <tr>
                   <td><input type="checkbox" [(ngModel)]="isChecked" /></td>

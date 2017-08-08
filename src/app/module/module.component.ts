@@ -15,7 +15,15 @@ export class ModuleComponent implements OnInit {
   modules: Module[];
   schematables: Schematable[];
   page:number = 1;
-  p:number = 1;
+  start:number;
+  end:number;
+  start1:number;
+  end1:number;
+  schemaItems:number = 21;
+  tableItems:number = 21;
+  chooseSchemaItems:number = 21;
+  totalItems:number = 16;
+  pageSize:number = 10;
   title:string;
   isChecked:boolean;
   isShow1:boolean = true;
@@ -31,8 +39,8 @@ export class ModuleComponent implements OnInit {
   ngOnInit(): void {
     this.getModules();
     this.getSchematables();
-    this.getPage(1);
-    this.getP(1);
+    this.pagination();
+    this.getPage();
   }
   getModules(): void {
     this.moduleService.getModules().then(modules => this.modules = modules);
@@ -40,12 +48,6 @@ export class ModuleComponent implements OnInit {
   }
   getSchematables(): void {
     this.moduleService.getSchematables().then(schematables => this.schematables = schematables);
-  }
-  getPage(page: number) {
-    this.page = page;
-  }
-  getP(p: number) {
-    this.p = p;
   }
   choose1(isShow:boolean):void {
     this.isShow1= isShow;
@@ -71,6 +73,15 @@ export class ModuleComponent implements OnInit {
       this.title = '修改核心表';
     }
   }
+  pagination() {
+    this.start = (this.page-1) * this.pageSize;
+    this.end = (this.page)* this.pageSize;
+  }
+  getPage() {
+    this.start1 = (this.page-1) * this.pageSize;
+    this.end1 = (this.page)* this.pageSize;
+  }
+
 
 
 }

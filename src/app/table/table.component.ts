@@ -13,7 +13,11 @@ import {SystemService} from '../system/system.service';
 export class TableComponent implements OnInit {
   projects: Project[];
   users: User[];
-  page:number;
+  page:number = 1;
+  start:number;
+  end:number;
+  totalItems:number = 23;
+  pageSize:number = 10;
   isChecked:boolean;
   title:string;
   project = new Subject<string>();
@@ -30,24 +34,12 @@ export class TableComponent implements OnInit {
 
   ngOnInit():void {
     this.getProjects();
-    this.loadPage(1);
+    this.pagination();
   }
   getProjects():void {
     this.tableService.getProjects().then(projects => this.projects = projects);
     this.systemService.getUsers().then(users => this.users = users);
   }
-  loadPage(page:number){
-    this.page=page;
-  }
-  // loadData() {
-  //   this.dataService.query({
-  //     page: this.page - 1,
-  //     size: this.itemsPerPage,
-  //   }).subscribe(
-  //     (res: Response) => this.onSuccess(res.json(), res.headers),
-  //     (res: Response) => this.onError(res.json())
-  //   )
-  // }
   chooseModal(tit:string){
     if (tit == '新增'){
       this.title='新增项目';
@@ -56,6 +48,10 @@ export class TableComponent implements OnInit {
     }else if(tit =='查看'){
       this.title = '查看项目';
     }
+  }
+  pagination() {
+    this.start = (this.page-1) * this.pageSize;
+    this.end = (this.page)* this.pageSize;
   }
 
 }

@@ -14,14 +14,15 @@
   width:40%;
   min-width:400px;
 }
-.active{
-  border:1px solid gainsboro;
-  /*border-bottom:none;*/
+/*tab样式*/
+.nav-tabs .nav-item {
+  border: 1px solid transparent;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
 }
-
-
-
-
+.nav-tabs .nav-item.active {
+  border-color: #ddd #ddd #fff;
+}
 
 
 

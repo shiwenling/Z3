@@ -1,4 +1,3 @@
-<!--<app-header></app-header>-->
 <div class="content">
   <div class="left-table">
     <div class="panel panel-default">
@@ -17,15 +16,15 @@
               <input type="text"  class="form-control" placeholder="应用模块名称">
             </div>
             <div class="form-group">
-              <button type="button" class="btn btn-light " >
+              <button type="button" class="btn btn-secondary " >
                 <span class="fa fa-search " aria-hidden="true"></span>查询
               </button>
               <span>|</span>
-              <button type="button" class="btn btn-light " data-toggle="modal" data-target="#addModule" (click)="chooseModal('新增')">
+              <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#addModule" (click)="chooseModal('新增')">
                 <span class="fa fa-plus" aria-hidden="true" ></span>新增
               </button>
               <span>|</span>
-              <button type="button" class="btn btn-light " >
+              <button type="button" class="btn btn-secondary " >
                 <span class="fa fa-refresh" aria-hidden="true" ></span>刷新
               </button>
             </div>
@@ -41,7 +40,7 @@
             <td>描述</td>
             <td>操作</td>
           </tr>
-          <tr  *ngFor="let module of modules | paginate: { itemsPerPage: 10, currentPage: page ,id:'module'}; let i =index;">
+          <tr  *ngFor="let module of modules | slice:start:end; let i =index;">
             <td><input type="checkbox" ></td>
             <td>{{i+1}}</td>
             <td>{{module.modulename}}</td>
@@ -58,20 +57,21 @@
             </td>
           </tr>
         </table>
-        <pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="page = $event" maxSize="6"
-                             directionLinks="true" autoHide="true"  id="module">
-        </pagination-controls>
+        <ngb-pagination [collectionSize]="totalItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                        [rotate]="true" (pageChange)="pagination(page)">
+
+        </ngb-pagination>
       </div>
     </div>
   </div>
 
   <!--right table-->
   <div class="right-table">
-    <ul class="nav nav-tabs" role="tablist">
-      <li class="nav-item " role="presentation"  [ngClass]="{'active': isShow1}" (click)="choose1(isShow1)">
+    <ul class="nav nav-tabs" >
+      <li class="nav-item "  [ngClass]="{'active': isShow1}" (click)="choose1(isShow1)">
         <a class="nav-link" role="tab">Schema</a>
       </li>
-      <li class="nav-item" role="presentation" [ngClass]="{'active': isShow2}" (click)="choose2(isShow2)">
+      <li class="nav-item"  [ngClass]="{'active': isShow2}" (click)="choose2(isShow2)">
         <a class="nav-link">核心表</a>
       </li>
     </ul>
@@ -81,10 +81,10 @@
       <div class="panel-body">
         <div class="list-op" >
           <form class="form-inline">
-            <button type="button" class="btn btn-light " data-toggle="modal" data-target="#schemaModal">
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#schemaModal">
               <span class="fa fa-plus" aria-hidden="true" ></span>新增
             </button>
-            <button type="button" class="btn btn-light " >
+            <button type="button" class="btn btn-secondary " >
               <span class="fa fa-refresh" aria-hidden="true" ></span>刷新
             </button>
           </form>
@@ -99,7 +99,7 @@
             <td>描述</td>
             <td>操作</td>
           </tr>
-          <tr  *ngFor="let schematable of schematables | paginate: { itemsPerPage: 10, currentPage: page ,id:'schema'};" >
+          <tr  *ngFor="let schematable of schematables | slice:start1:end1" >
             <td><input type="checkbox" [checked]="isChecked"></td>
             <td>{{schematable.dbname}}</td>
             <td>{{schematable.schema}}</td>
@@ -116,9 +116,10 @@
             </td>
           </tr>
         </table>
-        <pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="page = $event" maxSize="6"
-                             directionLinks="true" autoHide="true"  id="schema">
-        </pagination-controls>
+        <ngb-pagination [collectionSize]="schemaItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                        [rotate]="true" (pageChange)="getPage(page)">
+
+        </ngb-pagination>
       </div>
     </div>
     <!--核心表-->
@@ -127,10 +128,10 @@
       <div class="panel-body">
         <div class="list-op" >
           <form class="form-inline">
-            <button type="button" class="btn btn-light " data-toggle="modal" data-target="#tableModal" (click)="chooseTable('新增')">
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#tableModal" (click)="chooseTable('新增')">
               <span class="fa fa-plus" aria-hidden="true" ></span>新增
             </button>
-            <button type="button" class="btn btn-light " >
+            <button type="button" class="btn btn-secondary " >
               <span class="fa fa-refresh" aria-hidden="true" ></span>刷新
             </button>
           </form>
@@ -142,7 +143,7 @@
             <td>描述</td>
             <td>操作</td>
           </tr>
-          <tr  *ngFor="let schematable of schematables | paginate: { itemsPerPage: 10, currentPage: page ,id:'table'}; ">
+          <tr  *ngFor="let schematable of schematables | slice:start1:end1 ">
             <td><input type="checkbox" [checked]="isChecked"></td>
             <td>{{schematable.tablename}}</td>
             <td>{{schematable.comments}}</td>
@@ -156,9 +157,10 @@
             </td>
           </tr>
         </table>
-        <pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="page = $event" maxSize="6"
-                             directionLinks="true" autoHide="true"  id="table">
-        </pagination-controls>
+        <ngb-pagination [collectionSize]="tableItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                        [rotate]="true" (pageChange)="getPage(page)">
+
+        </ngb-pagination>
       </div>
     </div>
   </div>
@@ -166,22 +168,24 @@
 
   <!--modal-->
   <!--应用模块modal-->
-  <div class="modal fade" id="addModule" tabindex="-1" role="dialog" >
+  <div class="modal fade" id="addModule" tabindex="-1" role="dialog" aria-labelledby="moduleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h6 class="modal-title">{{title}}</h6>
+          <h5 class="modal-title" id="moduleModalLabel">{{title}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           <form class="form-horizontal">
-            <div class="form-group">
+            <div class="form-group row">
               <label for="moduleName" class="col-sm-2 control-label ">模块名称：</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="moduleName" placeholder="请输入模块名称">
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label  class="col-sm-2 control-label">应用系统:</label>
               <div class="col-sm-10">
                 <select class="form-control" >
@@ -189,7 +193,7 @@
                 </select>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label  class="col-sm-2 control-label">负责人:</label>
               <div class="col-sm-10">
                 <select class="form-control" >
@@ -197,7 +201,7 @@
                 </select>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label for="moduleDiscribe" class="col-sm-2 control-label">描述：</label>
               <div class="col-sm-10">
                 <textarea  class="form-control" id="moduleDiscribe"  row="10" placeholder="请输入应用模块的描述说明，长度不可大于40个字符"></textarea>
@@ -214,20 +218,21 @@
   </div><!-- /.modal -->
 
   <!--关联schema modal-->
-  <div class="modal fade" id="schemaModal" tabindex="-1" role="dialog" >
+  <div class="modal fade" id="schemaModal" tabindex="-1" role="dialog" aria-labelledby="schemaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h6 class="modal-title">关联Schema</h6>
+          <h5 class="modal-title" id="schemaModalLabel">关联Schema</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           <div class="panel panel-default">
-            <!--<div class="panel-heading">Panel heading</div>-->
             <div class="panel-body">
               <div class="list-op" >
                 <form class="form-inline">
-                  <div class="form-group">
+                  <div class="form-group ">
                     <label >DB名称：</label>
                     <select>
                       <option *ngFor="let schematable of schematables">{{schematable.dbname}}</option>
@@ -237,8 +242,8 @@
                     <label >Schema名：</label>
                     <input type="text"  class="form-control" >
                   </div>
-                  <div class="form-group">
-                    <button type="button" class="btn btn-light search" >
+                  <div class="form-group ">
+                    <button type="button" class="btn btn-secondary" >
                       <span class="fa fa-search " aria-hidden="true"></span>查询
                     </button>
                   </div>
@@ -251,16 +256,17 @@
                   <td>Schema名</td>
                   <td>密码状态 </td>
                 </tr>
-                <tr  *ngFor="let schematable of schematables | paginate: { itemsPerPage: 10, currentPage: p ,id:'20'};">
+                <tr  *ngFor="let schematable of schematables | slice:start1:end1">
                   <td><input type="checkbox" [checked]="isChecked"></td>
                   <td>{{schematable.dbname}}</td>
                   <td>{{schematable.schema}}</td>
                   <td>{{schematable.psdstate}}</td>
                 </tr>
               </table>
-              <pagination-controls previousLabel="上一页" nextLabel="下一页" (pageChange)="getP($event)" maxSize="6"
-                                   directionLinks="true" autoHide="true"  id="20">
-              </pagination-controls>
+              <ngb-pagination [collectionSize]="chooseSchemaItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                              [rotate]="true" (pageChange)="getPage(page)">
+
+              </ngb-pagination>
             </div>
           </div>
         </div>
@@ -273,22 +279,24 @@
   </div><!-- /.modal -->
 
   <!--核心表modal-->
-  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog" >
+  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog" aria-labelledby="tableModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h6 class="modal-title">{{title}}</h6>
+          <h5 class="modal-title" id="tableModalLabel">{{title}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           <form class="form-horizontal">
-            <div class="form-group">
-              <label for="sysName" class="col-sm-2 control-label ">核心表名称：</label>
+            <div class="form-group row">
+              <label for="sysName" class="col-sm-2 control-label ">核心表：</label>
               <div class="col-sm-10">
                 <input type="text" class="form-control" id="sysName" placeholder="请输入核心表名称">
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group row">
               <label for="sysDiscribe" class="col-sm-2 control-label">描述：</label>
               <div class="col-sm-10">
                 <textarea  class="form-control" id="sysDiscribe"  row="10" placeholder="请输入核心表的描述说明，长度不可大于40个字符"></textarea>

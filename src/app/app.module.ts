@@ -20,6 +20,7 @@ import { FooterComponent } from './footer/footer.component';
 
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TableService} from './table/table.service';
+import { ProjectComponent } from './project/project.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {TableService} from './table/table.service';
     LoginComponent,
     HeaderComponent,
     FooterComponent,
+    ProjectComponent,
 
   ],
   imports: [
