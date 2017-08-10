@@ -25,3 +25,8 @@
 .input-group .form-control{
   width:120px !important;
 }
+
+/*弹框的上层弹框*/
+#moduleModal{
+  background-color: rgba(128,128,128,0.5);
+}

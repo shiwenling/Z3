@@ -3,7 +3,7 @@ html{
   height: 100%;
 }
 body{
-  min-width: 1000px;
+  min-width: 1200px;
   height:100%;
   position: relative;
   margin:0;
@@ -17,7 +17,7 @@ body{
 .content{
   margin-top:50px;
   min-height:800px;
-  min-width: 1025px;
+  min-width: 1200px;
 }
 /*form*/
 .form-inline{
@@ -86,10 +86,10 @@ table {
 .fa-plus {
   color: #5DAC81;
 }
-.fa-refresh, .fa-edit, .fa-trash, .fa-link, .fa-retweet, .fa-eye, .fa-newspaper-o, .fa-snowflake-o{
+.fa-refresh, .fa-edit, .fa-trash, .fa-link, .fa-retweet, .fa-eye, .fa-newspaper-o, .fa-snowflake-o, .fa-flag{
   color: #666;
 }
-.fa-edit:hover,.fa-trash:hover, .fa-link:hover, .fa-retweet:hover, .fa-eye:hover, .fa-newspaper-o:hover, .fa-snowflake-o:hover{
+.fa-edit:hover,.fa-trash:hover, .fa-link:hover, .fa-retweet:hover, .fa-eye:hover, .fa-newspaper-o:hover, .fa-snowflake-o:hover, .fa-flag:hover{
   color: #F2A53A;
 }
 /*操作按钮*/
@@ -111,6 +111,7 @@ table {
 
 
 /*modal样式*/
+
 .modal input,.modal textarea,.modal label, .modal select option{
   font-size: 12px;
   font-weight: normal;
@@ -118,9 +119,9 @@ table {
 .modal-footer .btn{
   font-size: 14px;
 }
-/*.modal-body .modalsearch{*/
-  /*margin:0 20px;*/
-/*}*/
+.modal-body .panel-body{
+  padding: 0;
+}
 
 /*modal取消按钮*/
 .cancle{

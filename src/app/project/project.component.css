@@ -1,0 +1,92 @@
+.fa-pencil-square-o, .fa-database, .fa-newspaper-o, .fa-pencil{
+  color: #5DAC81;
+}
+/*搜索条的下拉框*/
+.selectType{
+  width:180px;
+}
+/*modal样式*/
+@media (min-width: 576px){
+  /*创建表的modal*/
+  #createTable .modal-dialog {
+    max-width: 800px;
+  }
+  /*拷贝相似表modal*/
+  #copyTable .modal-dialog{
+    max-width: 800px;
+  }
+  /*修改现有表modal*/
+  #editTable  .modal-dialog{
+    max-width: 800px;
+  }
+  /*对比表信息modal*/
+  #compareTable .modal-dialog{
+    max-width: 900px;
+  }
+  /*选择现有序列*/
+  #editSequence .modal-dialog{
+    max-width: 900px;
+  }
+
+}
+/*创建表的modal*/
+/*修改按钮*/
+.edit{
+  margin-left:5px;
+}
+/*描述说明input*/
+.describe{
+  width:550px;
+}
+/*标红字体*/
+.note{
+  color:red;
+}
+.tableName input{
+  width: 260px;
+}
+.tableName label{
+  width: 48px;
+  justify-content: left;
+}
+
+/*对表格进行操作的样式   新增，列重命名*/
+.addColumn{
+  border-top: 1px solid #ddd;
+  padding-top: 5px;
+}
+/*修改序列之弹框再往上弹框   修改序列属性modal*/
+/*为modal添加阴影背景*/
+#createSequence, #createTable, #seeTable, #compareTable, #compareSequence{
+  background-color: rgba(128,128,128,0.3);
+}
+
+.selectSequence select{
+  width:170px;
+}
+
+
+/*导入SQL的modal样式*/
+.sql{
+  height:220px;
+}
+
+
+/*选择现有表  已采集表modal 样式*/
+.toggleButton button{
+  border:none;
+  background-color: #fff;
+}
+.toggleButton:hover{
+  background-color: #fff;
+}
+
+/*表结构信息 modal*/
+.modal-dialog .nav-tabs{
+  padding-top:0;
+}
+.modal-dialog .tab-content{
+  margin-top:15px;
+}
+
+

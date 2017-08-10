@@ -1,3 +1,1129 @@
-<p>
-  project works!
-</p>
+<div class="content">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="list-op" id="list_op">
+        <div class="form-inline">
+          <div class="form-group">
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#createTable" (click)="tableModal('创建表')">
+              <span class="fa fa-plus " aria-hidden="true"></span>创建表
+            </button>
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#createSequence" (click)="sequenceModal('创建序列')">
+              <span class="fa fa-plus" aria-hidden="true" ></span>创建序列
+            </button>
+            <span>|</span>
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#importSQL" >
+              <span class="fa fa-plus" aria-hidden="true" ></span>导入建表SQL
+            </button>
+            <span>|</span>
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#copyTable" >
+              <span class="fa fa-plus" aria-hidden="true" ></span>拷贝相似表
+            </button>
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#editTable" >
+              <span class="fa fa-pencil-square-o" aria-hidden="true" ></span>修改现有表
+            </button>
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#editSequence" >
+              <span class="fa fa-pencil-square-o" aria-hidden="true" ></span>修改现有序列
+            </button>
+            <span>|</span>
+            <div class="dropdown show">
+              <button class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="fa fa-database" aria-hidden="true" ></span>变更执行到线下数据库
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item ">开发库</a>
+                <a class="dropdown-item ">测试库</a>
+              </div>
+            </div>
+            <span>|</span>
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#DDLModal">
+              <span class="fa fa-newspaper-o" aria-hidden="true" ></span>生成项目DDL
+            </button>
+          </div>
+        </div>
+        <div class="form-inline">
+          <div class="form-group">
+            <label >对象类型：</label>
+            <select class="selectType">
+              <option >不限</option>
+              <option>表</option>
+              <option>序列</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label >对象名称：</label>
+            <input type="text"  class="form-control" />
+          </div>
+          <div class="form-group">
+            <button type="button" class="btn btn-secondary " >
+              <span class="fa fa-search " aria-hidden="true"></span>查询
+            </button>
+            <button type="button" class="btn btn-secondary " >
+              <span class="fa fa-refresh" aria-hidden="true" ></span>重置
+            </button>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover" >
+        <tr>
+          <td>对象类型</td>
+          <td>对象名称</td>
+          <td>变更类型</td>
+          <td>数据功能</td>
+          <td>最后修改人</td>
+          <td>最后修改时间</td>
+          <td>描述</td>
+          <td>操作</td>
+        </tr>
+        <tr  *ngFor="let object of objects | slice: start:end ">
+          <td>{{object.objectType}}</td>
+          <td>{{object.objectName}}</td>
+          <td>{{object.changeType}}</td>
+          <td>{{object.dataFunction}}</td>
+          <td>{{object.changePeople}}</td>
+          <td>{{object.gmtModified}}</td>
+          <td>{{object.comments}}</td>
+          <td>
+            <a class="action" data-toggle="modal"  data-target="#createTable" (click)="tableModal('修改现有表')" >
+              <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
+            </a>
+            <a class="action" >
+              <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
+            </a>
+          </td>
+        </tr>
+      </table>
+      <ngb-pagination [collectionSize]="totalItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                      [rotate]="true" (pageChange)="pagination(page)">
+
+      </ngb-pagination>
+    </div>
+  </div>
+
+
+
+
+  <!--modal-->
+
+
+  <!--拷贝相似表的modal-->
+  <div class="modal fade" id="copyTable" tabindex="-1" role="dialog" aria-labelledby="schemaModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="schemaModalLabel">选择要拷贝的表</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="list-op" >
+                <form class="form-inline">
+                  <div class="form-group">
+                    <label >表名：</label>
+                    <input type="text"  class="form-control" />
+                  </div>
+                  <div class="form-group ">
+                    <button type="button" class="btn btn-secondary" >
+                      <span class="fa fa-search " aria-hidden="true"></span>查询
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <table class="table table-striped table-hover" >
+                <tr>
+                  <td></td>
+                  <td>表名</td>
+                  <td>锁定状态</td>
+                  <td>最后修改人 </td>
+                  <td>最后修改时间 </td>
+                  <td>描述 </td>
+                </tr>
+                <tr  *ngFor="let table of tables | slice:start:end">
+                  <td><input type="checkbox" ></td>
+                  <td>{{table.tableName}}</td>
+                  <td>{{table.lockState}}</td>
+                  <td>{{table.changePeople}}</td>
+                  <td>{{table.gmtModified}}</td>
+                  <td>{{table.comments}}</td>
+                </tr>
+              </table>
+              <ngb-pagination [collectionSize]="tableItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                              [rotate]="true" (pageChange)="getPage(page)">
+
+              </ngb-pagination>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#createTable" (click)="tableModal('拷贝表')" data-dismiss="modal">拷贝</button>
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">关闭</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--修改现有表的modal-->
+  <div class="modal fade" id="editTable" tabindex="-1" role="dialog"  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" >选择现有表</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="list-op" >
+                <form class="form-inline">
+                  <div class="form-group">
+                    <label >搜索方式：</label>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" checked (click)="choose('已归档表')"  name="inlineRadioOptions" id="inlineRadio1" value="option1"> 已归档表
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" (click)="choose('已采集表')" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 已采集表
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group" [hidden]="!isHiddenTab">
+                    <label>数据库：</label>
+                    <select>
+                      <option>不限</option>
+                      <option>orcl</option>
+                      <option>rac10g</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>表名：</label>
+                    <input type="text" class="form-control" placeholder="可使用%进行模糊搜索"/>
+                  </div>
+                  <div class="form-group ">
+                    <button type="button" class="btn btn-secondary" >
+                      <span class="fa fa-search " aria-hidden="true"></span>查询
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!--已归档表-->
+              <div [hidden]="isHiddenTab">
+                <table class="table table-striped table-hover" >
+                  <tr>
+                    <td></td>
+                    <td>表名</td>
+                    <td>锁定状态</td>
+                    <td>最后修改人 </td>
+                    <td>最后修改时间 </td>
+                    <td>描述 </td>
+                  </tr>
+                  <tr  *ngFor="let table of tables | slice:start:end">
+                    <td><input type="checkbox" ></td>
+                    <td>{{table.tableName}}</td>
+                    <td>{{table.lockState}}</td>
+                    <td>{{table.changePeople}}</td>
+                    <td>{{table.gmtModified}}</td>
+                    <td>{{table.comments}}</td>
+                  </tr>
+                </table>
+                <ngb-pagination [collectionSize]="tableItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                                [rotate]="true" (pageChange)="getPage(page)">
+
+                </ngb-pagination>
+              </div>
+              <!--已采集表-->
+              <div [hidden]="!isHiddenTab">
+                <table class="table table-striped table-hover" >
+                  <tr>
+                    <td></td>
+                    <td>表名</td>
+                    <td>创建时间</td>
+                    <td>最后修改时间 </td>
+                    <td>描述 </td>
+                    <td>操作</td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" class="toggleButton" (click)="showSelected()">
+                      <button >
+                        <span *ngIf="!selected"><i class="fa fa-minus-circle"></i>idb10g 【ZONE】（12项）</span>
+                        <span *ngIf="selected"><i class="fa fa-plus-circle"></i>idb10g 【ZONE】（12项）</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr  *ngFor="let table of tables | slice:start:end" [hidden]="selected">
+                    <td><input type="checkbox" ></td>
+                    <td>{{table.tableName}}</td>
+                    <td>{{table.gmtCreate}}</td>
+                    <td>{{table.gmtModified}}</td>
+                    <td>{{table.comments}}</td>
+                    <td>
+                      <a class="action" data-toggle="modal" data-target="#seeTable" >
+                        <i class="fa fa-eye" data-toggle="tooltip" title="查看"></i>
+                      </a>
+                      <a class="action" data-toggle="modal" data-target="#createTable" data-dismiss="modal" (click)="tableModal('采集表基线')">
+                        <i class="fa fa-flag" data-toggle="tooltip" title="作为基线"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <ngb-pagination [collectionSize]="tableItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                                [rotate]="true" (pageChange)="getPage(page)">
+                </ngb-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary " [hidden]=" isHiddenTab" data-toggle="modal" data-target="#createTable" (click)="tableModal('归档表修改')"  data-dismiss="modal">修改</button>
+          <button type="button" class="btn btn-primary "  [hidden]="!isHiddenTab" data-toggle="modal" data-target="#compareTable" >对比</button>
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">关闭</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--表结构信息modal-->
+  <div class="modal fade" id="seeTable" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">表结构信息</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="baseinfo-tab" data-toggle="tab" href="#baseinfo" role="tab" aria-controls="baseinfo" aria-expanded="true">基础信息</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="sequence-tab" data-toggle="tab" href="#sequence" role="tab" aria-controls="sequence">列</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="index-tab" data-toggle="tab" href="#index" role="tab" aria-controls="index">索引</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="key-tab" data-toggle="tab" href="#key" role="tab" aria-controls="key">主外键</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <!--基础信息-->
+            <div class="tab-pane fade show active" id="baseinfo" role="tabpanel" aria-labelledby="baseinfo-tab">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <form class="form-horizontal">
+                    <div class="form-group row">
+                      <label for="tableName" class="col-sm-2 control-label ">表名：</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" id="tableName" readonly="readonly" />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 control-label" >主键列:</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control"  readonly="readonly" />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 control-label" >表空间名:</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly="readonly" />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 control-label" >分区列:</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly="readonly" />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 control-label" >子分区列:</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly="readonly" />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 control-label" >创建时间:</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly="readonly" />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 control-label" >修改时间:</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly="readonly" />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label  class="col-sm-2 control-label">描述：</label>
+                      <div class="col-sm-10">
+                        <input type="text" class="form-control" readonly="readonly" />
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!--列-->
+            <div class="tab-pane fade show " id="sequence" role="tabpanel" aria-labelledby="baseinfo-tab">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <table  class="table table-striped table-hover" >
+                    <tr>
+                      <td>列名</td>
+                      <td>数据类型</td>
+                      <td>长度</td>
+                      <td>是否为空</td>
+                      <td>缺省值</td>
+                      <td>描述</td>
+                    </tr>
+                    <tr >
+                      <td>ID</td>
+                      <td>CARCHAR2</td>
+                      <td>10</td>
+                      <td>Y</td>
+                      <td></td>
+                      <td>--</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!--索引-->
+            <div class="tab-pane fade show " id="index" role="tabpanel" aria-labelledby="baseinfo-tab">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <table  class="table table-striped table-hover" >
+                    <tr>
+                      <td>索引名</td>
+                      <td>索引列</td>
+                    </tr>
+                    <tr >
+                      <td>IDX_B_CUD_DP_SI_GC</td>
+                      <td>DB_PK,SNAP_ID,GMT_CRATE</td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!--主外键-->
+            <div class="tab-pane fade show " id="key" role="tabpanel" aria-labelledby="baseinfo-tab">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <table  class="table table-striped table-hover" >
+                    <tr>
+                      <td>键名</td>
+                      <td>类型</td>
+                      <td>应用的列</td>
+                      <td>依赖的索引</td>
+                    </tr>
+                    <!--<tr >-->
+                      <!--<td>IDX_B_CUD_DP_SI_GC</td>-->
+                      <!--<td>DB_PK,SNAP_ID,GMT_CRATE</td>-->
+                    <!--</tr>-->
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">关闭</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--对比表信息modal-->
+  <div class="modal fade" id="compareTable" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">对比表信息</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-body">
+          <!--表基本信息对比-->
+              <div class="top-table">
+                <span class="note">表基本信息对比</span>
+                <table  class="table table-striped table-hover table-bordered" >
+                  <tr>
+                    <td>数据库【Schema】</td>
+                    <td>表名</td>
+                    <td>主键列</td>
+                    <td>创建时间</td>
+                    <td>最后修改时间</td>
+                    <td>描述</td>
+                    <td>操作</td>
+                  </tr>
+                  <tr >
+                    <td>idbdev【Z3】</td>
+                    <td>PUB_USER_DB_PRIVS</td>
+                    <td>ID</td>
+                    <td>2015-10-13 20:12:12</td>
+                    <td>2015-10-13 20:12:12</td>
+                    <td>--</td>
+                    <td>
+                      <a class="action" data-toggle="modal" data-target="#createTable" data-dismiss="modal" >
+                        <i class="fa fa-flag" data-toggle="tooltip" title="作为基线"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr >
+                    <td>idbdev【ZDBDEV】</td>
+                    <td>PUB_USER_DB_PRIVS</td>
+                    <td>ID</td>
+                    <td>2015-10-13 20:12:12</td>
+                    <td>2015-10-13 20:12:12</td>
+                    <td>用户数据库权限表</td>
+                    <td>
+                      <a class="action" data-toggle="modal" data-target="#createTable">
+                        <i class="fa fa-flag" data-toggle="tooltip" title="作为基线"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+          <!--列信息对比-->
+              <div class="bottom-table">
+                <span class="note">列信息对比</span>
+                <table  class="table table-striped table-hover  table-bordered" >
+                  <tr>
+                    <td colspan="5">表【idbdev@Z3】 【PUB_USER_PRIVS】</td>
+                    <td colspan="5">表【idbdev@ZDBDEV】 【PUB_USER_DB_PRIVS】</td>
+                  </tr>
+                  <tr>
+                    <td>列名</td>
+                    <td>数据类型</td>
+                    <td>长度</td>
+                    <td>允许为空</td>
+                    <td>缺省值</td>
+                    <td>列名</td>
+                    <td>数据类型</td>
+                    <td>长度</td>
+                    <td>允许为空</td>
+                    <td>缺省值</td>
+                  </tr>
+                  <tr >
+                    <td>GMT_MODIFIED</td>
+                    <td>NUMBER</td>
+                    <td>--</td>
+                    <td>否</td>
+                    <td>--</td>
+                    <td>GMT_MODIFIED</td>
+                    <td>NUMBER</td>
+                    <td>--</td>
+                    <td>否</td>
+                    <td>--</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">关闭</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--修改现有序列modal-->
+  <div class="modal fade" id="editSequence" tabindex="-1" role="dialog"  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" >选择现有序列</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="list-op" >
+                <form class="form-inline">
+                  <div class="form-group">
+                    <label >搜索方式：</label>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" checked (click)="choose('已归档序列')"  name="inlineRadioOptions" id="inlineRadio3" value="option1"> 已归档序列
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="radio" (click)="choose('已采集序列')" name="inlineRadioOptions" id="inlineRadio4" value="option2"> 已采集序列
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group" [hidden]="!isHiddenSeq">
+                    <label>数据库：</label>
+                    <select>
+                      <option>不限</option>
+                      <option>orcl</option>
+                      <option>rac10g</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>序列名：</label>
+                    <input type="text" class="form-control" placeholder="可使用%进行模糊搜索"/>
+                  </div>
+                  <div class="form-group ">
+                    <button type="button" class="btn btn-secondary" >
+                      <span class="fa fa-search " aria-hidden="true"></span>查询
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!--已归档序列-->
+              <div [hidden]="isHiddenSeq">
+                <table class="table table-striped table-hover" >
+                  <tr>
+                    <td></td>
+                    <td>序列名称</td>
+                    <td>锁定状态</td>
+                    <td>最小值</td>
+                    <td>最大值</td>
+                    <td>步长</td>
+                    <td>缓存大小</td>
+                    <td>是否循环</td>
+                    <td>是否排序 </td>
+                    <td>关联表数 </td>
+                    <td>描述 </td>
+                  </tr>
+                  <tr  *ngFor="let sequence of sequences | slice:start:end">
+                    <td><input type="checkbox" ></td>
+                    <td>{{sequence.sequenceName}}</td>
+                    <td>{{sequence.lockState}}</td>
+                    <td>{{sequence.minValue}}</td>
+                    <td>{{sequence.maxValue}}</td>
+                    <td>{{sequence.step}}</td>
+                    <td>{{sequence.cacheValue}}</td>
+                    <td>{{sequence.cicle}}</td>
+                    <td>{{sequence.order}}</td>
+                    <td>{{sequence.tableNumber}}</td>
+                    <td>{{sequence.comments}}</td>
+                  </tr>
+                </table>
+                <ngb-pagination [collectionSize]="tableItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                                [rotate]="true" (pageChange)="getPage(page)">
+
+                </ngb-pagination>
+              </div>
+              <!--已采集表-->
+              <div [hidden]="!isHiddenSeq">
+                <table class="table table-striped table-hover" >
+                  <tr>
+                    <td></td>
+                    <td>序列名称</td>
+                    <td>最小值</td>
+                    <td>最大值</td>
+                    <td>步长</td>
+                    <td>缓存大小</td>
+                    <td>是否循环</td>
+                    <td>是否排序 </td>
+                    <td>创建时间 </td>
+                    <td>操作 </td>
+                  </tr>
+                  <tr>
+                    <td colspan="6" class="toggleButton" (click)="showSelected()">
+                      <button >
+                        <span *ngIf="!selected"><i class="fa fa-minus-circle"></i>orcl 【MZ3_PRE】</span>
+                        <span *ngIf="selected"><i class="fa fa-plus-circle"></i>orcl 【MZ3_PRE】</span>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr  *ngFor="let sequence of sequences | slice:start:end" [hidden]="selected">
+                    <td><input type="checkbox" ></td>
+                    <td>{{sequence.sequenceName}}</td>
+                    <td>{{sequence.minValue}}</td>
+                    <td>{{sequence.maxValue}}</td>
+                    <td>{{sequence.step}}</td>
+                    <td>{{sequence.cacheValue}}</td>
+                    <td>{{sequence.cicle}}</td>
+                    <td>{{sequence.order}}</td>
+                    <td>{{sequence.gmtCreate}}</td>
+                    <td>
+                      <a class="action" data-toggle="modal" data-target="#createSequence"  (click)="sequenceModal('查看序列信息')">
+                        <i class="fa fa-eye" data-toggle="tooltip" title="查看"></i>
+                      </a>
+                      <a class="action" data-toggle="modal" data-target="#createSequence" data-dismiss="modal">
+                        <i class="fa fa-flag" data-toggle="tooltip" title="作为基线"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <ngb-pagination [collectionSize]="tableItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
+                                [rotate]="true" (pageChange)="getPage(page)">
+                </ngb-pagination>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary " [hidden]=" isHiddenSeq" data-toggle="modal" data-target="#createSequence" (click)="sequenceModal('归档序列修改')" >修改</button>
+          <button type="button" class="btn btn-primary "  [hidden]="!isHiddenSeq" data-toggle="modal" data-target="#compareSequence" >对比</button>
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">关闭</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--对比序列信息-->
+  <div class="modal fade" id="compareSequence" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">对比序列【SEQ_ZONE_METADATA】信息</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <table  class="table table-striped table-hover table-bordered" >
+                <tr>
+                  <td>比较字段</td>
+                  <td>序列【idb10g@ZONE】</td>
+                  <td>序列【orcl@ZONE】</td>
+                </tr>
+                <tr>
+                  <td>最小值</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>最大值</td>
+                  <td>999999999</td>
+                  <td>999999999</td>
+                </tr>
+                <tr>
+                  <td>步长</td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>缓存大小</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
+                <tr>
+                  <td>是否循环</td>
+                  <td>N</td>
+                  <td>N</td>
+                </tr>
+                <tr>
+                  <td>是否排序</td>
+                  <td>N</td>
+                  <td>N</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">关闭</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+  <!--创建表modal-->
+  <div class="modal fade" id="createTable" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{tableTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div class="list-op" >
+                <div class="form-inline">
+                  <div class="form-group" [ngClass]="{'tableName': isHidden == true ? true: false}">
+                    <label class="tablename">表名：</label>
+                    <input type="text"  class="form-control" [readonly]="isReadonly"/>
+                    <!--<button class="btn btn-primary edit" [disabled]="isDisabled" [hidden]="isHidden">修改表名</button>-->
+                  </div>
+                  <div class="form-group">
+                    <label class="tablename">主键：</label>
+                    <input type="text"  class="form-control" readonly="readonly"/>
+                  </div>
+                  <div class="form-group">
+                    <label class="tablename">数据功能：</label>
+                    <select class="form-control">
+                      <option >业务数据</option>
+                      <option >配置数据</option>
+                      <option >业务数据备份</option>
+                      <option >日志</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-inline">
+                  <div class="form-group" [hidden]="isHidden">
+                    <label class="tablename">序列：</label>
+                    <select  class="form-control" (change)="selectOption($event.target.value)" #item="ngModel" [(ngModel)]="itemValueToSet" name="select">
+                      <option *ngFor="let item of seqs" [value]='item'>{{item}}</option>
+                    </select>
+                  </div>
+                  <div class="form-group"  [hidden]="isHiddenSeqName">
+                    <label class="tablename">序列名：</label>
+                    <input class="form-control" type="text" readonly="readonly" [value]="sequenceName" [hidden]="isEditButton"/>
+                    <select [hidden]="!isEditButton" >
+                      <option *ngFor="let sequence of sequences">{{sequence.sequenceName}}</option>
+                    </select>
+                    <button class="btn btn-primary edit" [hidden]="isEditButton" data-toggle="modal" data-target="#createSequence" (click)="sequenceModal('修改序列属性')">
+                      修改序列属性
+                    </button>
+                    <button class="btn btn-primary edit" [hidden]="!isEditButton" data-toggle="modal" data-target="#createSequence" (click)="sequenceModal('查看序列属性')">
+                      查看序列属性
+                    </button>
+                  </div>
+                </div>
+                <div class="form-inline">
+                  <div class="form-group">
+                    <label class="tablename">描述：</label>
+                    <input type="text"  class="form-control describe" placeholder="请输入表的描述说明，长度不可大于100个字符"/>
+                  </div>
+                </div>
+                <p class="note">主键不能为空，不能使用默认值；列长度：CHAR(1-4000)，VARCHAR2(1-4000)，NUMBER(1-38[,0-38])，DATE无长度。</p>
+                <div class="form-group addColumn">
+                  <button class="btn btn-secondary">
+                    <span class="fa fa-plus " aria-hidden="true"></span>新增
+                  </button>
+                  <button class="btn btn-secondary">
+                    <span class="fa fa-pencil " aria-hidden="true"></span>列重命名</button>
+                  <span class="note">(已存在的列重命名会立即执行到数据库)</span>
+                </div>
+              </div>
+              <table  class="table table-striped table-hover" >
+                <tr>
+                  <td>状态</td>
+                  <td>列名</td>
+                  <td>数据类型</td>
+                  <td>长度</td>
+                  <td>是否主键</td>
+                  <td>允许为空</td>
+                  <td>缺省值</td>
+                  <td>描述</td>
+                  <td>操作</td>
+                </tr>
+                <tr >
+                  <td></td>
+                  <td>ID</td>
+                  <td>CARCHAR2</td>
+                  <td>1</td>
+                  <td><input type="checkbox" /></td>
+                  <td><input type="checkbox" /></td>
+                  <td>sysdate</td>
+                  <td>修改时间</td>
+                  <td>
+                    <a class="action" >
+                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr >
+                  <td></td>
+                  <td>ID</td>
+                  <td>CARCHAR2</td>
+                  <td>1</td>
+                  <td><input type="checkbox" /></td>
+                  <td><input type="checkbox" /></td>
+                  <td>sysdate</td>
+                  <td>修改时间</td>
+                  <td>
+                    <a class="action" >
+                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr >
+                  <td></td>
+                  <td>ID</td>
+                  <td>CARCHAR2</td>
+                  <td>1</td>
+                  <td><input type="checkbox" /></td>
+                  <td><input type="checkbox" /></td>
+                  <td>sysdate</td>
+                  <td>修改时间</td>
+                  <td>
+                    <a class="action" >
+                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr >
+                  <td></td>
+                  <td>ID</td>
+                  <td>CARCHAR2</td>
+                  <td>1</td>
+                  <td><input type="checkbox" /></td>
+                  <td><input type="checkbox" /></td>
+                  <td>sysdate</td>
+                  <td>修改时间</td>
+                  <td>
+                    <a class="action" >
+                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr >
+                  <td></td>
+                  <td>ID</td>
+                  <td>CARCHAR2</td>
+                  <td>1</td>
+                  <td><input type="checkbox" /></td>
+                  <td><input type="checkbox" /></td>
+                  <td>sysdate</td>
+                  <td>修改时间</td>
+                  <td>
+                    <a class="action" >
+                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
+                    </a>
+                  </td>
+                </tr>
+                <tr >
+                  <td></td>
+                  <td>ID</td>
+                  <td>CARCHAR2</td>
+                  <td>1</td>
+                  <td><input type="checkbox" /></td>
+                  <td><input type="checkbox" /></td>
+                  <td>sysdate</td>
+                  <td>修改时间</td>
+                  <td>
+                    <a class="action" >
+                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary ">保存</button>
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--序列modal-->
+  <div class="modal fade" id="createSequence" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{sequenceTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-inline selectSequence" [hidden]="selectSequence">
+              <div class="form-group">
+                <label >序列：</label>
+                <select  class="form-control"  (change)="selectOption($event.target.value)" name="select">
+                  <option *ngFor="let item of seqs" [value]='item'>{{item}}</option>
+                </select>
+              </div>
+              <div class="form-group" >
+                <label  >序列名：</label>
+                <select  >
+                  <option *ngFor="let sequence of sequences">{{sequence.sequenceName}}</option>
+                </select>
+              </div>
+            </div>
+            <div  >
+              <div class="form-group row">
+                <label for="sequenceName" class="col-sm-2 control-label ">序列名称：</label>
+                <div class="col-sm-10">
+                  <input type="text"  class="form-control" id="sequenceName" [value]="sequenceNameValue"/>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="maxValue" class="col-sm-2 control-label">最大值：</label>
+                <div class="col-sm-10">
+                  <input type="text"  class="form-control" id="maxValue" placeholder="默认最大值为1e+28"/>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="minValue" class="col-sm-2 control-label">最大值：</label>
+                <div class="col-sm-10">
+                  <input type="text"  class="form-control" id="minValue" value="1"/>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="addValue" class="col-sm-2 control-label">自增值：</label>
+                <div class="col-sm-10">
+                  <input type="number"  class="form-control" id="addValue" value="1"/>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="cacheValue" class="col-sm-2 control-label">缓存大小：</label>
+                <div class="col-sm-10">
+                  <input type="text"  class="form-control" id="cacheValue" value="20"/>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="cicle" class="col-sm-2 control-label">缓存大小：</label>
+                <div class="col-sm-10">
+                  <input type="checkbox" id="cicle" value="20"/>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="order" class="col-sm-2 control-label">缓存大小：</label>
+                <div class="col-sm-10">
+                  <input type="checkbox" id="order" value="20"/>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="sequenceDescribe" class="col-sm-2 control-label">缓存大小：</label>
+                <div class="col-sm-10">
+                  <textarea  class="form-control" id="sequenceDescribe"  row="10" placeholder="请输入序列的描述说明，长度不可大于100个字符"></textarea>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary ">确定</button>
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--导入SQL的modal-->
+  <div class="modal fade" id="importSQL" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">导入建表SQL</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <form class="form-inline modalsearch">
+            <textarea class="sql" row="10" cols="90" placeholder="请输入建表SQL，每次输入一个建表语句"></textarea>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">确定</button>
+          <button type="button" class="btn btn-default cancle" data-dismiss="modal">取消</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <!--DDL  modal-->
+  <div class="modal fade" id="DDLModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">导入建表SQL</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <ul class="nav nav-tabs" id="DDLTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="changeScript-tab" data-toggle="tab" href="#changeScript" role="tab" aria-controls="changeScript" aria-expanded="true">变更脚本</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="rollbackScript-tab" data-toggle="tab" href="#rollbackScript" role="tab" aria-controls="rollbackScript">回滚脚本</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="DDLTabContent">
+                <div class="tab-pane fade show active" id="changeScript" role="tabpanel" aria-labelledby="changeScript-tab">
+                  <p>
+                    /*****************************变更脚本*****************************/
+                    --【项目】zen项目迁移_zone
+                    --【表】        新建：0个，重命名：0个，修改：2个，核心表：0个.
+                    --【序列】      新建：0个，修改：0个，删除：0个
+                    --【变更类型】一般变更
+                    /********************************表********************************/
+                    alter table EMAIL_PROPERTIES add (
+                    DEBUG VARCHAR2(16) DEFAULT 'false',
+                    TIMEOUT NUMBER DEFAULT 10000,
+                    CONNECTION_TIMEOUT NUMBER DEFAULT 10000,
+                    WRITE_TIMEOUT NUMBER DEFAULT 10000
+                    );
+                    alter table PUB_MODULES add (
+                    DB_TYPE VARCHAR2(20) DEFAULT 'oracle',
+                    DEFAULT_TEMPLATE NUMBER
+                    );
+                    alter table PUB_MODULES modify (
+                    TYPE null
+                    );
+                    /*******************************注释*******************************/
+                    comment on column EMAIL_PROPERTIES.DEBUG is 'javamail的debug开关';
+                    comment on column EMAIL_PROPERTIES.TIMEOUT is 'Socket I/O连接超时时间';
+                    comment on column EMAIL_PROPERTIES.CONNECTION_TIMEOUT is '连接邮件服务器超时时间';
+                    comment on column EMAIL_PROPERTIES.WRITE_TIMEOUT is '发送邮件超时时间';
+                    comment on column PUB_MODULES.DB_TYPE is '数据库类型：oracle、mysql，适配MZ3';
+                    comment on column PUB_MODULES.DEFAULT_TEMPLATE is '默认模版';
+                  </p>
+
+                </div>
+                <div class="tab-pane fade" id="rollbackScript" role="tabpanel" aria-labelledby="rollbackScript-tab">
+                  <p>
+                    /*****************************变更脚本*****************************/
+                    --【项目】zen项目迁移_zone
+                    --【表】        新建：0个，重命名：0个，修改：2个，核心表：0个.
+                    --【序列】      新建：0个，修改：0个，删除：0个
+                    --【变更类型】一般变更
+                    /********************************表********************************/
+                    alter table EMAIL_PROPERTIES add (
+                    DEBUG VARCHAR2(16) DEFAULT 'false',
+                    TIMEOUT NUMBER DEFAULT 10000,
+                    CONNECTION_TIMEOUT NUMBER DEFAULT 10000,
+                    WRITE_TIMEOUT NUMBER DEFAULT 10000
+                    );
+                    alter table PUB_MODULES add (
+                    DB_TYPE VARCHAR2(20) DEFAULT 'oracle',
+                    DEFAULT_TEMPLATE NUMBER
+                    );
+                    alter table PUB_MODULES modify (
+                    TYPE null
+                    );
+                    /*******************************注释*******************************/
+                    comment on column EMAIL_PROPERTIES.DEBUG is 'javamail的debug开关';
+                    comment on column EMAIL_PROPERTIES.TIMEOUT is 'Socket I/O连接超时时间';
+                    comment on column EMAIL_PROPERTIES.CONNECTION_TIMEOUT is '连接邮件服务器超时时间';
+                    comment on column EMAIL_PROPERTIES.WRITE_TIMEOUT is '发送邮件超时时间';
+                    comment on column PUB_MODULES.DB_TYPE is '数据库类型：oracle、mysql，适配MZ3';
+                    comment on column PUB_MODULES.DEFAULT_TEMPLATE is '默认模版';
+                  </p>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">导出脚本</button>
+          <button type="button" class="btn btn-default cancle" data-dismiss="modal">关闭</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+</div>
+
+
+
+
+
+
+

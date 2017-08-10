@@ -25,11 +25,10 @@ export class ModuleComponent implements OnInit {
   totalItems:number = 16;
   pageSize:number = 10;
   title:string;
-  isChecked:boolean;
-  isShow1:boolean = true;
-  isShow2:boolean = false;
+  isChecked:boolean;  //全选/全不选
   module = new Subject<string>();
   schematable = new Subject<string>();
+  isHidden:boolean = false;
 
 
   constructor(
@@ -49,29 +48,19 @@ export class ModuleComponent implements OnInit {
   getSchematables(): void {
     this.moduleService.getSchematables().then(schematables => this.schematables = schematables);
   }
-  choose1(isShow:boolean):void {
-    this.isShow1= isShow;
-    this.isShow1=true;
-    this.isShow2=false;
-  }
-  choose2(isShow:boolean):void {
-    this.isShow2= isShow;
-    this.isShow2= true;
-    this.isShow1=false;
-  }
-  chooseModal(tit:string){
-    if (tit == '新增'){
-      this.title='新增模块';
-    }else if (tit =='修改'){
-      this.title = '修改模块';
+
+  //tab切换操作
+  choose(para:string):void {
+    if (para=='Schema'){
+      this.isHidden = false;
+    }
+    else if(para == '核心表'){
+      this.isHidden = true;
     }
   }
-  chooseTable(tit:string){
-    if (tit == '新增'){
-      this.title='新增核心表';
-    }else if (tit =='修改'){
-      this.title = '修改核心表';
-    }
+
+  setTitle(tit:string){
+    this.title = tit;
   }
   pagination() {
     this.start = (this.page-1) * this.pageSize;
@@ -81,7 +70,5 @@ export class ModuleComponent implements OnInit {
     this.start1 = (this.page-1) * this.pageSize;
     this.end1 = (this.page)* this.pageSize;
   }
-
-
 
 }

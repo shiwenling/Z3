@@ -17,6 +17,7 @@ import { FooterComponent } from './footer/footer.component';
 
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TableService} from './table/table.service';
+import {ObjectService} from './project/object.service';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import {TableService} from './table/table.service';
     ReactiveFormsModule,
     NgbModule.forRoot()
   ],
-  providers: [SystemService, ModuleService,TableService],
+  providers: [SystemService, ModuleService,TableService, ObjectService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

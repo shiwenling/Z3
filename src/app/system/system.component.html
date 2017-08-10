@@ -17,7 +17,7 @@
               <span class="fa fa-search " aria-hidden="true"></span>查询
             </button>
             <span>|</span>
-            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addModal" (click)="chooseModal('新增')">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addModal" (click)="setTitle('新增应用系统')">
               <span class="fa fa-plus" aria-hidden="true" ></span>新增
             </button>
             <span>|</span>
@@ -47,7 +47,7 @@
           <td>{{system.gmtModified}}</td>
           <td>{{system.comments}}</td>
           <td>
-            <a class="action" data-toggle="modal" data-target="#addModal" (click)="chooseModal('修改')" >
+            <a class="action" data-toggle="modal" data-target="#addModal" (click)="setTitle('修改应用系统')" >
               <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
             </a>
             <a class="action" >

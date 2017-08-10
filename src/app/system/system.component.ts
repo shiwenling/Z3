@@ -55,12 +55,8 @@ export class SystemComponent implements OnInit {
   search(term: string): void {
     this.system.next(term);
   }
-  chooseModal(tit:string){
-    if (tit == '新增'){
-      this.title='新增应用系统';
-    }else if (tit =='修改'){
-      this.title = '修改应用系统';
-    }
+  setTitle(tit:string){
+    this.title = tit;
   }
   pagination() {
     this.start = (this.page-1) * this.pageSize;

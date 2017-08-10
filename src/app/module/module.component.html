@@ -20,7 +20,7 @@
                 <span class="fa fa-search " aria-hidden="true"></span>查询
               </button>
               <span>|</span>
-              <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#addModule" (click)="chooseModal('新增')">
+              <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#addModule" (click)="setTitle('新增模块')">
                 <span class="fa fa-plus" aria-hidden="true" ></span>新增
               </button>
               <span>|</span>
@@ -48,7 +48,7 @@
             <td>{{module.principal}}</td>
             <td>{{module.comments}}</td>
             <td>
-              <a class="action" data-toggle="modal" data-target="#addModule" (click)="chooseModal('修改')">
+              <a class="action" data-toggle="modal" data-target="#addModule" (click)="setTitle('修改模块')">
                 <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
               </a>
               <a class="action">
@@ -68,15 +68,15 @@
   <!--right table-->
   <div class="right-table">
     <ul class="nav nav-tabs" >
-      <li class="nav-item "  [ngClass]="{'active': isShow1}" (click)="choose1(isShow1)">
+      <li class="nav-item "  [ngClass]="{'active': !isHidden}" (click)="choose('Schema')">
         <a class="nav-link" role="tab">Schema</a>
       </li>
-      <li class="nav-item"  [ngClass]="{'active': isShow2}" (click)="choose2(isShow2)">
+      <li class="nav-item"  [ngClass]="{'active': isHidden}" (click)="choose('核心表')">
         <a class="nav-link">核心表</a>
       </li>
     </ul>
     <!--schema-->
-    <div class="panel panel-default " *ngIf="isShow1">
+    <div class="panel panel-default " *ngIf="!isHidden">
       <!--<div class="panel-heading">Panel heading</div>-->
       <div class="panel-body">
         <div class="list-op" >
@@ -123,12 +123,12 @@
       </div>
     </div>
     <!--核心表-->
-    <div class="panel panel-default" *ngIf="isShow2">
+    <div class="panel panel-default" *ngIf="isHidden">
       <!--<div class="panel-heading">Panel heading</div>-->
       <div class="panel-body">
         <div class="list-op" >
           <form class="form-inline">
-            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#tableModal" (click)="chooseTable('新增')">
+            <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#tableModal" (click)="setTitle('新增核心表')">
               <span class="fa fa-plus" aria-hidden="true" ></span>新增
             </button>
             <button type="button" class="btn btn-secondary " >
@@ -148,7 +148,7 @@
             <td>{{schematable.tablename}}</td>
             <td>{{schematable.comments}}</td>
             <td>
-              <a class="action" data-toggle="modal" data-target="#tableModal" (click)="chooseTable('修改')">
+              <a class="action" data-toggle="modal" data-target="#tableModal" (click)="setTitle('修改核心表')">
                 <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
               </a>
               <a class="action">

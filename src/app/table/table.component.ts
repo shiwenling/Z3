@@ -18,8 +18,9 @@ export class TableComponent implements OnInit {
   end:number;
   totalItems:number = 23;
   pageSize:number = 10;
-  isChecked:boolean;
+  isChecked:boolean; //全选/全不选
   title:string;
+  canClick:boolean;  //选择模块，选择成员按钮是否可用
   project = new Subject<string>();
   newItem = {
     startTime: null,
@@ -40,13 +41,16 @@ export class TableComponent implements OnInit {
     this.tableService.getProjects().then(projects => this.projects = projects);
     this.systemService.getUsers().then(users => this.users = users);
   }
-  chooseModal(tit:string){
+  setTitle(tit:string){
     if (tit == '新增'){
       this.title='新增项目';
+      this.canClick = false;
     }else if (tit =='修改'){
       this.title = '修改项目';
+      this.canClick = true;
     }else if(tit =='查看'){
       this.title = '查看项目';
+      this.canClick = true;
     }
   }
   pagination() {
