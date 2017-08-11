@@ -319,49 +319,49 @@
                     <div class="form-group row">
                       <label for="tableName" class="col-sm-2 control-label ">表名：</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" id="tableName" readonly="readonly" />
+                        <input type="text" class="form-control" id="tableName" readonly="readonly" value="COLLECT_DROUPS" />
                       </div>
                     </div>
                     <div class="form-group row">
                       <label  class="col-sm-2 control-label" >主键列:</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control"  readonly="readonly" />
+                        <input type="text" class="form-control"  readonly="readonly" value="--" />
                       </div>
                     </div>
                     <div class="form-group row">
                       <label  class="col-sm-2 control-label" >表空间名:</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly="readonly" />
+                        <input type="text" class="form-control" readonly="readonly" value="--"/>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label  class="col-sm-2 control-label" >分区列:</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly="readonly" />
+                        <input type="text" class="form-control" readonly="readonly" value="RANGE:GMT_CREATE"/>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label  class="col-sm-2 control-label" >子分区列:</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly="readonly" />
+                        <input type="text" class="form-control" readonly="readonly" value="--"/>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label  class="col-sm-2 control-label" >创建时间:</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly="readonly" />
+                        <input type="text" class="form-control" readonly="readonly" value="2016-12-34 10：38：14"/>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label  class="col-sm-2 control-label" >修改时间:</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly="readonly" />
+                        <input type="text" class="form-control" readonly="readonly" value="2016-12-34 10：38：14"/>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label  class="col-sm-2 control-label">描述：</label>
                       <div class="col-sm-10">
-                        <input type="text" class="form-control" readonly="readonly" />
+                        <input type="text" class="form-control" readonly="readonly"  value="主机监控项黑白名单关系备份表"/>
                       </div>
                     </div>
                   </form>
@@ -471,7 +471,7 @@
                     <td>2015-10-13 20:12:12</td>
                     <td>--</td>
                     <td>
-                      <a class="action" data-toggle="modal" data-target="#createTable" data-dismiss="modal" >
+                      <a class="action" data-toggle="modal" data-target="#createTable" data-dismiss="modal" (click)="tableModal('对比表基线')">
                         <i class="fa fa-flag" data-toggle="tooltip" title="作为基线"></i>
                       </a>
                     </td>
@@ -651,10 +651,10 @@
                     <td>{{sequence.order}}</td>
                     <td>{{sequence.gmtCreate}}</td>
                     <td>
-                      <a class="action" data-toggle="modal" data-target="#createSequence"  (click)="sequenceModal('查看序列信息')">
+                      <a class="action" data-toggle="modal" data-target="#createSequence"  (click)="sequenceModal('采集序列查看')">
                         <i class="fa fa-eye" data-toggle="tooltip" title="查看"></i>
                       </a>
-                      <a class="action" data-toggle="modal" data-target="#createSequence" data-dismiss="modal">
+                      <a class="action" data-toggle="modal" data-target="#createSequence" data-dismiss="modal" (click)="sequenceModal('采集序列基线')">
                         <i class="fa fa-flag" data-toggle="tooltip" title="作为基线"></i>
                       </a>
                     </td>
@@ -928,67 +928,67 @@
         </div>
         <div class="modal-body">
           <form class="form-horizontal">
-            <div class="form-inline selectSequence" [hidden]="selectSequence">
-              <div class="form-group">
+            <div class="form-inline selectSequence" >
+              <div class="form-group" [hidden]="isHiddenTopSeq">
                 <label >序列：</label>
-                <select  class="form-control"  (change)="selectOption($event.target.value)" name="select">
+                <select  class="form-control"  (change)="selectSeq($event.target.value)" #item="ngModel" [(ngModel)]="seqValue" name="select">
                   <option *ngFor="let item of seqs" [value]='item'>{{item}}</option>
                 </select>
               </div>
-              <div class="form-group" >
+              <div class="form-group" [hidden]="isHiddenTopSeqName">
                 <label  >序列名：</label>
                 <select  >
                   <option *ngFor="let sequence of sequences">{{sequence.sequenceName}}</option>
                 </select>
               </div>
             </div>
-            <div  >
+            <div [hidden]="isHiddenForm">
               <div class="form-group row">
                 <label for="sequenceName" class="col-sm-2 control-label ">序列名称：</label>
                 <div class="col-sm-10">
-                  <input type="text"  class="form-control" id="sequenceName" [value]="sequenceNameValue"/>
+                  <input type="text"  class="form-control" id="sequenceName" [value]="sequenceNameValue" [readonly]="isSeqReadonly"/>
                 </div>
               </div>
               <div class="form-group row">
                 <label for="maxValue" class="col-sm-2 control-label">最大值：</label>
                 <div class="col-sm-10">
-                  <input type="text"  class="form-control" id="maxValue" placeholder="默认最大值为1e+28"/>
+                  <input type="text"  class="form-control" id="maxValue" placeholder="默认最大值为1e+28" [readonly]="isSeqReadonly"/>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="minValue" class="col-sm-2 control-label">最大值：</label>
+                <label for="minValue" class="col-sm-2 control-label">最小值：</label>
                 <div class="col-sm-10">
-                  <input type="text"  class="form-control" id="minValue" value="1"/>
+                  <input type="text"  class="form-control" id="minValue" value="1" [readonly]="isSeqReadonly"/>
                 </div>
               </div>
               <div class="form-group row">
                 <label for="addValue" class="col-sm-2 control-label">自增值：</label>
                 <div class="col-sm-10">
-                  <input type="number"  class="form-control" id="addValue" value="1"/>
+                  <input type="number"  class="form-control" id="addValue" value="1" [readonly]="isSelfGrowReadonly"/>
                 </div>
               </div>
               <div class="form-group row">
                 <label for="cacheValue" class="col-sm-2 control-label">缓存大小：</label>
                 <div class="col-sm-10">
-                  <input type="text"  class="form-control" id="cacheValue" value="20"/>
+                  <input type="text"  class="form-control" id="cacheValue" value="20" [readonly]="isCacheReadonly"/>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="cicle" class="col-sm-2 control-label">缓存大小：</label>
+                <label for="cicle" class="col-sm-2 control-label">周期循环：</label>
                 <div class="col-sm-10">
-                  <input type="checkbox" id="cicle" value="20"/>
+                  <input type="checkbox" id="cicle" value="20" [disabled]="isSeqReadonly"/>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="order" class="col-sm-2 control-label">缓存大小：</label>
+                <label for="order" class="col-sm-2 control-label">是否顺序：</label>
                 <div class="col-sm-10">
-                  <input type="checkbox" id="order" value="20"/>
+                  <input type="checkbox" id="order" value="20" [disabled]="isSeqReadonly"/>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="sequenceDescribe" class="col-sm-2 control-label">缓存大小：</label>
+                <label for="sequenceDescribe" class="col-sm-2 control-label">描述：</label>
                 <div class="col-sm-10">
-                  <textarea  class="form-control" id="sequenceDescribe"  row="10" placeholder="请输入序列的描述说明，长度不可大于100个字符"></textarea>
+                  <textarea  class="form-control" id="sequenceDescribe"  row="10" [readonly]="isDescribeReadonly" placeholder="请输入序列的描述说明，长度不可大于100个字符"></textarea>
                 </div>
               </div>
             </div>

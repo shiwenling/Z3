@@ -171,7 +171,7 @@ export class InMemoryDataService implements InMemoryDbService {
     const objects=[
       {id: 10, objectType:'表', objectName: 'EMAIL_PROPRTIES', changeType:'变更',dataFunction: '配置数据', changePeople: 'dev',
         gmtModified: '2016-12-30 10:38:14', comments: '--'},
-      {id: 12, objectType:'表', objectName: 'EMAIL_PROPRTIES', changeType:'变更',dataFunction: '配置数据', changePeople: 'dev',
+      {id: 12, objectType:'序列', objectName: 'SQL_EMAIL', changeType:'新建',dataFunction: '--', changePeople: 'dev',
         gmtModified: '2016-12-30 10:38:14', comments: '--'},
       {id: 14, objectType:'表', objectName: 'EMAIL_PROPRTIES', changeType:'变更',dataFunction: '配置数据', changePeople: 'dev',
         gmtModified: '2016-12-30 10:38:14', comments: '--'},

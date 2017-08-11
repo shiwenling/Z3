@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     },
     'password': {
       'required': '这是必填项！',
-      'minlength': '最小长度是4',
+      'minlength': '最小长度是6',
     }
   };
   ngAfterViewInit(): void {}

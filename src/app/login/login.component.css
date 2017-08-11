@@ -7,8 +7,6 @@ min-height: 700px;
 height: 100%
 
 }
-
-
 .container{
   min-width: 340px;
   text-align: center;
@@ -30,11 +28,15 @@ h4{
   height: 40px;
   width: 240px;
 }
-.input-group-addon{
-  padding-top:12px;
+.form-group{
+  margin-left:5px;
 }
+
+/*.input-group-addon{*/
+  /*padding-top:12px;*/
+/*}*/
 .login, .reset{
-  width: 130px;
+  width: 142px;
   margin-bottom: 30px;
 }
  .reset{

@@ -89,4 +89,11 @@
   margin-top:15px;
 }
 
+#baseinfo form input{
+  border: none;
+
+}
+.form-control[readonly]{
+  background:none;
+}
 
