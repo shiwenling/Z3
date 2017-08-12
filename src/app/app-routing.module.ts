@@ -11,7 +11,8 @@ import {TableComponent} from './table/table.component';
 import {HeaderComponent} from './header/header.component';
 
 const routes: Routes = [
-  {path: '', component: LoginComponent},
+  {path: '', redirectTo: '/login', pathMatch: 'full'},
+  {path: 'login', component: LoginComponent},
   {
     path:'header',
     component: HeaderComponent,

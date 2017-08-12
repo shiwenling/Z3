@@ -26,7 +26,7 @@ const routes: Routes = [
         component: TableComponent,
       },
       {
-        path: 'project',
+        path: 'table/project',
         component: ProjectComponent,
       }
     ]

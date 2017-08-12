@@ -8,9 +8,9 @@ import {Location} from '@angular/common';
 })
 export class HeaderComponent implements OnInit {
   private isListPage = true;
-  isClick1: boolean = true;
-  isClick2: boolean = false;
-  isClick3: boolean = false;
+  isClick1: boolean ;
+  isClick2: boolean;
+  isClick3: boolean ;
 
 
   constructor(

@@ -3,13 +3,13 @@
     <div class="container-fluid">
       <ul class="nav">
         <li  class="nav-item" [ngClass]="{'active':isClick1}" (click)="click1()">
-          <a class="nav-link" routerLink="/header/system"  routerLinkActive="active">应用系统管理</a>
+          <a class="nav-link" routerLink="./system"  routerLinkActive="active">应用系统管理</a>
         </li>
         <li  class="nav-item" [ngClass]="{'active':isClick2}" (click)="click2()">
-          <a class="nav-link" routerLink="/header/module" routerLinkActive="active" >应用模块管理</a>
+          <a class="nav-link" routerLink="./module" routerLinkActive="active" >应用模块管理</a>
         </li>
         <li  class="nav-item" [ngClass]="{'active':isClick3}" (click)="click3()">
-          <a class="nav-link" routerLink ="/header/table" routerLinkActive="active" >表结构变更管理</a>
+          <a class="nav-link" routerLink ="./table" routerLinkActive="active" >表结构变更管理</a>
         </li>
       </ul>
     </div>
