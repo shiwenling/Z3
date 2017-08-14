@@ -44,7 +44,7 @@ export class ProjectComponent implements OnInit {
   seqs:string[]=['创建新序列','选择已有序列','不使用序列'];
   selected:boolean;   //修改现有表modal设置“采集表”和“归档表”二选一
   isHiddenSeq:boolean;  //修改现有序列modal设置radio对应显示页面
-  isHiddenTab:boolean  //修改现有表modal设置radio对应显示页面
+  isHiddenTab:boolean;  //修改现有表modal设置radio对应显示页面
 
   constructor(
     private objectService: ObjectService
@@ -78,7 +78,7 @@ export class ProjectComponent implements OnInit {
       this.itemValueToSet = '创建新序列';
       this.sequenceName = 'SQL_';
 
-    }else if( tit == '修改现有表') {
+    }else if( tit == '修改操作') {
       this.tableTitle = '修改现有表';
       this.isHidden = true;  //隐藏“序列”一行
       this.isReadonly = true;  //设置“表名”只读
@@ -112,12 +112,49 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  chooseModal(value:string){
+    if (value == '表'){
+      this.tableTitle = '修改现有表';
+      this.isHidden = true;  //隐藏“序列”一行
+      this.isReadonly = true;  //设置“表名”只读
+      this.isEditButton = false; //设置序列名  设置序列名  (分两种情况：或者为查看序列属性， 或者为修改序列属性。。。未完待续)
+      this.isHiddenSeqName = false;
+      this.sequenceName = '';
+    }
+    else if(value == '序列') {
+      this.sequenceTitle = '修改序列属性';
+      this.isHiddenTopSeq = true;   //是否隐藏最上面“序列”一行
+      this.isHiddenTopSeqName = true; //是否隐藏最上面“序列名”一行
+      this.sequenceNameValue = 'SQL_';  //修改序列属性的序列名称为'SQL_'+'表名'
+      this.isSeqReadonly = false;  //表单是否“只读”
+      this.isSelfGrowReadonly = false;
+      this.isCacheReadonly = false;
+      this.isDescribeReadonly = false;
+    }
+    if(value == '序列'){
+      console.log('运行')
+      return true;
+    }else {
+      return false;
+    }
+  }
+
   sequenceModal(tit:string) {
     if(tit == '创建序列'){
       this.sequenceTitle = '创建序列';
       this.isHiddenTopSeq = true;   //是否隐藏最上面“序列”一行
       this.isHiddenTopSeqName = true; //是否隐藏最上面“序列名”一行
       this.sequenceNameValue = '';  //序列名称的默认值
+      this.isSeqReadonly = false;  //表单是否“只读”
+      this.isSelfGrowReadonly = false;
+      this.isCacheReadonly = false;
+      this.isDescribeReadonly = false;
+
+    } else if (tit == '修改操作') {
+      this.sequenceTitle = '修改序列属性';
+      this.isHiddenTopSeq = true;   //是否隐藏最上面“序列”一行
+      this.isHiddenTopSeqName = true; //是否隐藏最上面“序列名”一行
+      this.sequenceNameValue = 'SQL_';  //修改序列属性的序列名称为 表格中的数据
       this.isSeqReadonly = false;  //表单是否“只读”
       this.isSelfGrowReadonly = false;
       this.isCacheReadonly = false;
@@ -186,8 +223,8 @@ export class ProjectComponent implements OnInit {
   selectOption(sequenceValue:string){
     if (sequenceValue == '创建新序列'){
       this.sequenceName = 'SQL_';   //修改序列属性的序列名称为'SQL_'+'表名'
-      this.isEditButton = false;
-      this.isHiddenSeqName = false;
+      this.isEditButton = false;    //是否隐藏修改按钮
+      this.isHiddenSeqName = false;  //是否隐藏“序列名”
     }else if( sequenceValue == '选择已有序列'){
       this.isEditButton = true;
       this.isHiddenSeqName = false;

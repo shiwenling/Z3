@@ -1,8 +1,9 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import { SystemService } from './system.service';
 import {System} from './system';
 import {Subject} from 'rxjs/Subject';
 
+import {FormControl} from '@angular/forms';
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -27,10 +28,22 @@ export class SystemComponent implements OnInit {
   title:string ;
   total: number;
   system = new Subject<string>();
+  erroramaessage:string;
+  selectedSystem: System;
+  public  titleFilter: FormControl = new FormControl();
+  public  keyword: string;
+
   constructor(
     private systemService: SystemService,
+    private changeDetectorRef: ChangeDetectorRef
 
-  ) { }
+  ) {
+    this.titleFilter.valueChanges
+      .debounceTime(500)
+      .subscribe(
+        value => this.keyword = value
+      );
+  }
 
   getSearchTerm() {
     return this.system
@@ -62,6 +75,35 @@ export class SystemComponent implements OnInit {
     this.start = (this.page-1) * this.pageSize;
     this.end = (this.page)* this.pageSize;
   }
+
+  delete(system: System): void {
+    this.systemService
+      .delete(system.id)
+      .then(() => {
+        this.systems = this.systems.filter(s => s !== system);
+        if (this.selectedSystem === system) { this.selectedSystem = null; }
+      });
+  }
+
+  // delete (rowNumber:number) {
+  //   this.systems.splice(rowNumber, 1);
+  //   this.changeDetectorRef.detectChanges();
+  // }
+
+  // delete(system:System, rowNumber: number): void {
+  //   this.systemService.delete(system.id)
+  //     .subscribe(
+  //       response => {
+  //         this.systems.splice(rowNumber, 1);
+  //       },
+  //       error => {
+  //         this.erroramaessage = < any > error;
+  //       }
+  //     );
+  //   // this.systems.splice(rowNumber, 1);
+  //   // this.changeDetectorRef.detectChanges();
+  // }
+
 
 
 }

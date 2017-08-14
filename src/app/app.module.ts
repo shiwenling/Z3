@@ -24,7 +24,7 @@ import {ObjectService} from './project/object.service';
     AppComponent,
     LoginComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
 
   ],
   imports: [
