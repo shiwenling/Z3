@@ -39,7 +39,7 @@ export class TableComponent implements OnInit {
   }
   getProjects():void {
     this.tableService.getProjects().then(projects => this.projects = projects);
-    this.systemService.getUsers().then(users => this.users = users);
+    this.systemService.getUsers().subscribe(users => this.users = users);
   }
   setTitle(tit:string){
     if (tit == '新增'){

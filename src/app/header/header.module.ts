@@ -11,7 +11,6 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ProjectComponent} from '../project/project.component';
-import {FilterPipe} from '../pipe/filter.pipe';
 import {PipeModule} from '../pipe/pipe.module';
 
 @NgModule({
@@ -22,13 +21,12 @@ import {PipeModule} from '../pipe/pipe.module';
     NgbModule,
     PipeModule.forRoot(),
     ReactiveFormsModule
-    // FilterPipe
   ],
   declarations: [
     SystemComponent,
     ModuleComponent,
     TableComponent,
-    ProjectComponent
+    ProjectComponent,
   ]
 })
 export class HeaderModule { }

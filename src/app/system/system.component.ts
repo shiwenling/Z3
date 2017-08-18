@@ -1,9 +1,9 @@
-import {Component, OnInit, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import { SystemService } from './system.service';
 import {System} from './system';
-import {Subject} from 'rxjs/Subject';
+// import {Subject} from 'rxjs/Subject';
 
-import {FormControl} from '@angular/forms';
+import { FormControl} from '@angular/forms';
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -15,27 +15,34 @@ import {User} from './user';
   styleUrls: ['./system.component.css'],
 })
 export class SystemComponent implements OnInit {
-  @Output() searchContent = new EventEmitter<Object>();
   systems: System[];
   users: User[];
+  system: System;
+  selectedSystem: System;
+  isChecked:boolean;
+  title:string ;
+  //分页条相关参数
   page:number = 1;
   start:number;
   end:number;
   dbItems:number = 14;
   totalItems:number = 14;
   pageSize:number = 10;
-  isChecked:boolean;
-  title:string ;
-  total: number;
-  system = new Subject<string>();
-  erroramaessage:string;
-  selectedSystem: System;
+  // system = new Subject<string>();
   public  titleFilter: FormControl = new FormControl();
   public  keyword: string;
+  //弹框form参数
+  sysnameValue: string;
+  sysPeopleValue: string;
+  sysDescValue: string;
+  sysidValue: number;
+  //搜索条参数
+  dbSearch:string;
+  sysnameSearch:string;
 
   constructor(
     private systemService: SystemService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
 
   ) {
     this.titleFilter.valueChanges
@@ -43,67 +50,84 @@ export class SystemComponent implements OnInit {
       .subscribe(
         value => this.keyword = value
       );
-  }
 
-  getSearchTerm() {
-    return this.system
-      .debounceTime(300)
-      .distinctUntilChanged();
   }
-
   ngOnInit(): void {
     this.getSystems();
     this.getUsers();
     this. pagination();
-    this.getSearchTerm().subscribe((res) => {
-      this.searchContent.emit(res);
-    })
   }
   getSystems(): void {
-     this.systemService.getSystems().then(systems => this.systems = systems);
+     this.systemService.getSystems().subscribe(systems => this.systems = systems);
   }
   getUsers(): void {
-    this.systemService.getUsers().then(users => this.users = users);
-  }
-  search(term: string): void {
-    this.system.next(term);
-  }
-  setTitle(tit:string){
-    this.title = tit;
+    this.systemService.getUsers().subscribe(users => this.users = users);
   }
   pagination() {
     this.start = (this.page-1) * this.pageSize;
     this.end = (this.page)* this.pageSize;
   }
+  // search(term: string): void {
+  //   // this.system.next(term);
+  // }
+  setTitle(tit:string, sys:any){
+    this.title = tit;
+    if (tit == '修改应用系统') {
+      this.sysidValue = sys.id;
+      this.sysnameValue = sys.sysname;
+      this. sysPeopleValue = sys.principal;
+      this.sysDescValue = sys.comments;
+    }else {
+      this.sysidValue = null;
+      this.sysnameValue = '';
+      this. sysPeopleValue = 'dev';
+      this.sysDescValue = '';
+    }
+  }
 
-  delete(system: System): void {
+  search(searchform){
+    this.systemService.search(searchform.value).subscribe(systems => this.systems = systems);
+  }
+  refresh(){
+    this.systemService.getSystems().subscribe(systems => this.systems = systems);
+    this.sysnameSearch = '';
+    this.dbSearch = '';
+  }
+
+  save(sysform){
+    const sys = sysform.form.value;
+    // console.log(sysform);
+    if (sys.id) {
+      this.systemService.update(sys,sys.id).subscribe(system => {
+        for(this.system of this.systems) {
+          if(this.system.id === system.id) {
+            this.system.sysname = system.sysname;
+            this.system.principal = system.principal;
+            this.system.comments = system.comments;
+          }
+        }
+      })
+    }else {
+      if(sysform.valid){
+        // console.log(sysform.form);
+        this.systemService.create(sys).subscribe(system => {
+          this.systems.push(system);
+        } );
+        sysform.form.reset();
+
+      }
+
+    }
+  }
+
+  delete(system: System): void{
     this.systemService
       .delete(system.id)
-      .then(() => {
+      .subscribe(() => {
         this.systems = this.systems.filter(s => s !== system);
         if (this.selectedSystem === system) { this.selectedSystem = null; }
       });
   }
-
-  // delete (rowNumber:number) {
-  //   this.systems.splice(rowNumber, 1);
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
-  // delete(system:System, rowNumber: number): void {
-  //   this.systemService.delete(system.id)
-  //     .subscribe(
-  //       response => {
-  //         this.systems.splice(rowNumber, 1);
-  //       },
-  //       error => {
-  //         this.erroramaessage = < any > error;
-  //       }
-  //     );
-  //   // this.systems.splice(rowNumber, 1);
-  //   // this.changeDetectorRef.detectChanges();
-  // }
-
 
 
 }

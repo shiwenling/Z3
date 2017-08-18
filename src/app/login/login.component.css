@@ -24,17 +24,29 @@ h1{
 h4{
   margin-bottom: 30px;
 }
-.form-control{
+.input-group .form-control{
   height: 40px;
-  width: 240px;
+  width: 265px;
+  flex: none;
 }
 .form-group{
   margin-left:5px;
 }
-
-/*.input-group-addon{*/
-  /*padding-top:12px;*/
+/*.input-group{*/
+  /*width: 300px;*/
 /*}*/
+/*.form-control{*/
+  /*width: 200px;*/
+/*}*/
+.input-group-addon{
+  padding-top:10px;
+}
+.info{
+  padding-top:10px;
+  padding-left: 5px;
+  display: block;
+  color: #d9534f;
+}
 .login, .reset{
   width: 142px;
   margin-bottom: 30px;

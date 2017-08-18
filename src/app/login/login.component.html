@@ -2,54 +2,45 @@
   <div class="container">
     <h1>Z3</h1>
     <h4>SQL质量管控平台</h4>
-    <form [formGroup]="loginForm">
-
-      <!--<nav class="navbar navbar-light bg-light">-->
-        <!--<form class="form-inline">-->
-          <!--<div class="input-group">-->
-            <!--<span class="input-group-addon fa fa-user" id="basic-addon1" ></span>-->
-            <!--<input type="text" class="form-control" placeholder="用户名" aria-label="Username" aria-describedby="basic-addon1">-->
-          <!--</div>-->
-          <!--<div *ngIf="formErrors['name']" class="alert alert-danger">-->
-            <!--{{formErrors['name']}}-->
-          <!--</div>-->
-        <!--</form>-->
-      <!--</nav>-->
-      <!--<nav class="navbar navbar-light bg-light">-->
-        <!--<form class="form-inline">-->
-          <!--<div class="input-group">-->
-            <!--<span class="input-group-addon fa fa-lock" id="basic-addon2"></span>-->
-            <!--<input type="password" class="form-control" placeholder="密码" aria-label="password" aria-describedby="basic-addon2">-->
-          <!--</div>-->
-          <!--<div *ngIf="formErrors.password" class="alert alert-danger">-->
-            <!--{{formErrors.password}}-->
-          <!--</div>-->
-        <!--</form>-->
-      <!--</nav>-->
-
+    <form [formGroup]="loginForm"  novalidate>
       <div class="form-group" >
-        <div class="input-group">
+        <div class="input-group" [ngClass]="{'has-danger': (loginForm.get('name').invalid && loginForm.get('name').dirty)|| (loginForm.get('name').invalid &&loginForm.get('name').touched)}" >
           <span class="fa fa-user input-group-addon"></span>
-          <input type="text" class="form-control" id="name" required  name="name" formControlName="name" placeholder="用户名">
+          <input formControlName="name" type="text" class="form-control" id="name"  name="name"  placeholder="用户名" >
+          <span class="fa fa-info-circle info" *ngIf="loginForm.get('name').invalid && loginForm.get('name').touched && loginForm.hasError('required','name') "
+                data-target="tooltip" title="这是必填项" >
+          </span>
+          <span class="fa fa-info-circle info" *ngIf="loginForm.hasError('minlength','name')" data-target="tooltip"
+                title="用户名的长度不得少于4位" >
+          </span>
+
           <!--<span class="help-block small">用户名输入有误</span>-->
         </div>
-        <div *ngIf="formErrors['name']" class="alert alert-danger">
-          {{formErrors['name']}}
-        </div>
+        <!--<div *ngIf="formErrors['name']" class="alert alert-danger">-->
+          <!--{{formErrors['name']}}-->
+        <!--</div>-->
       </div>
-      <div class="form-group">
-        <div class="input-group">
+      <div class="form-group" >
+        <div class="input-group" [class.has-danger]="(loginForm.get('password').invalid && loginForm.get('password').dirty) ||(loginForm.get('password').invalid && loginForm.get('password').touched) ">
           <span class="fa fa-lock input-group-addon"></span>
-          <input type="password" class="form-control" id="password" required  name="password" formControlName="password" placeholder="密码">
+          <input  formControlName="password" type="password" class="form-control" id="password"  name="password" placeholder="密码">
+          <span class="fa fa-info-circle info" *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched && loginForm.hasError('required','password') "
+                data-target="tooltip" title="这是必填项" >
+          </span>
+          <span class="fa fa-info-circle info" *ngIf="loginForm.hasError('minlength','password')" data-target="tooltip"
+                title="密码的长度不得少于6位" >
+          </span>
+
+          <!--<span class="fa fa-info-circle info" *ngIf="formErrors.password " data-target="tooltip" title=" {{formErrors.password}}"></span>-->
           <!--<span class="help-block small">密码输入有误</span>-->
         </div>
-        <div *ngIf="formErrors.password" class="alert alert-danger">
-          {{formErrors.password}}
-        </div>
+        <!--<div *ngIf="formErrors.password" class="alert alert-danger">-->
+          <!--{{formErrors.password}}-->
+        <!--</div>-->
       </div>
       <!--<button  class="btn btn-success  login" [disabled]="!loginForm.valid" routerLink="/header/system" routerLinkActive="active">登录</button>-->
       <button  class="btn btn-success  login" [disabled]="!loginForm.valid" routerLink="/header/system" routerLinkActive="active">登录</button>
-      <button  class="btn btn-light reset" href="#">取消</button>
+      <button  class="btn btn-light reset" (click)="cancel()">取消</button>
     </form>
   </div>
 </div>
