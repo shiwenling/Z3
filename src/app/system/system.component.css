@@ -1,0 +1,9 @@
+  .modal-body .form-group .col-sm-1{
+    padding-left: 13px;
+    flex: none;
+  }
+  .modal-body .form-group .col-sm-9{
+    flex: none;
+    padding-right: 0;
+
+  }

@@ -3,11 +3,12 @@ import { SystemService } from './system.service';
 import {System} from './system';
 // import {Subject} from 'rxjs/Subject';
 
-import { FormControl} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import {User} from './user';
+import { nameAsyncValidator} from '../validator/validators';
 
 @Component({
   selector: 'app-system',
@@ -32,6 +33,7 @@ export class SystemComponent implements OnInit {
   public  titleFilter: FormControl = new FormControl();
   public  keyword: string;
   //弹框form参数
+  sysform: FormGroup;
   sysnameValue: string;
   sysPeopleValue: string;
   sysDescValue: string;
@@ -40,9 +42,28 @@ export class SystemComponent implements OnInit {
   dbSearch:string;
   sysnameSearch:string;
 
+
+
+  formErrors = {
+    'sysname': '',
+    'comments': ''
+  };
+  validationMessages = {
+    'name': {
+      'required': '应用系统名称不能为空',
+      'maxlength': '应用系统名称的长度不得超过21',
+      'pattern': '应用系统名称只可包含中文、英文字符、数字或下划线，不可包含空格'
+    },
+    'comments': {
+      'maxlength': '备注说明长度不可大于40',
+    }
+  };
+
+
   constructor(
     private systemService: SystemService,
     private changeDetectorRef: ChangeDetectorRef,
+    fb: FormBuilder
 
   ) {
     this.titleFilter.valueChanges
@@ -50,13 +71,38 @@ export class SystemComponent implements OnInit {
       .subscribe(
         value => this.keyword = value
       );
+    this.sysform = fb.group({
+      sysId:[''],
+      // sysname: ['', [Validators.required, Validators.maxLength(21), Validators.pattern("^[\u4e00-\u9fa5\w\-]+$")]],
+      sysname: ['', [Validators.required,  nameAsyncValidator]],
+      principal: [''],
+      comments:['']
+    })
 
   }
+
+
+
   ngOnInit(): void {
     this.getSystems();
     this.getUsers();
     this. pagination();
+    this.sysform.valueChanges.subscribe(data => this.onValueChanged(data));
   }
+  onValueChanged(data) {
+    for (const field in this.formErrors) {
+      this.formErrors[field] = '';
+      const control = this.sysform.get(field);
+      if (control && control.dirty && !control.valid && control.touched ) {
+        const messages = this.validationMessages[field];
+        for (const key in control.errors) {
+          this.formErrors[field] += messages[key] + '';
+        }
+      }
+    }
+  }
+
+
   getSystems(): void {
      this.systemService.getSystems().subscribe(systems => this.systems = systems);
   }
@@ -95,34 +141,31 @@ export class SystemComponent implements OnInit {
   }
 
   save(sysform){
-    const sys = sysform.form.value;
+    const sys = sysform.value;
     // console.log(sysform);
-    if (sys.id) {
-      this.systemService.update(sys,sys.id).subscribe(system => {
+    if (sys.sysId) {
+      this.systemService.update(sys,sys.sysId).subscribe(system => {
         for(this.system of this.systems) {
-          if(this.system.id === system.id) {
+          if(this.system.sysId === system.sysId) {
             this.system.sysname = system.sysname;
             this.system.principal = system.principal;
             this.system.comments = system.comments;
           }
         }
-      })
+      });
     }else {
       if(sysform.valid){
         // console.log(sysform.form);
         this.systemService.create(sys).subscribe(system => {
           this.systems.push(system);
         } );
-        sysform.form.reset();
-
       }
-
     }
   }
 
   delete(system: System): void{
     this.systemService
-      .delete(system.id)
+      .delete(system.sysId)
       .subscribe(() => {
         this.systems = this.systems.filter(s => s !== system);
         if (this.selectedSystem === system) { this.selectedSystem = null; }

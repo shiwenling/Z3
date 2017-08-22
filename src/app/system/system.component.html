@@ -4,7 +4,6 @@
     <div class="panel-body">
       <div class="list-op" id="list_op">
         <form class="form-inline" #searchform="ngForm" >
-          <!--<form class="form-inline" #searchform="ngForm" >-->
           <div class="form-group">
             <label for="sysnameSearch" class="control-label" >应用系统：</label>
             <!--<input type="text" #searchSys name="sysname" class="form-control" (keyup)="search(searchSys.value)" -->
@@ -15,7 +14,6 @@
             <label for="dbSearch" class="control-label" >数据库：</label>
             <input type="text" name="dbname" ngModel [value]="dbSearch" id="dbSearch" class="form-control" placeholder="数据库名称" (keyup)=search(searchform)>
           </div>
-          <!--</form>-->
           <div class="form-group ">
             <button type="button" class="btn btn-secondary" (click)="search(searchform)">
               <span class="fa fa-search " aria-hidden="true"></span>查询
@@ -78,7 +76,7 @@
 
   <!--modal-->
   <!--应用系统modal-->
-  <div class="modal fade"  id="addModal" tabindex="-1" role="dialog" aria-labelledby="sysModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="sysModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -88,37 +86,51 @@
           </button>
         </div>
         <div class="modal-body">
-          <form class="form-horizontal"   #sysform="ngForm" >
+          <form class="form-horizontal"  [formGroup]="sysform"  novalidate >
             <div class="form-group row" hidden>
               <label  for="sysid" class="col-sm-2 control-label ">id：</label>
               <div class="col-sm-10">
-                <input  type="text" class="form-control" id="sysid"  [(ngModel)]="sysidValue" name="id">
+                <input  type="text" class="form-control" id="sysid"  [(ngModel)]="sysidValue" name="sysId" formControlName="sysId">
               </div>
             </div>
             <div class="form-group row">
               <label  for="sysName" class="col-sm-2 control-label ">应用系统：</label>
-              <div class="col-sm-10">
-                <input  type="text" class="form-control" id="sysName" placeholder="请输入应用系统名称" [(ngModel)]="sysnameValue" name="sysname">
+              <div class="col-sm-9" [ngClass]="{'has-danger': sysform.get('sysname').invalid && (sysform.get('sysname').touched ||sysform.get('sysname').dirty ) }">
+                <input  type="text" class="form-control" id="sysName" placeholder="请输入应用系统名称" [(ngModel)]="sysnameValue"
+                        name="sysname" formControlName="sysname" maxlength="21">
+              </div>
+              <div class="col-sm-1">
+                 <span class="fa fa-info-circle info" *ngIf="sysform.get('sysname').invalid && sysform.get('sysname').touched && sysform.hasError('required','sysname')"
+                       data-target="tooltip" title="应用系统名称不能为空" >
+                 </span>
+                 <span class="fa fa-info-circle info" *ngIf=" sysform.hasError('namevalid','sysname') && sysform.get('sysname').value" data-target="tooltip"
+                        title="应用系统名称只可包含中文、英文字符、数字或下划线，不可包含空格" >
+                 </span>
+
+                <!--<span class="fa fa-info-circle info" *ngIf="sysform.get('sysname').invalid && (sysform.get('sysname').touched ||sysform.get('sysname').dirty )" data-target="tooltip"-->
+                      <!--title="{{formErrors['sysname']}} ">-->
+                 <!--</span>-->
               </div>
             </div>
             <div class="form-group row">
               <label  class="col-sm-2 control-label">负责人:</label>
-              <div class="col-sm-10">
-                <select class="form-control" [(ngModel)]="sysPeopleValue" name = "principal">
+              <div class="col-sm-9">
+                <select class="form-control" [(ngModel)]="sysPeopleValue" name = "principal" formControlName="principal">
                   <option *ngFor="let user of users">{{user.name}}</option>
                 </select>
               </div>
             </div>
             <div class="form-group row">
               <label for="sysDiscribe" class="col-sm-2 control-label">描述：</label>
-              <div class="col-sm-10">
-                <textarea [(ngModel)]="sysDescValue" name = "comments" class="form-control" id="sysDiscribe"  row="10" placeholder="请输入应用系统的描述说明，长度不可大于40个字符"></textarea>
+              <div class="col-sm-9" >
+                <textarea [(ngModel)]="sysDescValue" formControlName="comments" name = "comments" class="form-control"
+                          id="sysDiscribe"  row="10" placeholder="请输入应用系统的描述说明，长度不可大于40个字符" maxlength="40"></textarea>
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary " (click)="save(sysform)" data-dismiss="modal">保存</button>
+          <button type="submit" class="btn btn-primary " [disabled]="!sysform.valid"  (click)="save(sysform)" data-dismiss="modal">保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->

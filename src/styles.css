@@ -92,6 +92,14 @@ table {
 .fa-edit:hover,.fa-trash:hover, .fa-link:hover, .fa-retweet:hover, .fa-eye:hover, .fa-newspaper-o:hover, .fa-snowflake-o:hover, .fa-flag:hover{
   color: #F2A53A;
 }
+/*错误提示图标*/
+.info{
+  padding-top:10px;
+  padding-left: 5px;
+  display: block;
+  color: #d9534f;
+}
+
 /*操作按钮*/
 .action{
   margin-right:15px;

@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     for (const field in this.formErrors) {
       this.formErrors[field] = '';
       const control = this.loginForm.get(field);
-      if (control && control.dirty && !control.valid && control.touched) {
+      if (control && control.dirty && !control.valid && control.touched ) {
         const messages = this.validationMessages[field];
         for (const key in control.errors) {
           this.formErrors[field] += messages[key] + '';

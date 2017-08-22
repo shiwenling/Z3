@@ -2,9 +2,9 @@
  * Created by TP on 2017/8/4.
  */
 export class Module {
-  id: number;
+  moduleId: number;
   sysname: string;
-  modulenamae: string;
+  modulename: string;
   principal: string;
   comments: string;
 }

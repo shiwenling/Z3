@@ -4,19 +4,21 @@
     <!--<div class="panel-heading">Panel heading</div>-->
       <div class="panel-body">
         <div class="list-op" id="list_op">
-          <form class="form-inline">
+          <form class="form-inline" #searchform="ngForm" novalidate>
             <div class="form-group">
-              <label >应用系统：</label>
-              <select>
-                <option *ngFor="let module of modules">{{module.sysname}}</option>
+              <label for="sysnameSearch" class="control-label"  >应用系统：</label>
+              <select  name="sysname"  ngModel id="sysnameSearch" class="form-control" [(ngModel)]="sysnameSearch" (change)="search(searchform)">
+                <option selected="selected">不限</option>
+                <option *ngFor="let item of sysnames"  >{{item}}</option>
               </select>
             </div>
             <div class="form-group">
-              <label >应用模块：</label>
-              <input type="text"  class="form-control" placeholder="应用模块名称">
+              <label  for="moduleSearch" class="control-label" >应用模块：</label>
+              <input type="text" name="modulename"   ngModel [value]="moduleSearch" class="form-control"
+                     placeholder="应用模块名称" id="moduleSearch" (keyup)="search(searchform)">
             </div>
             <div class="form-group">
-              <button type="button" class="btn btn-secondary " >
+              <button type="button" class="btn btn-secondary "  (click)="search(searchform)">
                 <span class="fa fa-search " aria-hidden="true"></span>查询
               </button>
               <span>|</span>
@@ -24,7 +26,7 @@
                 <span class="fa fa-plus" aria-hidden="true" ></span>新增
               </button>
               <span>|</span>
-              <button type="button" class="btn btn-secondary " >
+              <button type="button" class="btn btn-secondary "  (click)="refreshModule()">
                 <span class="fa fa-refresh" aria-hidden="true" ></span>刷新
               </button>
             </div>
@@ -34,6 +36,7 @@
           <tr>
             <td></td>
             <td>编号</td>
+            <td hidden>模块id</td>
             <td>模块名称</td>
             <td>应用系统</td>
             <td>创建人 </td>
@@ -43,15 +46,16 @@
           <tr  *ngFor="let module of modules | slice:start:end; let i =index;">
             <td><input type="checkbox" ></td>
             <td>{{i+1}}</td>
+            <td hidden>{{module.moduleId}}</td>
             <td>{{module.modulename}}</td>
             <td>{{module.sysname}}</td>
-            <td>{{module.principal}}</td>
-            <td>{{module.comments}}</td>
+            <td>{{module.principal ? module.principal : '--'}}</td>
+            <td title={{module.comments}}>{{module.comments ? module.comments : '--'}}</td>
             <td>
-              <a class="action" data-toggle="modal" data-target="#addModule" (click)="setTitle('修改模块')">
+              <a class="action" data-toggle="modal" data-target="#addModule" (click)="setTitle('修改模块',module)">
                 <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
               </a>
-              <a class="action">
+              <a class="action" (click)="deleteModule(module)">
                 <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
               </a>
             </td>
@@ -84,7 +88,7 @@
             <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#schemaModal">
               <span class="fa fa-plus" aria-hidden="true" ></span>新增
             </button>
-            <button type="button" class="btn btn-secondary " >
+            <button type="button" class="btn btn-secondary " (click)="refreshSchema()" >
               <span class="fa fa-refresh" aria-hidden="true" ></span>刷新
             </button>
           </form>
@@ -92,6 +96,7 @@
         <table class="table table-striped table-hover" >
           <tr>
             <td><input type="checkbox" [(ngModel)]="isChecked"></td>
+            <td hidden>数据库id</td>
             <td>数据库名</td>
             <td>SCHEMA</td>
             <td>密码状态 </td>
@@ -99,18 +104,19 @@
             <td>描述</td>
             <td>操作</td>
           </tr>
-          <tr  *ngFor="let schematable of schematables | slice:start1:end1" >
+          <tr  *ngFor="let schema of schemas | slice:start1:end1" >
             <td><input type="checkbox" [checked]="isChecked"></td>
-            <td>{{schematable.dbname}}</td>
-            <td>{{schematable.schema}}</td>
-            <td>{{schematable.psdstate}}</td>
-            <td>{{schematable.function}}</td>
-            <td>{{schematable.comments}}</td>
+            <td hidden>{{schema.dbPk}}</td>
+            <td>{{schema.dbname}}</td>
+            <td>{{schema.schema}}</td>
+            <td>{{schema.psdstate}}</td>
+            <td>{{schema.function}}</td>
+            <td title={{schema.comments}}>{{schema.comments ? schema.comments : '--'}}</td>
             <td>
               <a class="action" >
                 <i class="fa fa-retweet" data-toggle="tooltip" title="测试链接"></i>
               </a>
-              <a class="action">
+              <a class="action" (click)="deleteSchema(schema)">
                 <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
               </a>
             </td>
@@ -131,7 +137,7 @@
             <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#tableModal" (click)="setTitle('新增核心表')">
               <span class="fa fa-plus" aria-hidden="true" ></span>新增
             </button>
-            <button type="button" class="btn btn-secondary " >
+            <button type="button" class="btn btn-secondary " (click)="refreshCoreTable()">
               <span class="fa fa-refresh" aria-hidden="true" ></span>刷新
             </button>
           </form>
@@ -139,19 +145,21 @@
         <table class="table table-striped table-hover" >
           <tr>
             <td><input type="checkbox" [(ngModel)]="isChecked"></td>
+            <td hidden>表id</td>
             <td>表名</td>
             <td>描述</td>
             <td>操作</td>
           </tr>
-          <tr  *ngFor="let schematable of schematables | slice:start1:end1 ">
+          <tr  *ngFor="let coretable of coretables | slice:start1:end1 ">
             <td><input type="checkbox" [checked]="isChecked"></td>
-            <td>{{schematable.tablename}}</td>
-            <td>{{schematable.comments}}</td>
+            <td hidden>{{coretable.coreTableId}}</td>
+            <td>{{coretable.tablename}}</td>
+            <td title={{coretable.tablecomments}}>{{coretable.tablecomments ? coretable.tablecomments : '--' }}</td>
             <td>
-              <a class="action" data-toggle="modal" data-target="#tableModal" (click)="setTitle('修改核心表')">
+              <a class="action" data-toggle="modal" data-target="#tableModal" (click)="setTitle('修改核心表','' ,coretable)">
                 <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
               </a>
-              <a class="action">
+              <a class="action" (click)="deleteTable(coretable)">
                 <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
               </a>
             </td>
@@ -178,39 +186,57 @@
           </button>
         </div>
         <div class="modal-body">
-          <form class="form-horizontal">
+          <form class="form-horizontal" [formGroup]="moduleform" novalidate>
+            <div class="form-group row" hidden>
+              <label for="moduleId" class="col-sm-2 control-label ">模块id：</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="moduleId"  name="moduleId" formControlName="moduleId"
+                       [(ngModel)]="moduleidValue">
+              </div>
+            </div>
             <div class="form-group row">
               <label for="moduleName" class="col-sm-2 control-label ">模块名称：</label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control" id="moduleName" placeholder="请输入模块名称">
+              <div class="col-sm-9" [ngClass]="{'has-danger': moduleform.get('modulename').invalid && (moduleform.get('modulename').touched ||moduleform.get('modulename').dirty ) }">
+                <input type="text" class="form-control" id="moduleName"  name="modulename" formControlName="modulename"
+                       placeholder="请输入模块名称" [(ngModel)]="modulenameValue"   maxlength="40">
+              </div>
+              <div class="col-sm-1">
+                 <span class="fa fa-info-circle info" *ngIf="moduleform.get('modulename').invalid && moduleform.get('modulename').touched && moduleform.hasError('required','modulename')"
+                       data-target="tooltip" title="应用系统名称不能为空" >
+                 </span>
+                 <span class="fa fa-info-circle info" *ngIf=" moduleform.hasError('namevalid','modulename') && moduleform.get('modulename').value" data-target="tooltip"
+                    title="应用系统名称只可包含中文、英文字符、数字或下划线，不可包含空格" >
+                 </span>
               </div>
             </div>
             <div class="form-group row">
               <label  class="col-sm-2 control-label">应用系统:</label>
-              <div class="col-sm-10">
-                <select class="form-control" >
-                  <option *ngFor="let module of modules">{{module.sysname}}</option>
+              <div class="col-sm-9">
+                <select class="form-control" [(ngModel)]="sysnameValue" name = "sysname" formControlName="sysname"  >
+                  <option *ngFor="let item of sysnames"  >{{item}}</option>
+                  <!--<option *ngFor="let module of modules">{{module.sysname}}</option>-->
                 </select>
               </div>
             </div>
             <div class="form-group row">
               <label  class="col-sm-2 control-label">负责人:</label>
-              <div class="col-sm-10">
-                <select class="form-control" >
+              <div class="col-sm-9">
+                <select class="form-control" [(ngModel)]="modulePeopleValue" name = "principal" formControlName="principal">
                   <option *ngFor="let module of modules">{{module.principal}}</option>
                 </select>
               </div>
             </div>
             <div class="form-group row">
               <label for="moduleDiscribe" class="col-sm-2 control-label">描述：</label>
-              <div class="col-sm-10">
-                <textarea  class="form-control" id="moduleDiscribe"  row="10" placeholder="请输入应用模块的描述说明，长度不可大于40个字符"></textarea>
+              <div class="col-sm-9" >
+                <textarea [(ngModel)]="moduleDescValue" formControlName="comments" name = "comments" class="form-control"
+                          id="moduleDiscribe"  row="10" placeholder="请输入应用模块的描述说明，长度不可大于40个字符"  maxlength="40"></textarea>
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary ">保存</button>
+          <button type="button" class="btn btn-primary " [disabled]="!moduleform.valid"  (click)="save(moduleform)" data-dismiss="modal">保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->
@@ -231,19 +257,21 @@
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="list-op" >
-                <form class="form-inline">
+                <form class="form-inline" #searchSchemaform="ngForm" novalidate>
                   <div class="form-group ">
                     <label >DB名称：</label>
-                    <select>
-                      <option *ngFor="let schematable of schematables">{{schematable.dbname}}</option>
+                    <select name="dbname" [(ngModel)]="dbnameSearch" (change)="searchSchema(searchSchemaform)">
+                      <option selected="selected">不限</option>
+                      <option *ngFor="let item of dbnames">{{item}}</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label >Schema名：</label>
-                    <input type="text"  class="form-control" >
+                    <label for="schemaSearch" >Schema名：</label>
+                    <input id="schemaSearch" type="text"  class="form-control" name="schema" ngModel
+                           (keyup)= "searchSchema(searchSchemaform)" placeholder="请输入Schema名称">
                   </div>
                   <div class="form-group ">
-                    <button type="button" class="btn btn-secondary" >
+                    <button type="button" class="btn btn-secondary" (click)="searchSchema(searchSchemaform)">
                       <span class="fa fa-search " aria-hidden="true"></span>查询
                     </button>
                   </div>
@@ -252,21 +280,28 @@
               <table class="table table-striped table-hover" >
                 <tr>
                   <td><input type="checkbox" [(ngModel)]="isChecked"></td>
+                  <td hidden>数据库id</td>
                   <td>数据库名</td>
+                  <td hidden>SchemaId</td>
                   <td>Schema名</td>
                   <td>密码状态 </td>
                 </tr>
-                <tr  *ngFor="let schematable of schematables | slice:start1:end1">
+                <tr  *ngFor="let schema of schemas | slice:start1:end1">
                   <td><input type="checkbox" [checked]="isChecked"></td>
-                  <td>{{schematable.dbname}}</td>
-                  <td>{{schematable.schema}}</td>
-                  <td>{{schematable.psdstate}}</td>
+                  <td hidden>{{schema.dbPk}}</td>
+                  <td>{{schema.dbname}}</td>
+                  <td hidden>{{schema.schemaId}}</td>
+                  <td>{{schema.schema}}</td>
+                  <td>{{schema.psdstate}}</td>
                 </tr>
               </table>
               <ngb-pagination [collectionSize]="chooseSchemaItems" [pageSize]="pageSize" [(page)]="page" [boundaryLinks]="true" [maxSize]="7"
                               [rotate]="true" (pageChange)="getPage(page)">
 
               </ngb-pagination>
+              <div>
+                <p class="note">提示：未设置密码的Schema，请到数据库管理页面中设置！</p>
+              </div>
             </div>
           </div>
         </div>
@@ -289,23 +324,46 @@
           </button>
         </div>
         <div class="modal-body">
-          <form class="form-horizontal">
-            <div class="form-group row">
-              <label for="sysName" class="col-sm-2 control-label ">核心表：</label>
+          <form class="form-horizontal" [formGroup]="coretableform" novalidate>
+            <div class="form-group row" hidden>
+              <label for="coreTableId" class="col-sm-2 control-label ">核心表id：</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="sysName" placeholder="请输入核心表名称">
+                <input type="text" class="form-control" id="coreTableId" [(ngModel)]="coretableIdValue" formControlName="coreTableId" name = "coreTableId">
+              </div>
+            </div>
+            <div class="form-group row" hidden>
+              <label for="coretableModuleId" class="col-sm-2 control-label ">模块id：</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="coretableModuleId" >
               </div>
             </div>
             <div class="form-group row">
-              <label for="sysDiscribe" class="col-sm-2 control-label">描述：</label>
-              <div class="col-sm-10">
-                <textarea  class="form-control" id="sysDiscribe"  row="10" placeholder="请输入核心表的描述说明，长度不可大于40个字符"></textarea>
+              <label for="coretable" class="col-sm-2 control-label ">核心表：</label>
+              <div class="col-sm-9" [ngClass]="{'has-danger': coretableform.get('tablename').invalid && (coretableform.get('tablename').touched ||coretableform.get('tablename').dirty ) }">
+                <input type="text" class="form-control" id="coretable" name="tablename" formControlName="tablename"
+                       placeholder="请输入核心表名称" maxlength="26" [(ngModel)]="coretablenameValue">
+              </div>
+              <div class="col-sm-1">
+                 <span class="fa fa-info-circle info" *ngIf="coretableform.get('tablename').invalid && coretableform.get('tablename').touched && coretableform.hasError('required','tablename')"
+                       data-target="tooltip" title="核心表名称不能为空" >
+                 </span>
+                <span class="fa fa-info-circle info" *ngIf=" coretableform.hasError('pattern','tablename') && coretableform.get('tablename').value" data-target="tooltip"
+                      title="核心表名称只可包含英文字符、数字或下划线" >
+                 </span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="coratableDiscribe" class="col-sm-2 control-label">描述：</label>
+              <div class="col-sm-9">
+                <textarea  class="form-control" id="coratableDiscribe"  row="10" placeholder="请输入核心表的描述说明，长度不可大于40个字符"
+                           maxlength="40" [(ngModel)]="coretableDescValue" formControlName="tablecomments" name = "tablecomments" >
+                </textarea>
               </div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary ">保存</button>
+          <button type="button" class="btn btn-primary " [disabled]="!coretableform.valid"  (click)="saveCoretable(coretableform)" data-dismiss="modal">保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->

@@ -23,6 +23,31 @@
 .nav-tabs .nav-item.active {
   border-color: #ddd #ddd #fff;
 }
+.nav-tabs .nav-link {
+  border: none;
+  cursor: default;
+}
+/*弹框验证样式*/
+.modal-body .form-group .col-sm-1{
+  padding-left: 13px;
+  flex: none;
+}
+.modal-body .form-group .col-sm-9{
+  flex: none;
+  padding-right: 0;
+
+}
+/*schema弹框*/
+#schemaModal .modal-dialog {
+  max-width: 600px;
+}
+#schemaModal  #schemaSearch{
+  width:135px;
+}
+/*标红字体*/
+.note{
+  color:red;
+}
 
 
 

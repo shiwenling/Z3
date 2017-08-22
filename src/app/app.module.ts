@@ -18,13 +18,15 @@ import { FooterComponent } from './footer/footer.component';
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {TableService} from './table/table.service';
 import {ObjectService} from './project/object.service';
+import {DbModalComponent} from './system/modal/db-modal/db-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    DbModalComponent
 
   ],
   imports: [
