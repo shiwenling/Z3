@@ -3,7 +3,7 @@
  */
 export class User {
   userId: number;
-  name: string;
+  username: string;
   role: string;
   email: string;
 

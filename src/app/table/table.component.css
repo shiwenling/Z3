@@ -27,6 +27,32 @@
 }
 
 /*弹框的上层弹框*/
-#moduleModal{
-  background-color: rgba(128,128,128,0.5);
+#moduleModal, #memberModal{
+  background-color: rgba(128,128,128,0.1);
+  /*background-color: rgba(0,0,0,0.5);*/
+
+}
+
+
+/*只读输入框的样式*/
+.form-control[readonly]{
+  background:none;
+}
+
+
+/*弹框验证样式*/
+.modal-body .form-group .col-sm-1{
+  padding-left: 13px;
+  flex: none;
+}
+.modal-body .form-group .col-sm-9{
+  flex: none;
+  padding-right: 0;
+
+}
+
+/*新增项目弹窗 按钮后面红色感叹号的样式*/
+.info-pro{
+  display: block;
+  margin-left: 9px;
 }

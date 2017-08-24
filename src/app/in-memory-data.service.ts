@@ -49,33 +49,63 @@ export class InMemoryDataService implements InMemoryDbService {
         gmtModified: '2016-12-30 10:38:14', comments: '--', role: '开发', email: 'dev@enmotech.com',
         dbname: 'ffff', host: 'oel6idb', function: '开发'},
     ];
+    const dbs = [
+      {dbPk: 0,  comments: '1111', dbname: 'aaa', host: 'oel6idb', function: '开发'},
+      {dbPk: 1,  comments: 'rrrrrrr',
+        dbname: 'dbbbt', host: 'oel6idb', function: '开发'},
+      {dbPk: 2, comments: 'jrt54654656fg',
+        dbname: 'ccc', host: 'oel6idb', function: '开发'},
+      {dbPk: 3,  comments: '',
+        dbname: 'ccc', host: 'oel6idb', function: '开发'},
+      {dbPk: 4,  comments: '--',
+        dbname: 'ccc', host: 'oel6idb', function: '开发'},
+      {dbPk: 5,  comments: '--',
+        dbname: 'ee', host: 'oel6idb', function: '开发'},
+      {dbPk: 6,  comments: '',
+        dbname: 'ddltest', host: 'oel6idb', function: '开发'},
+      {dbPk: 7, comments: '',
+        dbname: 'ddltest', host: 'oel6idb', function: '开发'},
+      {dbPk: 8, comments: '',
+        dbname: 'eee', host: 'oel6idb', function: '开发'},
+      {dbPk: 9,  comments: '--',
+        dbname: 'ddltest', host: 'oel6idb', function: '开发'},
+      {dbPk: 10, comments: '--',
+        dbname: 'ddltest', host: 'oel6idb', function: '开发'},
+      {dbPk: 11,  comments: '--',
+        dbname: 'ddltest', host: 'oel6idb', function: '开发'},
+      {dbPk: 12,  comments: '--',
+        dbname: 'ddltest', host: 'oel6idb', function: '开发'},
+      {dbPk: 13,  comments: '--',
+        dbname: 'ffff', host: 'oel6idb', function: '开发'},
+
+    ];
     const users = [
-      {userId: 0, name: 'ddd',  role: '开发', email: 'dev@enmotech.com'},
-      {userId: 1, name: 'dba', role: '开发', email: 'dev@enmotech.com'
+      {userId: 0, username: 'ddd',  role: '开发', email: 'dev@enmotech.com'},
+      {userId: 1, username: 'dba', role: '开发', email: 'dev@enmotech.com'
        },
-      {userId: 2, name: 'abc', role: '开发', email: 'dev@enmotech.com'
+      {userId: 2, username: 'abc', role: '开发', email: 'dev@enmotech.com'
        },
-      {userId: 3, name: 'eee', role: '开发', email: 'dev@enmotech.com'
+      {userId: 3, username: 'eee', role: '开发', email: 'dev@enmotech.com'
        },
-      {userId: 4, name: '333',  role: '开发', email: 'dev@enmotech.com'
+      {userId: 4, username: '333',  role: '开发', email: 'dev@enmotech.com'
         },
-      {userId: 5, name: '222',  role: '开发', email: 'dev@enmotech.com'
+      {userId: 5, username: '222',  role: '开发', email: 'dev@enmotech.com'
         },
-      {userId: 6, name: 'dev',  role: '开发', email: 'dev@enmotech.com'
+      {userId: 6, username: 'dev',  role: '开发', email: 'dev@enmotech.com'
         },
-      {userId: 7, name: 'aaa', role: '开发', email: 'dev@enmotech.com'
+      {userId: 7, username: 'aaa', role: '开发', email: 'dev@enmotech.com'
         },
-      {userId: 8, name: 'bbb', role: '开发', email: 'dev@enmotech.com'
+      {userId: 8, username: 'bbb', role: '开发', email: 'dev@enmotech.com'
         },
-      {userId: 9, name: 'deadvv', role: '开发', email: 'dev@enmotech.com'
+      {userId: 9, username: 'deadvv', role: '开发', email: 'dev@enmotech.com'
        },
-      {userId: 10, name: 'dev', role: '开发', email: 'dev@enmotech.com'
+      {userId: 10, username: 'dev', role: '开发', email: 'dev@enmotech.com'
         },
-      {userId: 11, name: 'dev',  role: '开发', email: 'dev@enmotech.com'
+      {userId: 11, username: 'dev',  role: '开发', email: 'dev@enmotech.com'
        },
-      {userId: 12, name: 'dev',  role: '开发', email: 'dev@enmotech.com'
+      {userId: 12, username: 'dev',  role: '开发', email: 'dev@enmotech.com'
         },
-      {userId: 13, name: 'dev',  role: '开发', email: 'dev@enmotech.com'
+      {userId: 13, username: 'dev',  role: '开发', email: 'dev@enmotech.com'
         },
     ];
     const modules = [
@@ -143,51 +173,51 @@ export class InMemoryDataService implements InMemoryDbService {
       {coreTableId: 35, tablename:'Test' ,tablecomments :'--'}
     ];
     const projects = [
-      {projectId: 10, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 10, projectname:'zen项目迁移', sysname: 'dev', moduleId:22, userId:57, modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+        gmtModified: '2016-12-30 10:38:14', comments: '--', state:'冻结',members:'pusheng,swl,zone_dev,angular'},
+      {id: 12, projectname:'ddd', sysname: 'ABC', moduleId:12, userId:58,  modulename:'Z3',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 12, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 14, projectname:'yr4', sysname: 'Z3', moduleId:32, userId:59,  modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 14, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 15, projectname:'dfdfd', sysname: 'Z3', moduleId:42, userId:34,  modulename:'Z3',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 15, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 16, projectname:'zen项目迁移', sysname: 'DDL', moduleId:52, userId:44,  modulename:'License',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 16, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 21, projectname:'gfgfg', sysname: 'dev',  moduleId:62, userId:43,  modulename:'License',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 21, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 23, projectname:'sss', sysname: 'dev',  moduleId:27, userId:74, modulename:'LICENSE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 23, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 26, projectname:'srg', sysname: 'Z3',  moduleId:28, userId:48, modulename:'ZEN',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 26, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 29, projectname:'fefe', sysname: 'dev',  moduleId:29, userId:49, modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 29, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 33, projectname:'aaa', sysname: 'DDL', moduleId:20, userId:66,  modulename:'MZ3',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 33, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 45, projectname:'avd', sysname: 'abc', moduleId:27, userId:67,  modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 45, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 44, projectname:'dgt', sysname: 'dev', moduleId:24, userId:68,  modulename:'MZ3',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 44, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 46, projectname:'ase', sysname: 'abc', moduleId:23, userId:60,  modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 46, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 31, projectname:'zen项目迁移', sysname: 'abn', moduleId:32, userId:37,  modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 31, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 7, projectname:'aqdcf', sysname: 'dev', moduleId:33, userId:24,  modulename:'License',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 7, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 52, projectname:'zen项目迁移', sysname: 'dev',  moduleId:34, userId:36, modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 52, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 42, projectname:'aaa', sysname: 'DDL', moduleId:35, userId:35,  modulename:'License',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 42, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 54, projectname:'aaa', sysname: 'dev',  moduleId:36, userId:34, modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 54, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 71, projectname:'aaa', sysname: 'dev', moduleId:43, userId:33,  modulename:'License',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 71, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 77, projectname:'zen项目迁移', sysname: 'dev',  moduleId:44, userId:21, modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 77, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 92, projectname:'zen项目迁移', sysname: 'dev',  moduleId:45, userId:22, modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 92, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 37, projectname:'zen项目迁移', sysname: 'dev', moduleId:56, userId:23,  modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 37, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
-        gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'},
-      {projectId: 49, projectname:'zen项目迁移', sysname: 'dev', modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
+      {id: 49, projectname:'zen项目迁移', sysname: 'dev', moduleId:58, userId:24,  modulename:'ZONE',creatror: 'mydba', principal: 'dev', gmtCreate: '2016-12-30 10:38:14',
         gmtModified: '2016-12-30 10:38:14', comments: '--', state:'活动',members:'["pusheng","swl","zone_dev","angular"]'}
 
     ];
@@ -340,6 +370,6 @@ export class InMemoryDataService implements InMemoryDbService {
       {id: 34, sequenceName: 'SEQ_COLLECT', lockState: '未锁', minValue: '1',   maxValue: '--',step:'1', cache:'20', cicle:'N', order:'N',
         tableNumber:'7',gmtCreate: '2016-12-30 10:38:14', comments: 'SNAP_ID序列'}
     ];
-    return {systems, users, modules, schemas,coretables, projects, objects, tables, sequences};
+    return {systems, dbs, users, modules, schemas,coretables, projects, objects, tables, sequences};
   }
 }

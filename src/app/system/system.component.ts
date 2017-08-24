@@ -9,6 +9,7 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import {User} from './user';
 import { nameAsyncValidator} from '../validator/validators';
+import {DB} from './db';
 
 @Component({
   selector: 'app-system',
@@ -18,6 +19,7 @@ import { nameAsyncValidator} from '../validator/validators';
 export class SystemComponent implements OnInit {
   systems: System[];
   users: User[];
+  dbs: DB[];
   system: System;
   selectedSystem: System;
   isChecked:boolean;
@@ -38,9 +40,11 @@ export class SystemComponent implements OnInit {
   sysPeopleValue: string;
   sysDescValue: string;
   sysidValue: number;
-  //搜索条参数
+  //应用系统搜索条参数
   dbSearch:string;
   sysnameSearch:string;
+  //关联数据库搜索参数
+  dbname: string;
 
 
 
@@ -85,6 +89,7 @@ export class SystemComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSystems();
+    this.getDBs();
     this.getUsers();
     this. pagination();
     this.sysform.valueChanges.subscribe(data => this.onValueChanged(data));
@@ -106,6 +111,10 @@ export class SystemComponent implements OnInit {
   getSystems(): void {
      this.systemService.getSystems().subscribe(systems => this.systems = systems);
   }
+  getDBs(): void {
+    this.systemService.getDBs().subscribe(dbs => this.dbs = dbs);
+  }
+
   getUsers(): void {
     this.systemService.getUsers().subscribe(users => this.users = users);
   }
@@ -119,7 +128,7 @@ export class SystemComponent implements OnInit {
   setTitle(tit:string, sys:any){
     this.title = tit;
     if (tit == '修改应用系统') {
-      this.sysidValue = sys.id;
+      this.sysidValue = sys.sysId;
       this.sysnameValue = sys.sysname;
       this. sysPeopleValue = sys.principal;
       this.sysDescValue = sys.comments;
@@ -134,10 +143,17 @@ export class SystemComponent implements OnInit {
   search(searchform){
     this.systemService.search(searchform.value).subscribe(systems => this.systems = systems);
   }
+  searchDB(searchDBform) {
+    this.systemService.searchDB(searchDBform.value).subscribe(dbs => this.dbs = dbs);
+  }
   refresh(){
     this.systemService.getSystems().subscribe(systems => this.systems = systems);
     this.sysnameSearch = '';
     this.dbSearch = '';
+  }
+  refreshDB() {
+    this.systemService.getDBs().subscribe(dbs => this.dbs = dbs);
+    this.dbname = '';
   }
 
   save(sysform){

@@ -14,3 +14,11 @@ export function nameAsyncValidator(control: FormControl): any {
   // return Observable.of(valid ? null : {sysnamevalid: true}).delay(5000);
   return valid ? null : {namevalid: true};
 }
+//表结构管理，项目名称校验
+export function peojectnameValidator(control: FormControl): any {
+  const myreg = /^[\u4e00-\u9fa5\w\.\-]+$/;
+  const valid = myreg.test(control.value);
+  // console.log('sysname的校验结果是：' + valid);
+  // return Observable.of(valid ? null : {sysnamevalid: true}).delay(5000);
+  return valid ? null : {projectnamevalid: true};
+}

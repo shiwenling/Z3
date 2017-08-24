@@ -8,12 +8,14 @@ import 'rxjs/add/operator/toPromise';
 import {User} from './user';
 import 'rxjs/Rx';
 import {Observable} from 'rxjs/Observable';
+import {DB} from './db';
 
 @Injectable()
 export  class SystemService {
 
   private headers = new Headers ({'Content-Type': 'application/json'});
   private systemsUrl = 'api/systems';
+  private dbsUrl = 'api/dbs';
   private usersUrl = 'api/users'; // URL to web api
   constructor(private http: Http) { }
   search(term: SystemSearchParams): Observable<System[]> {
@@ -35,12 +37,38 @@ export  class SystemService {
         .map(response => response.json().data as System[]);
     }
   }
+  searchUser(term:UsermSearchParams ): Observable<User[]> {
+    if(term.username==''){
+      return this.http.get(this.usersUrl)
+        .map(response => response.json().data as User[])
+        .catch(this.handleError);
+    }else if (term.username !=='' ){
+      return this.http.get(`api/users/?username=${term.username}`)
+        .map(response => response.json().data as User[]);
+    }
+  }
+  searchDB(term:DBSearchParams ): Observable<DB[]> {
+    if(term.dbname==''){
+      return this.http.get(this.dbsUrl)
+        .map(response => response.json().data as DB[])
+        .catch(this.handleError);
+    }else if (term.dbname !=='' ){
+      return this.http.get(`api/dbs/?dbname=${term.dbname}`)
+        .map(response => response.json().data as DB[]);
+    }
+  }
 
   getSystems(): Observable<System[]> {
     return this.http.get(this.systemsUrl)
       .map(response => response.json().data as System[])
       .catch(this.handleError);
   }
+  getDBs(): Observable<DB[]> {
+    return this.http.get(this.dbsUrl)
+      .map(response => response.json().data as DB[])
+      .catch(this.handleError);
+  }
+
 
   getUsers(): Observable<User[]> {
     return this.http.get(this.usersUrl)
@@ -112,3 +140,17 @@ export class SystemSearchParams {
   ){}
 
 }
+
+export class UsermSearchParams {
+  constructor(
+    public username:string,
+  ){}
+
+}
+export class DBSearchParams {
+  constructor(
+    public dbname:string,
+  ){}
+
+}
+

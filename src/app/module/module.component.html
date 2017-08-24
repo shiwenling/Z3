@@ -176,7 +176,7 @@
 
   <!--modal-->
   <!--应用模块modal-->
-  <div class="modal fade" id="addModule" tabindex="-1" role="dialog" aria-labelledby="moduleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="addModule" tabindex="-1" role="dialog" aria-labelledby="moduleModalLabel" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -202,10 +202,10 @@
               </div>
               <div class="col-sm-1">
                  <span class="fa fa-info-circle info" *ngIf="moduleform.get('modulename').invalid && moduleform.get('modulename').touched && moduleform.hasError('required','modulename')"
-                       data-target="tooltip" title="应用系统名称不能为空" >
+                       data-target="tooltip" title="模块名称不能为空" >
                  </span>
                  <span class="fa fa-info-circle info" *ngIf=" moduleform.hasError('namevalid','modulename') && moduleform.get('modulename').value" data-target="tooltip"
-                    title="应用系统名称只可包含中文、英文字符、数字或下划线，不可包含空格" >
+                    title="模块名称只可包含中文、英文字符、数字或下划线" >
                  </span>
               </div>
             </div>
@@ -244,7 +244,7 @@
   </div><!-- /.modal -->
 
   <!--关联schema modal-->
-  <div class="modal fade" id="schemaModal" tabindex="-1" role="dialog" aria-labelledby="schemaModalLabel" aria-hidden="true">
+  <div class="modal fade" id="schemaModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="schemaModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -314,7 +314,7 @@
   </div><!-- /.modal -->
 
   <!--核心表modal-->
-  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog" aria-labelledby="tableModalLabel" aria-hidden="true">
+  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog"data-backdrop="static"  aria-labelledby="tableModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -339,7 +339,8 @@
             </div>
             <div class="form-group row">
               <label for="coretable" class="col-sm-2 control-label ">核心表：</label>
-              <div class="col-sm-9" [ngClass]="{'has-danger': coretableform.get('tablename').invalid && (coretableform.get('tablename').touched ||coretableform.get('tablename').dirty ) }">
+              <div class="col-sm-9" [ngClass]="{'has-danger': coretableform.get('tablename').invalid &&
+              (coretableform.get('tablename').touched ||coretableform.get('tablename').dirty ) }">
                 <input type="text" class="form-control" id="coretable" name="tablename" formControlName="tablename"
                        placeholder="请输入核心表名称" maxlength="26" [(ngModel)]="coretablenameValue">
               </div>
