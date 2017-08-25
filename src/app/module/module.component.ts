@@ -62,14 +62,14 @@ export class ModuleComponent implements OnInit {
     fb: FormBuilder
   ) {
     this.moduleform = fb.group({
-      moduleId: [''],
+      id: [''],
       modulename: ['', [Validators.required, nameAsyncValidator]],
       sysname: [''],
       principal: [''],
       comments:['']
     });
     this.coretableform = fb.group({
-      coreTableId: [''],
+      id: [''],
       tablename: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9_]*$')]],
       tablecomments:['']
     })
@@ -126,7 +126,7 @@ export class ModuleComponent implements OnInit {
   setTitle(tit:string, module: any, coretable: any){
     this.title = tit;
     if (tit == '修改模块') {
-      this.moduleidValue = module.moduleId;
+      this.moduleidValue = module.id;
       this.modulenameValue = module.modulename;
       this.sysnameValue = module.sysname;
       this.modulePeopleValue = module.principal;
@@ -143,7 +143,7 @@ export class ModuleComponent implements OnInit {
       this.coretableDescValue = '';
 
     }else if(tit == '修改核心表') {
-      this.coretableIdValue = coretable.coreTableId;
+      this.coretableIdValue = coretable.id;
       this.coretablenameValue = coretable.tablename;
       this.coretableDescValue = coretable.tablecomments;
     }
@@ -158,10 +158,10 @@ export class ModuleComponent implements OnInit {
   }
   save(moduleform){
     const module = moduleform.value;
-    if (module.moduleId) {
-      this.moduleService.update(module,module.moduleId).subscribe(module => {
+    if (module.id) {
+      this.moduleService.update(module,module.id).subscribe(module => {
         for(this.module of this.modules) {
-          if(this.module.moduleId === module.moduleId) {
+          if(this.module.id === module.id) {
             this.module.modulename =  module.modulename;
             this.module.sysname = module.sysname;
             this.module.principal = module.principal;
@@ -180,10 +180,10 @@ export class ModuleComponent implements OnInit {
   }
   saveCoretable(form){
     const coretable = form.value;
-    if (coretable.coreTableId) {
-      this.moduleService.updateCoreTable(coretable,coretable.coreTableId).subscribe(coretable => {
+    if (coretable.id) {
+      this.moduleService.updateCoreTable(coretable,coretable.id).subscribe(coretable => {
         for(this.coretable of this.coretables) {
-          if(this.coretable.coreTableId === coretable.coreTableId) {
+          if(this.coretable.id === coretable.id) {
             this.coretable.tablename =  coretable.tablename;
             this.coretable.tablecomments = coretable.tablecomments;
           }
@@ -201,7 +201,7 @@ export class ModuleComponent implements OnInit {
 
   deleteModule(module: Module): void{
     this.moduleService
-      .deleteModule(module.moduleId)
+      .deleteModule(module.id)
       .subscribe(() => {
         this.modules = this.modules.filter(m => m !== module);
       });
@@ -215,7 +215,7 @@ export class ModuleComponent implements OnInit {
   }
   deleteTable(coretable: CoreTable): void {
     this.moduleService
-      .deleteCoreTable(coretable.coreTableId)
+      .deleteCoreTable(coretable.id)
       .subscribe(() => {
         this.coretables = this.coretables.filter(s => s !== coretable);
       });

@@ -46,7 +46,7 @@
           <tr  *ngFor="let module of modules | slice:start:end; let i =index;">
             <td><input type="checkbox" ></td>
             <td>{{i+1}}</td>
-            <td hidden>{{module.moduleId}}</td>
+            <td hidden>{{module.id}}</td>
             <td>{{module.modulename}}</td>
             <td>{{module.sysname}}</td>
             <td>{{module.principal ? module.principal : '--'}}</td>
@@ -152,7 +152,7 @@
           </tr>
           <tr  *ngFor="let coretable of coretables | slice:start1:end1 ">
             <td><input type="checkbox" [checked]="isChecked"></td>
-            <td hidden>{{coretable.coreTableId}}</td>
+            <td hidden>{{coretable.id}}</td>
             <td>{{coretable.tablename}}</td>
             <td title={{coretable.tablecomments}}>{{coretable.tablecomments ? coretable.tablecomments : '--' }}</td>
             <td>
@@ -190,13 +190,14 @@
             <div class="form-group row" hidden>
               <label for="moduleId" class="col-sm-2 control-label ">模块id：</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="moduleId"  name="moduleId" formControlName="moduleId"
+                <input type="text" class="form-control" id="moduleId"  name="id" formControlName="id"
                        [(ngModel)]="moduleidValue">
               </div>
             </div>
             <div class="form-group row">
               <label for="moduleName" class="col-sm-2 control-label ">模块名称：</label>
-              <div class="col-sm-9" [ngClass]="{'has-danger': moduleform.get('modulename').invalid && (moduleform.get('modulename').touched ||moduleform.get('modulename').dirty ) }">
+              <div class="col-sm-9" [ngClass]="{'has-danger': moduleform.get('modulename').invalid &&
+                              (moduleform.get('modulename').touched ||moduleform.get('modulename').dirty ) }">
                 <input type="text" class="form-control" id="moduleName"  name="modulename" formControlName="modulename"
                        placeholder="请输入模块名称" [(ngModel)]="modulenameValue"   maxlength="40">
               </div>
@@ -314,7 +315,7 @@
   </div><!-- /.modal -->
 
   <!--核心表modal-->
-  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog"data-backdrop="static"  aria-labelledby="tableModalLabel" aria-hidden="true">
+  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog" data-backdrop="static"  aria-labelledby="tableModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -328,7 +329,7 @@
             <div class="form-group row" hidden>
               <label for="coreTableId" class="col-sm-2 control-label ">核心表id：</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="coreTableId" [(ngModel)]="coretableIdValue" formControlName="coreTableId" name = "coreTableId">
+                <input type="text" class="form-control" id="coreTableId" [(ngModel)]="coretableIdValue" formControlName="id" name = "id">
               </div>
             </div>
             <div class="form-group row" hidden>

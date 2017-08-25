@@ -1,6 +1,10 @@
 .fa-pencil-square-o, .fa-database, .fa-newspaper-o, .fa-pencil{
   color: #5DAC81;
 }
+/*搜索条样式*/
+.searchform{
+  margin-left:10px;
+}
 /*搜索条的下拉框*/
 .selectType{
   width:180px;
@@ -48,6 +52,11 @@
 .tableName label{
   width: 48px;
   justify-content: left;
+}
+/*错误提示 红色感叹号*/
+.info-table {
+  display: block;
+  margin-bottom: 6px;
 }
 
 /*对表格进行操作的样式   新增，列重命名*/
@@ -97,3 +106,15 @@
   background:none;
 }
 
+
+
+/*弹框验证样式*/
+.modal-body .form-group .col-sm-1{
+  padding-left: 13px;
+  flex: none;
+}
+.modal-body .form-group .col-sm-9{
+  flex: none;
+  padding-right: 0;
+
+}

@@ -76,7 +76,7 @@ export class SystemComponent implements OnInit {
         value => this.keyword = value
       );
     this.sysform = fb.group({
-      sysId:[''],
+      id:[''],
       // sysname: ['', [Validators.required, Validators.maxLength(21), Validators.pattern("^[\u4e00-\u9fa5\w\-]+$")]],
       sysname: ['', [Validators.required,  nameAsyncValidator]],
       principal: [''],
@@ -128,7 +128,7 @@ export class SystemComponent implements OnInit {
   setTitle(tit:string, sys:any){
     this.title = tit;
     if (tit == '修改应用系统') {
-      this.sysidValue = sys.sysId;
+      this.sysidValue = sys.id;
       this.sysnameValue = sys.sysname;
       this. sysPeopleValue = sys.principal;
       this.sysDescValue = sys.comments;
@@ -159,10 +159,10 @@ export class SystemComponent implements OnInit {
   save(sysform){
     const sys = sysform.value;
     // console.log(sysform);
-    if (sys.sysId) {
-      this.systemService.update(sys,sys.sysId).subscribe(system => {
+    if (sys.id) {
+      this.systemService.update(sys,sys.id).subscribe(system => {
         for(this.system of this.systems) {
-          if(this.system.sysId === system.sysId) {
+          if(this.system.id === system.id) {
             this.system.sysname = system.sysname;
             this.system.principal = system.principal;
             this.system.comments = system.comments;
@@ -181,7 +181,7 @@ export class SystemComponent implements OnInit {
 
   delete(system: System): void{
     this.systemService
-      .delete(system.sysId)
+      .delete(system.id)
       .subscribe(() => {
         this.systems = this.systems.filter(s => s !== system);
         if (this.selectedSystem === system) { this.selectedSystem = null; }

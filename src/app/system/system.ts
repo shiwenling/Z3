@@ -2,7 +2,7 @@
  * Created by TP on 2017/7/26.
  */
 export class System {
-  sysId: number;
+  id: number;
   sysname: string;
   creatror: string;
   principal: string;

@@ -25,19 +25,19 @@ export  class TableService {
 
     if( length == 1){
       for (var propName in term) {
-        var url =  'api/projects/?'+ propName + '=' + term[propName];
+        var urls =  'api/projects/?'+ propName + '=' + term[propName];
       }
-      return this.http.get(url)
+      return this.http.get(urls)
         .map(response => response.json().data as Project[])
     }else {
-      var url = 'api/projects/?'+ termArray[0] + '=' + term[termArray[0]];
+      var urls = 'api/projects/?'+ termArray[0] + '=' + term[termArray[0]];
       for( var i=1; i<length; i++){
-        url = url + '&'+ termArray[i] + '=' + term[termArray[i]];
+        urls = urls + '&'+ termArray[i] + '=' + term[termArray[i]];
       }
       // for (var propName in term){
       //   url = url + '$'+ propName + '=' + term[propName];
       // }
-      return this.http.get(url)
+      return this.http.get(urls)
         .map(response => response.json().data as Project[])
 
     }
