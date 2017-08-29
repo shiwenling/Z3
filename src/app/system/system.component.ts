@@ -156,7 +156,7 @@ export class SystemComponent implements OnInit {
     this.dbname = '';
   }
 
-  save(sysform){
+  save(sysform,sysmodal){
     const sys = sysform.value;
     // console.log(sysform);
     if (sys.id) {
@@ -169,12 +169,16 @@ export class SystemComponent implements OnInit {
           }
         }
       });
+      sysform.reset();
+      $(sysmodal).modal('hide');
     }else {
       if(sysform.valid){
         // console.log(sysform.form);
         this.systemService.create(sys).subscribe(system => {
           this.systems.push(system);
         } );
+        sysform.reset();
+        $(sysmodal).modal('hide');
       }
     }
   }

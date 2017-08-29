@@ -176,7 +176,8 @@
 
   <!--modal-->
   <!--应用模块modal-->
-  <div class="modal fade" id="addModule" tabindex="-1" role="dialog" aria-labelledby="moduleModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal fade" id="addModule" tabindex="-1" role="dialog" aria-labelledby="moduleModalLabel" aria-hidden="true"
+       data-backdrop="static" #modulemodal>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -237,7 +238,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary " [disabled]="!moduleform.valid"  (click)="save(moduleform)" data-dismiss="modal">保存</button>
+          <button type="button" class="btn btn-primary " [disabled]="!moduleform.valid"  (click)="save(moduleform,modulemodal)" >保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->
@@ -315,7 +316,8 @@
   </div><!-- /.modal -->
 
   <!--核心表modal-->
-  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog" data-backdrop="static"  aria-labelledby="tableModalLabel" aria-hidden="true">
+  <div class="modal fade" id="tableModal" tabindex="-1" role="dialog" data-backdrop="static"
+       aria-labelledby="tableModalLabel" aria-hidden="true" #coretablemodal>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -365,7 +367,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary " [disabled]="!coretableform.valid"  (click)="saveCoretable(coretableform)" data-dismiss="modal">保存</button>
+          <button type="button" class="btn btn-primary " [disabled]="!coretableform.valid"  (click)="saveCoretable(coretableform,coretablemodal)" >保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->

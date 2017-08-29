@@ -222,12 +222,12 @@ export class InMemoryDataService implements InMemoryDbService {
 
     ];
     const objects=[
-      {id: 10, objectType:'表', objectName: 'EMAIL_PROPRTIES', changeType:'变更',dataFunction: '配置数据', changePeople: 'dev',
-        gmtModified: '2016-12-30 10:38:14', comments: '--'},
+      {id: 10, objectType:'序列', objectName: 'EMAIL_PROPRTIES', changeType:'新建',dataFunction: '', changePeople: 'dev',
+        gmtModified: '2016-12-30 10:38:14', comments: '-xulie'},
       {id: 12, objectType:'序列', objectName: 'SQL_EMAIL', changeType:'新建',dataFunction: '', changePeople: 'dev',
         gmtModified: '2016-12-30 10:38:14', comments: '序列SQL'},
-      {id: 14, objectType:'表', objectName: 'EMAIL_PROPRTIES', changeType:'变更',dataFunction: '配置数据', changePeople: 'dev',
-        gmtModified: '2016-12-30 10:38:14', comments: '--'},
+      {id: 14, objectType:'序列', objectName: 'DFHDIFHI', changeType:'新建',dataFunction: '', changePeople: 'dev',
+        gmtModified: '2016-12-30 10:38:14', comments: 'FIDHNIGIOJDI'},
       {id: 15, objectType:'序列', objectName: 'SQL_PROPRTIES', changeType:'变更',dataFunction: '', changePeople: 'dev',
         gmtModified: '2016-12-30 10:38:14', comments: '这是序列'},
       {id: 16, objectType:'序列', objectName: 'SQL_SSSSS', changeType:'新建',dataFunction: '', changePeople: 'dev',
@@ -370,6 +370,13 @@ export class InMemoryDataService implements InMemoryDbService {
       {sequenceId: 34, sequenceName: 'SEQ_COLLECT', lockState: '未锁', minValue: '1',   maxValue: '--',step:'1', cacehValue:'20', cycle:'N', order:'N',
         tableNumber:'7',gmtCreate: '2016-12-30 10:38:14', sequencecomments: 'SNAP_sequenceId序列', selfGrowValue: 20}
     ];
-    return {systems, dbs, users, modules, schemas,coretables, projects, objects, tables, sequences};
+    const tableinfos = [
+      {id: 0, state: '', columnName: 'ID', dataType: 'NUMBER', columnLength: null, key: 'checked', allowNull: '', defaultValue: '', columnComments: 'PK'},
+      {id: 1, state: '', columnName: 'GMT_CREATE', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '创建时间'},
+      {id: 2, state: '', columnName: 'GMT_MODIFIED', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '修改时间'},
+      {id: 3, state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
+
+    ];
+    return {systems, dbs, users, modules, schemas,coretables, projects, objects, tables, sequences, tableinfos};
   }
 }

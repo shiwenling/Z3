@@ -85,7 +85,7 @@
           <td>{{object.gmtModified}}</td>
           <td title={{object.comments}}>{{object.comments ? object.comments : '--'}}</td>
           <td>
-            <a class="action" data-toggle="modal"  data-target="#createTable" (click)="tableModal('修改操作')" [hidden]="object.objectType !=='表'">
+            <a class="action" data-toggle="modal"  data-target="#createTable" (click)="tableModal('修改操作',object)" [hidden]="object.objectType !=='表'">
               <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
             </a>
             <a class="action" data-toggle="modal" data-target="#createSequence" (click)="sequenceModal('修改操作', object)" [hidden]="object.objectType !=='序列'">
@@ -741,7 +741,7 @@
 
 
   <!--创建表modal-->
-  <div class="modal fade" id="createTable" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal fade" id="createTable" tabindex="-1" role="dialog" data-backdrop="static" #tablemodal>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -756,7 +756,7 @@
                   <div class="form-inline">
                     <div class="form-group" hidden>
                       <label >表id：</label>
-                      <input type="text"  class="form-control" name="tableId" formControlName="tableId"/>
+                      <input type="text"  class="form-control" name="tableId" formControlName="tableId" [(ngModel)]="tableid"/>
                     </div>
                     <div class="form-group" hidden>
                       <label >表中要删除字段的ids：</label>
@@ -766,8 +766,8 @@
                                             'has-danger': tableform.get('tableName').invalid &&
                                             (tableform.get('tableName').touched ||tableform.get('tableName').dirty ) }">
                       <label class="tablename">表名：</label>
-                      <input type="text"  class="form-control" [readonly]="isReadonly" maxlength="26" name="tableName"
-                             formControlName="tableName"/>
+                      <input type="text"  class="form-control" [readonly]="isReadonly" maxlength="26" name="tableName" #tabelnameValue
+                             formControlName="tableName" (blur)="upper(tabelnameValue)" [(ngModel)]="tablenameValue"/>
                       <span class="fa fa-info-circle info info-table" *ngIf="tableform.get('tableName').invalid
                       && tableform.get('tableName').touched && tableform.hasError('required','tableName')"
                             data-target="tooltip" title="表名不能为空" >
@@ -777,21 +777,21 @@
                             title="表名只可包含英文字符、数字以及 -符号" >
                       </span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group"  [ngClass]="{'has-danger': isKeyNull || (tableform.get('tablePk').invalid &&
+                                   (tableform.get('tablePk').touched ||tableform.get('tablePk').dirty )) }">
                       <label class="tablename">主键：</label>
-                      <input type="text"  class="form-control" readonly="readonly" name="tablePk" formControlName="tablePk"
-                      [ngClass]="{ 'has-danger': tableform.get('tablePk').invalid &&
-                                   (tableform.get('tablePk').touched ||tableform.get('tablePk').dirty ) }"/>
-                      <span class="fa fa-info-circle info info-table" *ngIf="tableform.get('tablePk').invalid
-                      && tableform.get('tablePk').touched && tableform.hasError('required','tablePk')"
+                      <input type="text"  class="form-control" readonly="readonly" name="tablePk" formControlName="tablePk" [(ngModel)]="keyValue"
+                     />
+                      <span class="fa fa-info-circle info info-table" *ngIf="(tableform.get('tablePk').invalid
+                      && tableform.get('tablePk').touched && tableform.hasError('required','tablePk')) || isKeyNull"
                             data-target="tooltip" title="主键不能为空" >
                        </span>
 
                     </div>
                     <div class="form-group">
                       <label class="tablename">数据功能：</label>
-                      <select class="form-control" name="tableDateFunction" formControlName="tableDateFunction" >
-                        <option *ngFor = "let item of dataFuncs">{{item}}</option>
+                      <select class="form-control" name="tableDateFunction" formControlName="tableDateFunction" [(ngModel)]="datafunction" >
+                        <option *ngFor = "let item of dataFuncs" >{{item}}</option>
                       </select>
                     </div>
                   </div>
@@ -805,25 +805,25 @@
                     </div>
                     <div class="form-group"  [hidden]="isHiddenSeqName">
                       <label class="tablename">序列名：</label>
-                      <input class="form-control" type="text" readonly="readonly" [value]="sequenceName" [hidden]="isEditButton"
+                      <input class="form-control" type="text" readonly="readonly" [(ngModel)]="sequenceName" [hidden]="isEditButton"
                              name="tableSequence" formControlName="tableSequence" />
-                      <select [hidden]="!isEditButton" >
-                        <option *ngFor="let sequence of sequences">{{sequence.sequenceName}}</option>
+                      <select [hidden]="!isEditButton" [(ngModel)]="selectSequence" name="tableSequence" formControlName="tableSequence" >
+                        <option *ngFor="let object of objects | slice : 0 : 0 " >{{  object.objectName }}</option>
                       </select>
-                      <button class="btn btn-primary edit" [hidden]="isEditButton" data-toggle="modal" data-target="#createSequence" (click)="sequenceModal('修改序列属性')">
+                      <button class="btn btn-primary edit" [hidden]="isEditButton" data-toggle="modal" data-target="#editTableSequence" (click)="editSequenceModal('修改序列属性',tableform)">
                         修改序列属性
                       </button>
-                      <button class="btn btn-primary edit" [hidden]="!isEditButton" data-toggle="modal" data-target="#createSequence" (click)="sequenceModal('查看序列属性')">
+                      <button class="btn btn-primary edit" [hidden]="!isEditButton" data-toggle="modal" data-target="#editTableSequence" (click)="editSequenceModal('查看序列属性',tableform)">
                         查看序列属性
                       </button>
                     </div>
                   </div>
                   <div class="form-inline">
-                    <div class="form-group">
+                    <div class="form-group" [ngClass]="{ 'has-danger': tableform.get('tablecomments').invalid &&
+                                   (tableform.get('tablecomments').touched ||tableform.get('tablecomments').dirty ) }">
                       <label class="tablename">描述：</label>
                       <input type="text"  class="form-control describe" placeholder="请输入表的描述说明，长度不可大于100个字符"
-                             name="tablecomments" formControlName="tablecomments"  [ngClass]="{ 'has-danger': tableform.get('tablecomments').invalid &&
-                                   (tableform.get('tablecomments').touched ||tableform.get('tablecomments').dirty ) }" />
+                             name="tablecomments" formControlName="tablecomments"  [(ngModel)]="tableComment" />
                       <span class="fa fa-info-circle info info-table" *ngIf="tableform.get('tablecomments').invalid
                       && tableform.get('tablecomments').touched && tableform.hasError('required','tablecomments')"
                             data-target="tooltip" title="表的描述不能为空" >
@@ -834,7 +834,7 @@
                 </form>
                 <p class="note">主键不能为空，不能使用默认值；列长度：CHAR(1-4000)，VARCHAR2(1-4000)，NUMBER(1-38[,0-38])，DATE无长度。</p>
                 <div class="form-group addColumn">
-                  <button class="btn btn-secondary">
+                  <button class="btn btn-secondary" (click)="addColumn(tableColumn)">
                     <span class="fa fa-plus " aria-hidden="true"></span>新增
                   </button>
                   <button class="btn btn-secondary">
@@ -842,8 +842,9 @@
                   <span class="note">(已存在的列重命名会立即执行到数据库)</span>
                 </div>
               </div>
-              <table  class="table table-striped table-hover" >
+              <table  class="table table-striped table-hover" #tableColumn>
                 <tr>
+                  <td class="columnId" class="columnid">列ID</td>
                   <td>状态</td>
                   <td>列名</td>
                   <td>数据类型</td>
@@ -854,92 +855,28 @@
                   <td>描述</td>
                   <td>操作</td>
                 </tr>
-                <tr >
-                  <td></td>
-                  <td>ID</td>
-                  <td>CARCHAR2</td>
-                  <td>1</td>
-                  <td><input type="checkbox" /></td>
-                  <td><input type="checkbox" /></td>
-                  <td>sysdate</td>
-                  <td>修改时间</td>
-                  <td>
-                    <a class="action" >
-                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
-                    </a>
+                <tr *ngFor="let tableinfo of tableinfos">
+                  <td>{{tableinfo.id}}</td>
+                  <td>{{tableinfo.state}}</td>
+                  <td *ngIf="tableinfo.state == '' || tableinfo.state == '新增'" >
+                    <input type="text" class="editInput column-input" [(ngModel)]="tableinfo.columnName"
+                           (blur)="upperColumnName(columnnameinput)" #columnnameinput (change)="checkValue(columnnameinput)"
+                    />
                   </td>
-                </tr>
-                <tr >
-                  <td></td>
-                  <td>ID</td>
-                  <td>CARCHAR2</td>
-                  <td>1</td>
-                  <td><input type="checkbox" /></td>
-                  <td><input type="checkbox" /></td>
-                  <td>sysdate</td>
-                  <td>修改时间</td>
+                  <td *ngIf="!(tableinfo.state == '' || tableinfo.state == '新增')">{{tableinfo.columnName}}</td>
                   <td>
-                    <a class="action" >
-                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
-                    </a>
+                    <select  [(ngModel)]="tableinfo.dataType" class="editInput" >
+                      <option *ngFor="let item of dataTypes" >{{item}}</option>
+                    </select>
                   </td>
-                </tr>
-                <tr >
-                  <td></td>
-                  <td>ID</td>
-                  <td>CARCHAR2</td>
-                  <td>1</td>
-                  <td><input type="checkbox" /></td>
-                  <td><input type="checkbox" /></td>
-                  <td>sysdate</td>
-                  <td>修改时间</td>
+                  <td ><input type="text" class="editInput" [(ngModel)]="tableinfo.columnLength" /></td>
+                  <td><input class="checkbox-key" type="checkbox" checked = {{tableinfo.key}}  #input  value = {{tableinfo.columnName}}
+                             (click)="chooseOne(tableColumn,input)"/></td>
+                  <td><input class="checkbox-null" type="checkbox" checked = {{tableinfo.allowNull}} (click)="clickNull(tableColumn)"/></td>
+                  <td><input type="text" class="editInput" [(ngModel)]="tableinfo.defaultValue" /></td>
+                  <td ><input type="text" class="editInput comment-input" [(ngModel)]="tableinfo.columnComments"  /></td>
                   <td>
-                    <a class="action" >
-                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
-                    </a>
-                  </td>
-                </tr>
-                <tr >
-                  <td></td>
-                  <td>ID</td>
-                  <td>CARCHAR2</td>
-                  <td>1</td>
-                  <td><input type="checkbox" /></td>
-                  <td><input type="checkbox" /></td>
-                  <td>sysdate</td>
-                  <td>修改时间</td>
-                  <td>
-                    <a class="action" >
-                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
-                    </a>
-                  </td>
-                </tr>
-                <tr >
-                  <td></td>
-                  <td>ID</td>
-                  <td>CARCHAR2</td>
-                  <td>1</td>
-                  <td><input type="checkbox" /></td>
-                  <td><input type="checkbox" /></td>
-                  <td>sysdate</td>
-                  <td>修改时间</td>
-                  <td>
-                    <a class="action" >
-                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
-                    </a>
-                  </td>
-                </tr>
-                <tr >
-                  <td></td>
-                  <td>ID</td>
-                  <td>CARCHAR2</td>
-                  <td>1</td>
-                  <td><input type="checkbox" /></td>
-                  <td><input type="checkbox" /></td>
-                  <td>sysdate</td>
-                  <td>修改时间</td>
-                  <td>
-                    <a class="action" >
+                    <a class="action"  (click)="deleteColumn(tableinfo)">
                       <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
                     </a>
                   </td>
@@ -949,7 +886,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary ">保存</button>
+          <button type="button" class="btn btn-primary " [disabled]="!tableform.valid " (click)="saveTable(tableform,tableColumn,tablemodal,sequenceform)"   >保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->
@@ -957,7 +894,7 @@
   </div><!-- /.modal -->
 
   <!--序列modal-->
-  <div class="modal fade" id="createSequence" tabindex="-1" data-backdrop="static" role="dialog" >
+  <div class="modal fade" id="createSequence" tabindex="-1" data-backdrop="static" role="dialog"  #sequencemodal>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -982,7 +919,7 @@
             </div>
             <div [hidden]="isHiddenForm">
               <form  [formGroup]="sequenceform" novalidate>
-                <div class="form-group row" >
+                <div class="form-group row" hidden>
                   <label for="sequenceId" class="col-sm-2 control-label ">序列id：</label>
                   <div class="col-sm-10">
                     <input type="text"  class="form-control" id="sequenceId" name="sequenceId" formControlName="sequenceId"
@@ -993,8 +930,9 @@
                   <label for="sequenceName" class="col-sm-2 control-label ">序列名称：</label>
                   <div class="col-sm-9" [ngClass]="{'has-danger': sequenceform.get('sequenceName').invalid &&
               (sequenceform.get('sequenceName').touched ||sequenceform.get('sequenceName').dirty ) }">
-                    <input type="text"  class="form-control" id="sequenceName" [readonly]="isSeqReadonly"
-                           name="sequenceName" formControlName="sequenceName" [(ngModel)]="sequenceNameValue" maxlength="30"/>
+                    <input type="text"  class="form-control"  [readonly]="isSeqReadonly"
+                           name="sequenceName" formControlName="sequenceName" [(ngModel)]="sequenceNameValue" maxlength="30"
+                           #sequencenameinput (blur)="upperSequenceName(sequencenameinput)"/>
                   </div>
                   <div class="col-sm-1">
                      <span class="fa fa-info-circle info" *ngIf="sequenceform.get('sequenceName').invalid &&
@@ -1020,7 +958,8 @@
                           sequenceform.get('maxValue').value " data-target="tooltip"
                           title="只可包含数字,最小值为1且不能大于1e+28" >
                     </span>
-                    <span class="fa fa-info-circle info" *ngIf="isMaxValueMin" data-target="tooltip"
+                    <span class="fa fa-info-circle info" *ngIf="isMaxValueMin && sequenceform.get('maxValue').value &&
+                              !sequenceform.hasError('valueValid','maxValue')" data-target="tooltip"
                           title="序列的最大值必须大于最小值，且不能大于1e+28" >
                     </span>
                   </div>
@@ -1028,16 +967,21 @@
                 <div class="form-group row">
                   <label for="minValue" class="col-sm-2 control-label">最小值：</label>
                   <div class="col-sm-9" [ngClass]="{'has-danger': (sequenceform.get('minValue').invalid &&
-                        sequenceform.get('minValue').value ) || isMinValueMax}">
+                        (sequenceform.get('minValue').touched && sequenceform.get('minValue').dirty) ) || isMinValueMax}">
                     <input type="text"  class="form-control" id="minValue" value="1" [readonly]="isSeqReadonly" #minValue
                            name="minValue" formControlName="minValue" [(ngModel)]="sequenceMinValue" maxlength="28" (change)="compare(sequenceform, minValue)"/>
                   </div>
                   <div class="col-sm-1">
+                     <span class="fa fa-info-circle info" *ngIf="sequenceform.get('minValue').invalid &&
+                     sequenceform.get('minValue').touched && sequenceform.hasError('required','minValue')"
+                           data-target="tooltip" title="最小值不能为空" >
+                     </span>
                     <span class="fa fa-info-circle info" *ngIf=" sequenceform.hasError('valueValid','minValue') &&
                           sequenceform.get('minValue').value" data-target="tooltip"
                           title="只可包含数字,最小值为1且不能大于1e+28-1" >
                     </span>
-                    <span class="fa fa-info-circle info" *ngIf=" isMinValueMax " data-target="tooltip"
+                    <span class="fa fa-info-circle info" *ngIf=" isMinValueMax &&  sequenceform.get('minValue').value  &&
+                                       !sequenceform.hasError('valueValid','minValue')" data-target="tooltip"
                           title="序列的最小值必须小于最大值,且不能大于1e+28-1" >
                     </span>
                   </div>
@@ -1091,12 +1035,162 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary " (click)="saveSequence(sequenceform)" [disabled]="!sequenceform.valid" data-dismiss="modal">确定</button>
+          <button type="button" class="btn btn-primary " (click)="saveSequence(sequenceform,sequencemodal)" [disabled]="!sequenceform.valid" >确定</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
+
+  <!-- 创建表里面的序列modal-->
+  <div class="modal fade" id="editTableSequence" tabindex="-1" data-backdrop="static" role="dialog"  #editsequencemodal>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{sequenceTitle}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal">
+            <div class="form-inline selectSequence" >
+              <div class="form-group" [hidden]="isHiddenTopSeq">
+                <label >序列：</label>
+                <select  class="form-control"  (change)="selectSeq($event.target.value)" #item="ngModel" [(ngModel)]="seqValue" name="select">
+                  <option *ngFor="let item of seqs" [value]='item'>{{item}}</option>
+                </select>
+              </div>
+              <div class="form-group" [hidden]="isHiddenTopSeqName">
+                <label  >序列名：</label>
+                <select  >
+                  <option *ngFor="let sequence of sequences">{{sequence.sequenceName}}</option>
+                </select>
+              </div>
+            </div>
+            <div [hidden]="isHiddenForm">
+              <form  [formGroup]="sequenceform" novalidate>
+                <div class="form-group row" hidden>
+                  <label for="sequenceId" class="col-sm-2 control-label ">序列id：</label>
+                  <div class="col-sm-10">
+                    <input type="text"  class="form-control" id="id" name="sequenceId" formControlName="sequenceId"
+                           [(ngModel)]="sequenceIdValue"/>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="sequenceName" class="col-sm-2 control-label ">序列名称：</label>
+                  <div class="col-sm-9" [ngClass]="{'has-danger': sequenceform.get('sequenceName').invalid &&
+              (sequenceform.get('sequenceName').touched ||sequenceform.get('sequenceName').dirty ) }">
+                    <input type="text"  class="form-control" id="sequenceName" [readonly]="isSeqReadonly"
+                           name="sequenceName" formControlName="sequenceName" [(ngModel)]="sequenceNameValue" maxlength="30" #sequenceNameInput
+                       (blur)="upperSequence(sequenceNameInput)"/>
+                  </div>
+                  <div class="col-sm-1">
+                     <span class="fa fa-info-circle info" *ngIf="sequenceform.get('sequenceName').invalid &&
+                     sequenceform.get('sequenceName').touched && sequenceform.hasError('required','sequenceName')"
+                           data-target="tooltip" title="序列名不能为空" >
+                     </span>
+                    <span class="fa fa-info-circle info" *ngIf=" sequenceform.hasError('pattern','sequenceName') &&
+                     sequenceform.get('sequenceName').value" data-target="tooltip"
+                          title="序列名只可包含英文字符、数字或下划线" >
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="maxValue" class="col-sm-2 control-label">最大值：</label>
+                  <div class="col-sm-9" [ngClass]="{'has-danger': (sequenceform.get('maxValue').invalid &&
+                  (sequenceform.get('maxValue').touched || sequenceform.get('maxValue').dirty)&&
+                         sequenceform.get('maxValue').value  ) || isMaxValueMin}">
+                    <input type="text"  class="form-control"  placeholder="默认最大值为1e+28" [readonly]="isSeqReadonly" #maxValue
+                           name="maxValue" formControlName="maxValue" [(ngModel)]="sequenceMaxValue" maxlength="28" (change)="compare(sequenceform, maxValue)"/>
+                  </div>
+                  <div class="col-sm-1">
+                    <span class="fa fa-info-circle info" *ngIf=" sequenceform.hasError('valueValid','maxValue') &&
+                          sequenceform.get('maxValue').value " data-target="tooltip"
+                          title="只可包含数字,最小值为1且不能大于1e+28" >
+                    </span>
+                    <span class="fa fa-info-circle info" *ngIf="isMaxValueMin && sequenceform.get('maxValue').value &&
+                              !sequenceform.hasError('valueValid','maxValue')" data-target="tooltip"
+                          title="序列的最大值必须大于最小值，且不能大于1e+28" >
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="minValue" class="col-sm-2 control-label">最小值：</label>
+                  <div class="col-sm-9" [ngClass]="{'has-danger': (sequenceform.get('minValue').invalid &&
+                        (sequenceform.get('minValue').touched && sequenceform.get('minValue').dirty) ) || isMinValueMax}">
+                    <input type="text"  class="form-control"  value="1" [readonly]="isSeqReadonly" #minValue
+                           name="minValue" formControlName="minValue" [(ngModel)]="sequenceMinValue" maxlength="28" (change)="compare(sequenceform, minValue)"/>
+                  </div>
+                  <div class="col-sm-1">
+                     <span class="fa fa-info-circle info" *ngIf="sequenceform.get('minValue').invalid &&
+                     sequenceform.get('minValue').touched && sequenceform.hasError('required','minValue')"
+                           data-target="tooltip" title="最小值不能为空" >
+                     </span>
+                    <span class="fa fa-info-circle info" *ngIf=" sequenceform.hasError('valueValid','minValue') &&
+                          sequenceform.get('minValue').value" data-target="tooltip"
+                          title="只可包含数字,最小值为1且不能大于1e+28-1" >
+                    </span>
+                    <span class="fa fa-info-circle info" *ngIf=" isMinValueMax &&  sequenceform.get('minValue').value  &&
+                                       !sequenceform.hasError('valueValid','minValue')" data-target="tooltip"
+                          title="序列的最小值必须小于最大值,且不能大于1e+28-1" >
+                    </span>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="addValue" class="col-sm-2 control-label">自增值：</label>
+                  <div class="col-sm-9">
+                    <input type="number"  class="form-control" value="1" [readonly]="isSelfGrowReadonly"
+                           name="selfGrowValue" formControlName="selfGrowValue" [(ngModel)]="selfGrowValue" />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="cacheValue" class="col-sm-2 control-label">缓存大小：</label>
+                  <div class="col-sm-9">
+                    <input type="number"  class="form-control"  value="20" [readonly]="isCacheReadonly"
+                           name="cacheValue" formControlName="cacheValue" [(ngModel)]="sequenceCacheValue" />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="cycle" class="col-sm-2 control-label">周期循环：</label>
+                  <div class="col-sm-10">
+                    <input type="checkbox"  value="20" [disabled]="isSeqReadonly"
+                           name="cycle" formControlName="cycle" [(ngModel)]="cycleValue" />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="order" class="col-sm-2 control-label">是否顺序：</label>
+                  <div class="col-sm-10">
+                    <input type="checkbox"  value="20" [disabled]="isSeqReadonly"
+                           name="order" formControlName="order" [(ngModel)]="orderValue" />
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="sequenceDescribe" class="col-sm-2 control-label">描述：</label>
+                  <div class="col-sm-9">
+                    <textarea  class="form-control"  row="10" [readonly]="isDescribeReadonly"
+                               placeholder="请输入序列的描述说明，长度不可大于100个字符"  name="sequencecomments" formControlName="sequencecomments"
+                               [(ngModel)]="sequencecommentsValue" maxlength="100">
+                    </textarea>
+                  </div>
+                  <div class="col-sm-1">
+                    <span class="fa fa-info-circle info "*ngIf="sequenceform.get('sequencecomments').invalid &&
+                     sequenceform.get('sequencecomments').touched && sequenceform.hasError('required','sequencecomments')"
+                          data-target="tooltip"  title="系列描述不可为空" >
+                    </span>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary " (click)="saveTableSequence(sequenceform,editsequencemodal)" [disabled]="!sequenceform.valid" >确定</button>
+          <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
 
   <!--导入SQL的modal-->
   <div class="modal fade" id="importSQL" tabindex="-1" data-backdrop="static" role="dialog" >

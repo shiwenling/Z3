@@ -254,7 +254,7 @@ export class TableComponent implements OnInit {
       });
   }
 
-  save(projectform){
+  save(projectform,projectmodal){
     const project = projectform.value;
     if (project.id) {
       if(projectform.valid){
@@ -268,6 +268,8 @@ export class TableComponent implements OnInit {
             }
           }
         });
+        projectform.reset();
+        $(projectmodal).modal('hide');
       }
 
     }else {
@@ -275,6 +277,8 @@ export class TableComponent implements OnInit {
         this.tableService.create(project).subscribe(project => {
           this.projects.push(project);
         } );
+        projectform.reset();
+        $(projectmodal).modal('hide');
       }
     }
   }

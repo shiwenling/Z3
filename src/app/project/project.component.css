@@ -13,7 +13,7 @@
 @media (min-width: 576px){
   /*创建表的modal*/
   #createTable .modal-dialog {
-    max-width: 800px;
+    max-width: 920px;
   }
   /*拷贝相似表modal*/
   #copyTable .modal-dialog{
@@ -57,6 +57,18 @@
 .info-table {
   display: block;
   margin-bottom: 6px;
+}
+/*可编辑列名*/
+.editInput{
+  border: none;
+  background: none;
+  width: 95px;
+}
+#createTable table td{
+  padding: 10px ;
+}
+.error{
+  border: 1px solid red;
 }
 
 /*对表格进行操作的样式   新增，列重命名*/

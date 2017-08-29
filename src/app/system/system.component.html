@@ -76,7 +76,8 @@
 
   <!--modal-->
   <!--应用系统modal-->
-  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="sysModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="sysModalLabel" aria-hidden="true"
+       data-backdrop="static" #sysmodal>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -130,7 +131,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary " [disabled]="!sysform.valid"  (click)="save(sysform)" data-dismiss="modal">保存</button>
+          <button type="submit" class="btn btn-primary " [disabled]="!sysform.valid"  (click)="save(sysform,sysmodal)" >保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->

@@ -156,7 +156,7 @@ export class ModuleComponent implements OnInit {
     this.start1 = (this.page-1) * this.pageSize;
     this.end1 = (this.page)* this.pageSize;
   }
-  save(moduleform){
+  save(moduleform, modulemodal){
     const module = moduleform.value;
     if (module.id) {
       this.moduleService.update(module,module.id).subscribe(module => {
@@ -170,15 +170,20 @@ export class ModuleComponent implements OnInit {
 
         }
       });
+      moduleform.reset();
+      $(modulemodal).modal('hide');
+
     }else {
       if(moduleform.valid){
         this.moduleService.create(module).subscribe(module => {
           this.modules.push(module);
         } );
+        moduleform.reset();
+        $(modulemodal).modal('hide');
       }
     }
   }
-  saveCoretable(form){
+  saveCoretable(form,coretablemodal){
     const coretable = form.value;
     if (coretable.id) {
       this.moduleService.updateCoreTable(coretable,coretable.id).subscribe(coretable => {
@@ -190,11 +195,15 @@ export class ModuleComponent implements OnInit {
 
         }
       });
+      form.reset();
+      $(coretablemodal).modal('hide');
     }else {
       if(form.valid){
         this.moduleService.createCoreTable(coretable).subscribe(coretable => {
           this.coretables.push(coretable);
         } );
+        form.reset();
+        $(coretablemodal).modal('hide');
       }
     }
   }

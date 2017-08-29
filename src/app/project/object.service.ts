@@ -8,6 +8,7 @@ import {Object} from './object';
 import {Table} from './table';
 import {Sequence} from './sequence';
 import {Observable} from 'rxjs/Observable';
+import {TableInfo} from './tableInfo';
 
 @Injectable()
 export  class ObjectService {
@@ -15,12 +16,19 @@ export  class ObjectService {
   private objectsUrl = 'api/objects';
   private tablesUrl = 'api/tables';
   private sequenceUrl = 'api/sequences';
+  private  tableinfosUrl =  'api/tableinfos';
   constructor(private http: Http) { }
 
   create(object: any ): Observable<Object> {
     return this.http
       .post(this.objectsUrl, JSON.stringify(object), {headers: this.headers})
       .map(res => res.json().data as Object)
+      .catch(this.handleError);
+  }
+  createColumn(tableinfo: any ): Observable<TableInfo> {
+    return this.http
+      .post(this.tableinfosUrl, JSON.stringify(tableinfo), {headers: this.headers})
+      .map(res => res.json().data as TableInfo)
       .catch(this.handleError);
   }
 
@@ -34,6 +42,13 @@ export  class ObjectService {
 
   delete(id: number):Observable<void> {
     const url = `${this.objectsUrl}/${id}`;
+    return this.http
+      .delete(url, {headers: this.headers})
+      .map(() => null)
+      .catch( this.handleError);
+  }
+  deleteColumn(id: number):Observable<void> {
+    const url = `${this.tableinfosUrl}/${id}`;
     return this.http
       .delete(url, {headers: this.headers})
       .map(() => null)
@@ -55,6 +70,12 @@ export  class ObjectService {
       .map(response => response.json().data as Sequence[])
       .catch(this.handleError);
   }
+  getTableInfos(): Observable<TableInfo[]> {
+    return this.http.get(this.tableinfosUrl)
+      .map(response => response.json().data as TableInfo[])
+      .catch(this.handleError);
+  }
+
 
   search(term: ObjectSearchParams): Observable<Object[]> {
     if(term.objectType =='不限' && term.objectName == ''){

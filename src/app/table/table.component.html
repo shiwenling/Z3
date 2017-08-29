@@ -131,7 +131,7 @@
 
   <!--modal-->
   <!--项目modal-->
-  <div class="modal fade" id="projectModal" tabindex="-1" role="dialog"  data-backdrop="static">
+  <div class="modal fade" id="projectModal" tabindex="-1" role="dialog"  data-backdrop="static" #projectmodal>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -217,7 +217,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary " (click)="save(projectform)" data-dismiss="modal" [disabled]="!projectform.valid" [hidden]="isHidden">保存</button>
+          <button type="button" class="btn btn-primary " (click)="save(projectform,projectmodal)"  [disabled]="!projectform.valid" [hidden]="isHidden">保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal" [hidden]="isHidden">取消</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal" [hidden]="!isHidden">关闭</button>
         </div>

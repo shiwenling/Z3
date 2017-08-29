@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform} from '@angular/core';
 import {System} from '../system/system';
+import {Object} from '../project/object';
 
 @Pipe({
   name: 'filter'
@@ -19,3 +20,20 @@ export class FilterPipe implements PipeTransform {
   }
 
 }
+
+//
+// export class FilterPipe implements PipeTransform {
+//
+//   transform(object: Object[], filterField: string): any {
+//
+//     if (!filterField ) {
+//       return object;
+//     }
+//     return object.filter( item => {
+//       const fieldValue = item[filterField];
+//       return fieldValue.indexOf('序列') >= 0;
+//
+//     });
+//   }
+
+// }
