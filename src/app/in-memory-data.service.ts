@@ -377,6 +377,13 @@ export class InMemoryDataService implements InMemoryDbService {
       {id: 3, state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
 
     ];
-    return {systems, dbs, users, modules, schemas,coretables, projects, objects, tables, sequences, tableinfos};
+    const columns = [
+      {columnId: 0, state: '', columnName: 'ID', dataType: 'NUMBER', columnLength: null, key: 'checked', allowNull: '', defaultValue: '', columnComments: 'PK'},
+      {colimnId: 1, state: '', columnName: 'GMT_CREATE', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '创建时间'},
+      {colimnId: 2, state: '', columnName: 'GMT_MODIFIED', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '修改时间'},
+      {colimnId: 3, state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
+
+    ];
+    return {systems, dbs, users, modules, schemas,coretables, projects, objects, tables, sequences, tableinfos, columns};
   }
 }

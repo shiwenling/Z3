@@ -25,7 +25,7 @@
               <span class="fa fa-pencil-square-o" aria-hidden="true" ></span>修改现有序列
             </button>
             <span>|</span>
-            <div class="dropdown show">
+            <div class="dropdown ">
               <button class="btn btn-secondary dropdown-toggle" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-database" aria-hidden="true" ></span>变更执行到线下数据库
               </button>
@@ -798,7 +798,7 @@
                   <div class="form-inline">
                     <div class="form-group" [hidden]="isHidden">
                       <label class="tablename">序列：</label>
-                      <select  class="form-control" (change)="selectOption($event.target.value)"
+                      <select  class="form-control" (change)="selectOption($event.target.value, tableform, select)"
                                [(ngModel)]="itemValueToSet" name="select" formControlName="select" >
                         <option *ngFor="let item of seqs" >{{item}}</option>
                       </select>
@@ -807,8 +807,8 @@
                       <label class="tablename">序列名：</label>
                       <input class="form-control" type="text" readonly="readonly" [(ngModel)]="sequenceName" [hidden]="isEditButton"
                              name="tableSequence" formControlName="tableSequence" />
-                      <select [hidden]="!isEditButton" [(ngModel)]="selectSequence" name="tableSequence" formControlName="tableSequence" >
-                        <option *ngFor="let object of objects | slice : 0 : 0 " >{{  object.objectName }}</option>
+                      <select [hidden]="!isEditButton" [(ngModel)]="selectSequence" name="tableSequence" formControlName="tableSequence" #select (click)="selectoption($event.target)">
+                        <option *ngFor="let object of objects  ">{{  object.objectType == '序列' ? object.objectName : null }}</option>
                       </select>
                       <button class="btn btn-primary edit" [hidden]="isEditButton" data-toggle="modal" data-target="#editTableSequence" (click)="editSequenceModal('修改序列属性',tableform)">
                         修改序列属性
@@ -837,14 +837,15 @@
                   <button class="btn btn-secondary" (click)="addColumn(tableColumn)">
                     <span class="fa fa-plus " aria-hidden="true"></span>新增
                   </button>
-                  <button class="btn btn-secondary">
-                    <span class="fa fa-pencil " aria-hidden="true"></span>列重命名</button>
+                  <!--<button class="btn btn-secondary">-->
+                    <!--<span class="fa fa-pencil " aria-hidden="true"></span>列重命名-->
+                  <!--</button>-->
                   <span class="note">(已存在的列重命名会立即执行到数据库)</span>
                 </div>
               </div>
-              <table  class="table table-striped table-hover" #tableColumn>
+              <table  class="table table-striped table-hover" #tableColumn >
                 <tr>
-                  <td class="columnId" class="columnid">列ID</td>
+                  <td class="columnId" >列ID</td>
                   <td>状态</td>
                   <td>列名</td>
                   <td>数据类型</td>
@@ -860,21 +861,25 @@
                   <td>{{tableinfo.state}}</td>
                   <td *ngIf="tableinfo.state == '' || tableinfo.state == '新增'" >
                     <input type="text" class="editInput column-input" [(ngModel)]="tableinfo.columnName"
-                           (blur)="upperColumnName(columnnameinput)" #columnnameinput (change)="checkValue(columnnameinput)"
+                           (blur)="upperColumnName(columnnameinput, tableColumn)" #columnnameinput (change)="checkValue(columnnameinput)"
                     />
                   </td>
                   <td *ngIf="!(tableinfo.state == '' || tableinfo.state == '新增')">{{tableinfo.columnName}}</td>
                   <td>
-                    <select  [(ngModel)]="tableinfo.dataType" class="editInput" >
+                    <select  [(ngModel)]="tableinfo.dataType" class="editInput"  (change)="changeDataType($event.target.value, $event.target)">
                       <option *ngFor="let item of dataTypes" >{{item}}</option>
                     </select>
                   </td>
-                  <td ><input type="text" class="editInput" [(ngModel)]="tableinfo.columnLength" /></td>
+                  <td ><input type="text" class="editInput  length-input" [(ngModel)]="tableinfo.columnLength"
+                              (blur)="saveInputChange(lengthinput, tableColumn)" #lengthinput (change)="checkLengthValue(lengthinput)" />
+                  </td>
                   <td><input class="checkbox-key" type="checkbox" checked = {{tableinfo.key}}  #input  value = {{tableinfo.columnName}}
                              (click)="chooseOne(tableColumn,input)"/></td>
                   <td><input class="checkbox-null" type="checkbox" checked = {{tableinfo.allowNull}} (click)="clickNull(tableColumn)"/></td>
-                  <td><input type="text" class="editInput" [(ngModel)]="tableinfo.defaultValue" /></td>
-                  <td ><input type="text" class="editInput comment-input" [(ngModel)]="tableinfo.columnComments"  /></td>
+                  <td><input type="text" class="editInput default-input" [(ngModel)]="tableinfo.defaultValue"
+                             (blur)="saveInputChange(lengthinput, tableColumn)" #defaultinput /></td>
+                  <td ><input type="text" class="editInput comment-input" [(ngModel)]="tableinfo.columnComments"
+                              (blur)="saveInputChange(lengthinput, tableColumn)" #commentinput /></td>
                   <td>
                     <a class="action"  (click)="deleteColumn(tableinfo)">
                       <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
@@ -1016,7 +1021,8 @@
                 </div>
                 <div class="form-group row">
                   <label for="sequenceDescribe" class="col-sm-2 control-label">描述：</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" [ngClass]="{'has-danger': sequenceform.get('sequencecomments').invalid &&
+                        (sequenceform.get('sequencecomments').touched || sequenceform.get('sequencecomments').dirty)} ">
                     <textarea  class="form-control" id="sequenceDescribe"  row="10" [readonly]="isDescribeReadonly"
                                placeholder="请输入序列的描述说明，长度不可大于100个字符"  name="sequencecomments" formControlName="sequencecomments"
                                [(ngModel)]="sequencecommentsValue" maxlength="100">
@@ -1025,7 +1031,7 @@
                   <div class="col-sm-1">
                     <span class="fa fa-info-circle info "*ngIf="sequenceform.get('sequencecomments').invalid &&
                      sequenceform.get('sequencecomments').touched && sequenceform.hasError('required','sequencecomments')"
-                          data-target="tooltip"  title="系列描述不可为空" >
+                          data-target="tooltip"  title="序列描述不可为空" >
                     </span>
                   </div>
                 </div>
@@ -1035,7 +1041,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary " (click)="saveSequence(sequenceform,sequencemodal)" [disabled]="!sequenceform.valid" >确定</button>
+          <button type="button" class="btn btn-primary " (click)="saveSequence(sequenceform,sequencemodal)"  >确定</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->
@@ -1165,7 +1171,8 @@
                 </div>
                 <div class="form-group row">
                   <label for="sequenceDescribe" class="col-sm-2 control-label">描述：</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" [ngClass]="{'has-danger': sequenceform.get('sequencecomments').invalid &&
+                        (sequenceform.get('sequencecomments').touched || sequenceform.get('sequencecomments').dirty)} ">
                     <textarea  class="form-control"  row="10" [readonly]="isDescribeReadonly"
                                placeholder="请输入序列的描述说明，长度不可大于100个字符"  name="sequencecomments" formControlName="sequencecomments"
                                [(ngModel)]="sequencecommentsValue" maxlength="100">
@@ -1174,7 +1181,7 @@
                   <div class="col-sm-1">
                     <span class="fa fa-info-circle info "*ngIf="sequenceform.get('sequencecomments').invalid &&
                      sequenceform.get('sequencecomments').touched && sequenceform.hasError('required','sequencecomments')"
-                          data-target="tooltip"  title="系列描述不可为空" >
+                          data-target="tooltip"  title="序列描述不可为空" >
                     </span>
                   </div>
                 </div>
@@ -1184,8 +1191,9 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary " (click)="saveTableSequence(sequenceform,editsequencemodal)" [disabled]="!sequenceform.valid" >确定</button>
-          <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary " [hidden]="isSeeButton" (click)="saveTableSequence(sequenceform,editsequencemodal)" >确定</button>
+          <button type="button" class="btn btn-light cancle" [hidden]="isSeeButton" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-light cancle" [hidden]="!isSeeButton" data-dismiss="modal">关闭</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
