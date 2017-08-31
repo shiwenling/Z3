@@ -77,14 +77,27 @@ export class ModuleComponent implements OnInit {
 
   ngOnInit(): void {
     this.getModules();
-    this.getSchemas();
-    this.getCoreTables();
     this.pagination();
     this.getPage();
   }
   getModules(): void {
     this.moduleService.getModules().subscribe(modules => this.modules = modules);
 
+  }
+  chooseOne(tableColumn, input) {
+    let inputs = tableColumn.getElementsByClassName('selectModule');
+    let inputLength = inputs.length;
+    for ( let i=0; i< inputLength; i++) {
+      if( input.checked == inputs[i].checked) {
+        this.getSchemas();
+        this.getCoreTables();
+        for (let k=0; k<inputLength ; k++) {
+          if ( k !== i){
+            inputs[k].checked = false;
+          }
+        }
+      }
+    }
   }
   getSchemas(): void {
     this.moduleService.getSchemas().subscribe(schemas => this.schemas = schemas);

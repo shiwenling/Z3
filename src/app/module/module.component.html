@@ -32,7 +32,7 @@
             </div>
           </form>
         </div>
-        <table class="table table-striped table-hover" >
+        <table class="table table-striped table-hover"  #tableColumn>
           <tr>
             <td></td>
             <td>编号</td>
@@ -44,7 +44,7 @@
             <td>操作</td>
           </tr>
           <tr  *ngFor="let module of modules | slice:start:end; let i =index;">
-            <td><input type="checkbox" ></td>
+            <td><input type="checkbox" class="selectModule" (click)="chooseOne(tableColumn,input)" #input></td>
             <td>{{i+1}}</td>
             <td hidden>{{module.id}}</td>
             <td>{{module.modulename}}</td>

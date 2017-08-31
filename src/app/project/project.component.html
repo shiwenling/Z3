@@ -85,7 +85,7 @@
           <td>{{object.gmtModified}}</td>
           <td title={{object.comments}}>{{object.comments ? object.comments : '--'}}</td>
           <td>
-            <a class="action" data-toggle="modal"  data-target="#createTable" (click)="tableModal('修改操作',object)" [hidden]="object.objectType !=='表'">
+            <a class="action" data-toggle="modal"  data-target="#createTable" (click)="tableModal('修改操作',object, tableColumn)" [hidden]="object.objectType !=='表'">
               <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
             </a>
             <a class="action" data-toggle="modal" data-target="#createSequence" (click)="sequenceModal('修改操作', object)" [hidden]="object.objectType !=='序列'">
@@ -866,7 +866,7 @@
                   </td>
                   <td *ngIf="!(tableinfo.state == '' || tableinfo.state == '新增')">{{tableinfo.columnName}}</td>
                   <td>
-                    <select  [(ngModel)]="tableinfo.dataType" class="editInput"  (change)="changeDataType($event.target.value, $event.target)">
+                    <select  [(ngModel)]="tableinfo.dataType" class="editInput selectType"  (change)="changeDataType($event.target.value, $event.target, tableColumn)">
                       <option *ngFor="let item of dataTypes" >{{item}}</option>
                     </select>
                   </td>
@@ -874,8 +874,9 @@
                               (blur)="saveInputChange(lengthinput, tableColumn)" #lengthinput (change)="checkLengthValue(lengthinput)" />
                   </td>
                   <td><input class="checkbox-key" type="checkbox" checked = {{tableinfo.key}}  #input  value = {{tableinfo.columnName}}
-                             (click)="chooseOne(tableColumn,input)"/></td>
-                  <td><input class="checkbox-null" type="checkbox" checked = {{tableinfo.allowNull}} (click)="clickNull(tableColumn)"/></td>
+                             (click)="chooseOne(tableColumn,input)" /></td>
+                  <td><input class="checkbox-null" type="checkbox" checked = {{tableinfo.allowNull}} (click)="clickNull(tableColumn)"/>
+                  </td>
                   <td><input type="text" class="editInput default-input" [(ngModel)]="tableinfo.defaultValue"
                              (blur)="saveInputChange(lengthinput, tableColumn)" #defaultinput /></td>
                   <td ><input type="text" class="editInput comment-input" [(ngModel)]="tableinfo.columnComments"
@@ -891,7 +892,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary " [disabled]="!tableform.valid " (click)="saveTable(tableform,tableColumn,tablemodal,sequenceform)"   >保存</button>
+          <button type="button" class="btn btn-primary " [disabled]="!tableform.valid " (click)="saveTable(tableform,tableColumn,tablemodal,sequenceform )"   >保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->

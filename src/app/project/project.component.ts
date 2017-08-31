@@ -26,7 +26,7 @@ export class ProjectComponent implements OnInit {
   page = 1;
   start: number;
   end: number;
-  totalItems = 23;
+  totalItems = 30;
   tableItems= 24;
   pageSize = 10;
   // 搜索条参数
@@ -56,6 +56,7 @@ export class ProjectComponent implements OnInit {
   tableselectSequence: string;   // 记录表中的序列选项
   tablekeyValue : string;
   isSeeButton: boolean;
+  nullchecked = [];
 
   // 创建序列
   sequenceTitle: string; // 创建序列的title
@@ -120,6 +121,8 @@ export class ProjectComponent implements OnInit {
     this.getPage();
 
   }
+
+  // 过滤已有序列名选项中的空白项
   selectoption(select){
     const options = select.getElementsByTagName('option');
     let length = options.length;
@@ -155,6 +158,7 @@ export class ProjectComponent implements OnInit {
         this.objects = this.objects.filter(o => o !== object);
       });
   }
+
   deleteColumn(tableinfo: TableInfo):void {
     this.objectService
       .deleteColumn(tableinfo.id)
@@ -171,8 +175,9 @@ export class ProjectComponent implements OnInit {
     this.start = (this.page - 1) * this.pageSize;
     this.end = (this.page) * this.pageSize;
   }
-  tableModal(tit: string, object) {
+  tableModal(tit: string, object, tableColumn) {
     if (tit === '创建表') {
+      this.objectService.getTableInfos().subscribe();
       this.tableTitle = '创建表';
       this.isReadonly = false;   // 设置"表名"一行是否可编辑
       this.isHiddenSeqName = false;
@@ -224,7 +229,26 @@ export class ProjectComponent implements OnInit {
 
       this.isHidden = false;  // 隐藏“序列”一行
       this.isReadonly = false;  // 设置“表名”只读
+      const inputs = tableColumn.getElementsByClassName('checkbox-key');
+      const nullinputs = tableColumn.getElementsByClassName('checkbox-null');
+      const length =  inputs.length;
+      const nullLength = this.nullchecked.length;
+      for (let i=0; i<length; i++) {
+        if( inputs[i].value == this.keyValue ){
+          inputs[i].checked = true;
+        }else {
+          inputs[i].checked = false;
+        }
+        for (let j =0 ; j<nullLength; j++){
+          if (i == this.nullchecked[j]){
+            nullinputs[i].checked = true;
+            break;
+          }else {
+            nullinputs[i].checked = false;
+          }
+        }
 
+      };
 
     }else if (tit === '拷贝表') {
       this.tableTitle = '创建表';
@@ -251,6 +275,8 @@ export class ProjectComponent implements OnInit {
 
     }
   }
+
+  //  判断创建表中columnname输入合法性
   checkValue(columnnameinput) {
     var value = columnnameinput.value;
     const reg = new RegExp('^[a-zA-Z][a-zA-Z0-9_#]*$');
@@ -259,6 +285,8 @@ export class ProjectComponent implements OnInit {
       alert ('列名只能输入字母，数字和下划线')
     }
   }
+
+  // 判断创建表中表格列输入合法性
   checkLengthValue(lengthinput) {
     var value = lengthinput.value;
     const reg = new RegExp('^[1-9][0-9]*(,(0|[1-9][0-9]*))?$');
@@ -272,15 +300,20 @@ export class ProjectComponent implements OnInit {
     const table = tableform.value;
     const columnInputs = tableColumn.getElementsByClassName('column-input');
     const commentInputs = tableColumn.getElementsByClassName('comment-input');
+    const nullinputs = tableColumn.getElementsByClassName('checkbox-null');
     const length =  columnInputs.length;
     let sum1 = 0;
     let sum2 = 0;
+    this.nullchecked = [];
     for (let i=0; i<length; i++) {
       if( columnInputs[i].value == ''){
         sum1 = sum1 + 1;
       }
       if ( commentInputs[i].value == ''){
         sum2 = sum2 + 1;
+      }
+      if( nullinputs[i].checked == true ){
+        this.nullchecked.push(i);
       }
     }
     if(sum1 !== 0 || sum2 !==0){
@@ -334,12 +367,13 @@ export class ProjectComponent implements OnInit {
             // }
 
 
+          }else {
+            this.tablekeyValue =  object.tablePk;
           }
         }else {
           this.tableselectSequence = table.select;
+
         }
-
-
 
         $(tablemodal).modal('hide');
         this.objectService.getTableInfos().subscribe(tableinfos => this.tableinfos = tableinfos);
@@ -420,7 +454,7 @@ export class ProjectComponent implements OnInit {
       this.tableinfos.push(newColumn);
     });
   }
-
+  // 创建表中表名大写
   upper(tabelnameValue){
     tabelnameValue.value = tabelnameValue.value.toUpperCase();
     if (this.sequenceName == 'SQL_'){
@@ -428,6 +462,22 @@ export class ProjectComponent implements OnInit {
     }
 
   }
+  // 保存创建表中数据类型
+  changeDataType(option, select,tablecolumn){
+    let selects = tablecolumn.getElementsByClassName('selectType');
+    let length = selects.length;
+    for (let i=0; i<length; i++) {
+      if(selects[i].value === option){
+        this.tableinfos[i].dataType = option;
+        this.objectService.createColumn(this.tableinfos[i]).subscribe( tableinfo => {
+          this.tableinfos.push(this.tableinfos[i]);
+        } );
+      }
+    }
+
+
+  }
+  //  保存创建表中表格列中数据
   saveInputChange(input, tableColumn){
     let inputValue = input.value;
     let inputs = tableColumn.getElementsByClassName('length-input');
@@ -441,6 +491,8 @@ export class ProjectComponent implements OnInit {
       }
     }
   }
+
+  // 创建表中表格列名大写
   upperColumnName(columnnameinput, tableColumn) {
     columnnameinput.value = columnnameinput.value.toUpperCase();
     // console.log(this.tableinfos);
@@ -462,12 +514,8 @@ export class ProjectComponent implements OnInit {
         }
       }
     }
-    // for (this.tableinfo of this.tableinfos){
-    //
-    // }
   }
-  changeDataType(option, select){
-  }
+
   //表内的序列modal
   upperSequence(sequenceNameInput) {
     sequenceNameInput.value = sequenceNameInput.value.toUpperCase();
@@ -477,6 +525,9 @@ export class ProjectComponent implements OnInit {
   upperSequenceName(sequencenameinput){
     sequencenameinput.value = sequencenameinput.value.toUpperCase();
   }
+  //  主键多选框操作
+
+
   chooseOne(tableColumn, input) {
     let inputs = tableColumn.getElementsByClassName('checkbox-key');
     let nullInputs = tableColumn.getElementsByClassName('checkbox-null');
@@ -484,6 +535,10 @@ export class ProjectComponent implements OnInit {
     let j = 0;
     for ( let i=0; i< inputLength; i++) {
       if( input.value == inputs[i].value) {
+        // this.tableinfos[i].key = 'checked';
+        // this.objectService.createColumn(this.tableinfos[i]).subscribe( tableinfo => {
+        //   this.tableinfos.push(this.tableinfos[i]);
+        // } );
         j = i;
         this.keyValue = input.value.toUpperCase();
         nullInputs[j].checked = false;
@@ -494,6 +549,8 @@ export class ProjectComponent implements OnInit {
             nullInputs[k].disabled = false;
           }
         }
+      }else {
+        // this.tableinfos[i].key = '';
       }
       if (input.checked == false) {
         nullInputs[j].disabled = false;
@@ -504,6 +561,8 @@ export class ProjectComponent implements OnInit {
       }
     }
   }
+
+  //   允许为空列的操作
   clickNull(tableColumn){
     let inputs = tableColumn.getElementsByClassName('checkbox-key');
     let nullInputs = tableColumn.getElementsByClassName('checkbox-null');
@@ -539,6 +598,8 @@ export class ProjectComponent implements OnInit {
       return false;
     }
   }
+
+  // 创建表中的序列属性按钮操作
   editSequenceModal (tit: string, tableform){
     const tableValue = tableform.value;
     if (tit === '修改序列属性') {
@@ -691,6 +752,8 @@ export class ProjectComponent implements OnInit {
       }
     }
   }
+
+  //  保存功能  创建表中序列弹框
   saveTableSequence(sequenceform,editsequencemodal) {
     const sequence = sequenceform.value;
     this.sequenceName = sequence.sequenceName.toUpperCase();
