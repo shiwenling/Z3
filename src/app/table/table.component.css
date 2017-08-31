@@ -56,3 +56,6 @@
   display: block;
   margin-left: 9px;
 }
+.canselect{
+  background: none;
+}

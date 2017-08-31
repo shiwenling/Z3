@@ -81,7 +81,7 @@ export class InMemoryDataService implements InMemoryDbService {
     ];
     const users = [
       {userId: 0, username: 'ddd',  role: '开发', email: 'dev@enmotech.com'},
-      {userId: 1, username: 'dba', role: '开发', email: 'dev@enmotech.com'
+      {userId: 1, username: 'dba', role: 'DBA', email: 'dev@enmotech.com'
        },
       {userId: 2, username: 'abc', role: '开发', email: 'dev@enmotech.com'
        },
@@ -89,7 +89,7 @@ export class InMemoryDataService implements InMemoryDbService {
        },
       {userId: 4, username: '333',  role: '开发', email: 'dev@enmotech.com'
         },
-      {userId: 5, username: '222',  role: '开发', email: 'dev@enmotech.com'
+      {userId: 5, username: '222',  role: 'DBA', email: 'dev@enmotech.com'
         },
       {userId: 6, username: 'dev',  role: '开发', email: 'dev@enmotech.com'
         },
@@ -379,9 +379,9 @@ export class InMemoryDataService implements InMemoryDbService {
     ];
     const columns = [
       {columnId: 0, state: '', columnName: 'ID', dataType: 'NUMBER', columnLength: null, key: 'checked', allowNull: '', defaultValue: '', columnComments: 'PK'},
-      {colimnId: 1, state: '', columnName: 'GMT_CREATE', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '创建时间'},
-      {colimnId: 2, state: '', columnName: 'GMT_MODIFIED', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '修改时间'},
-      {colimnId: 3, state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
+      {columnId: 1, state: '', columnName: 'GMT_CREATE', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '创建时间'},
+      {columnId: 2, state: '', columnName: 'GMT_MODIFIED', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '修改时间'},
+      {columnId: 3, state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
 
     ];
     return {systems, dbs, users, modules, schemas,coretables, projects, objects, tables, sequences, tableinfos, columns};

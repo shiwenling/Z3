@@ -57,6 +57,7 @@ export class ProjectComponent implements OnInit {
   tablekeyValue : string;
   isSeeButton: boolean;
   nullchecked = [];
+  isNew : boolean;
 
   // 创建序列
   sequenceTitle: string; // 创建序列的title
@@ -140,6 +141,7 @@ export class ProjectComponent implements OnInit {
     this.objectService.getTables().subscribe(tables => this.tables = tables);
     this.objectService.getSequences().subscribe(sequences => this.sequences = sequences);
     this.objectService.getTableInfos().subscribe(tableinfos => this.tableinfos = tableinfos);
+    this.objectService.getColumn().subscribe(columns => this.columns = columns);
 
   }
   search(searchform) {
@@ -177,7 +179,7 @@ export class ProjectComponent implements OnInit {
   }
   tableModal(tit: string, object, tableColumn) {
     if (tit === '创建表') {
-      this.objectService.getTableInfos().subscribe();
+      // this.objectService.getColumn().subscribe();
       this.tableTitle = '创建表';
       this.isReadonly = false;   // 设置"表名"一行是否可编辑
       this.isHiddenSeqName = false;
@@ -196,9 +198,12 @@ export class ProjectComponent implements OnInit {
         this.tableinfo.state = '';
       }
 
+      this.isNew = true;
+
 
 
     }else if ( tit === '修改操作') {
+      this.isNew = false;
       this.tableTitle = '修改表信息';
       // this.isHidden = true;  // 隐藏“序列”一行
       // this.isReadonly = true;  // 设置“表名”只读

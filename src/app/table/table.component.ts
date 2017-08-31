@@ -68,6 +68,7 @@ export class TableComponent implements OnInit {
   //选择模块弹框
   sysValue: string ;
   moduleValue: string;
+  canSelect : boolean = true;
   //应用系统下拉框
   sysSearch: string[] = ['DDL','Z3','站点测试'];
   //模块选择下拉框
@@ -75,6 +76,8 @@ export class TableComponent implements OnInit {
 
   //选择成员弹框
   username: string;
+  role = [];
+ members = [];
 
   constructor(
     private tableService: TableService,
@@ -175,27 +178,65 @@ export class TableComponent implements OnInit {
     this.systemService.getUsers().subscribe(users => this.users = users);
     this.username = '';
   }
-  saveModule(selectModuleform, projectform) {
+  saveModule(selectModuleform, projectform, modal) {
     const module = selectModuleform.form.get('modulename').value;
     projectform.controls.modulename.setValue(module);
+    selectModuleform.form.value.sysname = '';
+    $(modal).modal('hide');
+    this.canChooseMember = false;
   }
-  saveMember( table, projectform) {
+  saveMember( table, projectform, membermodal) {
     const inputs = table.getElementsByClassName('combo');
+    const roles = table.getElementsByClassName('role');
     const length = inputs.length;
-    const members = [];
+
+    let sum =0;
     let i: number;
     for ( i=1; i<length ; i++ ) {
       const input = inputs[i];
       const isCheck = input.checked;
       const member = input.value;
+      const userrole = roles[i].innerHTML;
       if (isCheck == true){
-        members.push(member);
+        this.members.push(member);
+        this.role.push(userrole);
       }
     }
-    projectform.controls.members.setValue(members);
+    for( let j=0; j<this.role.length; j++){
+      if(this.role[j] == 'DBA'){
+        sum = sum + 1;
+      }
+    }
+    if (sum == 0){
+      alert('成员必须有一个DBA');
+    }else {
+      projectform.controls.members.setValue(this.members);
+      $(membermodal).modal('hide');
+    }
+
+
   }
 
-  setTitle(tit:string, project: any){
+  //控制不选择应用系统，不能选择模块
+  select(option) {
+    if (option){
+      this.canSelect = false;
+    }
+  }
+  // checkmember(table){
+  //   const checkboxs = table.getElementsByClassName('combo');
+  //   const combos = checkboxs.length;
+  //   for ( let i =0 ;i<combos; i++){
+  //     for ( let j=0; j<length; j++){
+  //       if (checkboxs[i].value == this.members[j]){
+  //         checkboxs[i].checked = true;
+  //       }
+  //     }
+  //
+  //   }
+  //
+  // }
+  setTitle(tit:string, project: any, projectform){
     if (tit == '新增'){
       this.title='新增项目';
       this.isReadonly = false;
@@ -210,6 +251,12 @@ export class TableComponent implements OnInit {
       this.commentsValue = '';
       this.modulenameValue = '';
       this.membersValue = [];
+      this.sysValue = '';
+      this.canSelect = true;
+      if (projectform.value.modulename == null){
+        this.canChooseMember = true;
+      }
+
 
     }else if (tit =='修改'){
       this.title = '修改项目';

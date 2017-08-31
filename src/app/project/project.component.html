@@ -845,7 +845,7 @@
               </div>
               <table  class="table table-striped table-hover" #tableColumn >
                 <tr>
-                  <td class="columnId" >列ID</td>
+                  <td class="columnId" hidden>列ID</td>
                   <td>状态</td>
                   <td>列名</td>
                   <td>数据类型</td>
@@ -856,13 +856,45 @@
                   <td>描述</td>
                   <td>操作</td>
                 </tr>
-                <tr *ngFor="let tableinfo of tableinfos">
-                  <td>{{tableinfo.id}}</td>
+                <tbody *ngIf="isNew">
+                <tr *ngFor="let column of columns" >
+                  <td hidden>{{column.columnId}}</td>
+                  <td>{{column.state}}</td>
+                  <td *ngIf="column.state == '' || column.state == '新增'" >
+                    <input type="text" class="editInput column-input" [(ngModel)]="column.columnName"
+                           (blur)="upperColumnName(columnnameinput, tableColumn)" #columnnameinput (change)="checkValue(columnnameinput)"/>
+                  </td>
+                  <td *ngIf="!(column.state == '' || column.state == '新增')">{{column.columnName}}</td>
+                  <td>
+                    <select  [(ngModel)]="column.dataType" class="editInput selectType"  (change)="changeDataType($event.target.value, $event.target, tableColumn)">
+                      <option *ngFor="let item of dataTypes" >{{item}}</option>
+                    </select>
+                  </td>
+                  <td ><input type="text" class="editInput  length-input" [(ngModel)]="column.columnLength"
+                              (blur)="saveInputChange(lengthinput, tableColumn)" #lengthinput (change)="checkLengthValue(lengthinput)" />
+                  </td>
+                  <td><input class="checkbox-key" type="checkbox" checked = {{column.key}}  #input  value = {{column.columnName}}
+                             (click)="chooseOne(tableColumn,input)" /></td>
+                  <td><input class="checkbox-null" type="checkbox" checked = {{column.allowNull}} (click)="clickNull(tableColumn)"/>
+                  </td>
+                  <td><input type="text" class="editInput default-input" [(ngModel)]="column.defaultValue"
+                             (blur)="saveInputChange(lengthinput, tableColumn)" #defaultinput /></td>
+                  <td ><input type="text" class="editInput comment-input" [(ngModel)]="column.columnComments"
+                              (blur)="saveInputChange(lengthinput, tableColumn)" #commentinput /></td>
+                  <td>
+                    <a class="action"  (click)="deleteColumn(column)">
+                      <i class="fa fa-trash" data-toggle="tooltip" title="删除"></i>
+                    </a>
+                  </td>
+                </tr>
+                </tbody>
+                <tbody *ngIf="!isNew">
+                <tr *ngFor="let tableinfo of tableinfos" >
+                  <td hidden>{{tableinfo.id}}</td>
                   <td>{{tableinfo.state}}</td>
                   <td *ngIf="tableinfo.state == '' || tableinfo.state == '新增'" >
                     <input type="text" class="editInput column-input" [(ngModel)]="tableinfo.columnName"
-                           (blur)="upperColumnName(columnnameinput, tableColumn)" #columnnameinput (change)="checkValue(columnnameinput)"
-                    />
+                           (blur)="upperColumnName(columnnameinput, tableColumn)" #columnnameinput (change)="checkValue(columnnameinput)"/>
                   </td>
                   <td *ngIf="!(tableinfo.state == '' || tableinfo.state == '新增')">{{tableinfo.columnName}}</td>
                   <td>
@@ -887,6 +919,7 @@
                     </a>
                   </td>
                 </tr>
+                </tbody>
               </table>
             </div>
           </div>

@@ -9,6 +9,7 @@ import {Table} from './table';
 import {Sequence} from './sequence';
 import {Observable} from 'rxjs/Observable';
 import {TableInfo} from './tableInfo';
+import {Column} from './columns';
 
 @Injectable()
 export  class ObjectService {
@@ -73,6 +74,11 @@ export  class ObjectService {
   getTableInfos(): Observable<TableInfo[]> {
     return this.http.get(this.tableinfosUrl)
       .map(response => response.json().data as TableInfo[])
+      .catch(this.handleError);
+  }
+  getColumn(): Observable<Column[]> {
+    return this.http.get(this.tableinfosUrl)
+      .map(response => response.json().data as Column[])
       .catch(this.handleError);
   }
 

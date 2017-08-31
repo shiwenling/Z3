@@ -73,7 +73,7 @@
                   <span class="fa fa-refresh" aria-hidden="true" ></span>重置
                 </button>
                   <span>|</span>
-                <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#projectModal" (click)="setTitle('新增')">
+                <button type="button" class="btn btn-secondary " data-toggle="modal" data-target="#projectModal" (click)="setTitle('新增','',projectform)">
                   <span class="fa fa-plus" aria-hidden="true" ></span>新增
                 </button>
             </div>
@@ -107,7 +107,7 @@
             <a class="action" data-toggle="modal"   data-target="#projectModal" (click)="setTitle('查看',project)" >
               <i class="fa fa-eye" data-toggle="tooltip" title="查看"></i>
             </a>
-            <a class="action" data-toggle="modal"  data-target="#projectModal" (click)="setTitle('修改',project)" >
+            <a class="action" data-toggle="modal"  data-target="#projectModal" (click)="setTitle('修改',project,projectform)" >
               <i class="fa fa-edit" data-toggle="tooltip" title="修改"></i>
             </a>
             <a class="action" (click)="deleteProject(project)">
@@ -179,7 +179,8 @@
               <label  for="moduleName" class="col-sm-2 control-label">模块名称:</label>
               <div class="col-sm-7" [ngClass]="{'has-danger': projectform.get('modulename').invalid &&
                                     (projectform.get('modulename').touched ||projectform.get('modulename').dirty ) }">
-                <input type="text" class="form-control" id="moduleName" readonly  name="modulename" formControlName="modulename"   [(ngModel)]="moduleValue">
+                <input type="text" class="form-control" id="moduleName" readonly  name="modulename" formControlName="modulename"
+                       [(ngModel)]="moduleValue" >
               </div>
               <button class="btn btn-secondary col-sm-2" data-toggle="modal" data-target="#moduleModal" [disabled]="canChooseModule">
                 <span class="fa fa-plus" aria-hidden="true"></span>选择模块
@@ -207,7 +208,8 @@
                                     (projectform.get('members').touched ||projectform.get('members').dirty ) }">
                 <input type="text" class="form-control" id="memberName" readonly name="members" formControlName="members" [(ngModel)]="membersValue">
               </div>
-              <button class="btn btn-secondary col-sm-2 " data-toggle="modal" data-target="#memberModal" [disabled]="canChooseMember">
+              <button class="btn btn-secondary col-sm-2 " data-toggle="modal" data-target="#memberModal"
+                      [disabled]="canChooseMember" (click)="checkmember(table)">
                 <span class="fa fa-plus" aria-hidden="true"></span>选择成员
               </button>
                <span class="fa fa-info-circle info info-pro" *ngIf="projectform.get('members').invalid && projectform.get('members').touched && projectform.hasError('required','members')"
@@ -226,7 +228,7 @@
   </div><!-- /.modal -->
 
   <!--选择模块modal-->
-  <div class="modal fade" id="moduleModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal fade" id="moduleModal" tabindex="-1" role="dialog" data-backdrop="static" #modal>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -238,7 +240,7 @@
             <div class="form-group row">
               <label for="projectName" class="col-sm-2 control-label ">应用系统：</label>
               <div class="col-sm-10">
-                <select class="form-control" name="sysname" [(ngModel)]="sysValue">
+                <select class="form-control" name="sysname" [(ngModel)]="sysValue" (click)="select($event.target.value)">
                   <option *ngFor="let item of sysSearch">{{item}}</option>
                 </select>
               </div>
@@ -246,7 +248,7 @@
             <div class="form-group row">
               <label  class="col-sm-2 control-label">模块名称：</label>
               <div class="col-sm-10">
-                <select class="form-control" name="modulename" [(ngModel)]="moduleValue" >
+                <select class="form-control canselect" name="modulename" [(ngModel)]="moduleValue" [disabled]="canSelect">
                   <option *ngFor="let item of moduleSearch" >{{item}}</option>
                 </select>
               </div>
@@ -254,7 +256,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary " (click)="saveModule(selectModuleform, projectform)" data-dismiss="modal">保存</button>
+          <button type="button" class="btn btn-primary " (click)="saveModule(selectModuleform, projectform, modal)" >保存</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
 
         </div>
@@ -266,7 +268,7 @@
 
 
   <!--选择成员的modal-->
-  <div class="modal fade" id="memberModal" tabindex="-1" role="dialog" data-backdrop="static">
+  <div class="modal fade" id="memberModal" tabindex="-1" role="dialog" data-backdrop="static" #membermodal>
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -292,14 +294,14 @@
                 <tr>
                   <td><input type="checkbox" class="combo" [(ngModel)]="isChecked" /></td>
                   <td>姓名</td>
-                  <td>角色</td>
+                  <td class="role">角色</td>
                   <td>EMAIL</td>
                   <td>是否为负责人</td>
                 </tr>
                 <tr *ngFor="let user of users | slice: start:end " >
                   <td><input type="checkbox"  class="combo" [checked]="isChecked" value={{user.username}}/></td>
                   <td >{{user.username}}</td>
-                  <td>{{user.role}}</td>
+                  <td class="role">{{user.role}}</td>
                   <td>{{user.email}}</td>
                   <td><input type="checkbox" /></td>
                 </tr>
@@ -312,7 +314,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" #abc (click)="saveMember(table, projectform )" data-dismiss="modal">确定</button>
+          <button type="button" class="btn btn-primary" #abc (click)="saveMember(table, projectform , membermodal)" >确定</button>
           <button type="button" class="btn btn-light cancle" data-dismiss="modal">取消</button>
         </div>
       </div><!-- /.modal-content -->
