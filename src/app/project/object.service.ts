@@ -18,6 +18,7 @@ export  class ObjectService {
   private tablesUrl = 'api/tables';
   private sequenceUrl = 'api/sequences';
   private  tableinfosUrl =  'api/tableinfos';
+  private  columnsUrl =  'api/columns';
   constructor(private http: Http) { }
 
   create(object: any ): Observable<Object> {
@@ -30,6 +31,19 @@ export  class ObjectService {
     return this.http
       .post(this.tableinfosUrl, JSON.stringify(tableinfo), {headers: this.headers})
       .map(res => res.json().data as TableInfo)
+      .catch(this.handleError);
+  }
+  createColumnTem(column: any ): Observable<Column> {
+    return this.http
+      .post(this.columnsUrl, JSON.stringify(column), {headers: this.headers})
+      .map(res => res.json().data as Column)
+      .catch(this.handleError);
+  }
+  updateColumn(tableinfo: TableInfo, id:number): Observable<TableInfo> {
+    const url = `${this.tableinfosUrl}/${id}`;
+    return this.http
+      .put(url, JSON.stringify(tableinfo), {headers: this.headers})
+      .map(() => tableinfo)
       .catch(this.handleError);
   }
 
@@ -77,7 +91,7 @@ export  class ObjectService {
       .catch(this.handleError);
   }
   getColumn(): Observable<Column[]> {
-    return this.http.get(this.tableinfosUrl)
+    return this.http.get(this.columnsUrl)
       .map(response => response.json().data as Column[])
       .catch(this.handleError);
   }

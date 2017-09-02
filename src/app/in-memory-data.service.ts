@@ -371,17 +371,17 @@ export class InMemoryDataService implements InMemoryDbService {
         tableNumber:'7',gmtCreate: '2016-12-30 10:38:14', sequencecomments: 'SNAP_sequenceId序列', selfGrowValue: 20}
     ];
     const tableinfos = [
-      {id: 0, state: '', columnName: 'ID', dataType: 'NUMBER', columnLength: null, key: 'checked', allowNull: '', defaultValue: '', columnComments: 'PK'},
-      {id: 1, state: '', columnName: 'GMT_CREATE', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '创建时间'},
-      {id: 2, state: '', columnName: 'GMT_MODIFIED', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '修改时间'},
-      {id: 3, state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
+      {id: 0,tableId: 21,  state: '', columnName: 'ID', dataType: 'NUMBER', columnLength: null, key: 'checked', allowNull: '', defaultValue: '', columnComments: 'PK'},
+      {id: 1, tableId: 21,state: '', columnName: 'GMT_CREATE', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '创建时间'},
+      {id: 2, tableId: 21,state: '', columnName: 'GMT_MODIFIED', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '修改时间'},
+      {id: 3,tableId: 21, state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
 
     ];
     const columns = [
-      {columnId: 0, state: '', columnName: 'ID', dataType: 'NUMBER', columnLength: null, key: 'checked', allowNull: '', defaultValue: '', columnComments: 'PK'},
-      {columnId: 1, state: '', columnName: 'GMT_CREATE', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '创建时间'},
-      {columnId: 2, state: '', columnName: 'GMT_MODIFIED', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '修改时间'},
-      {columnId: 3, state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
+      {id: 0, tableId: null, state: '', columnName: 'ID', dataType: 'NUMBER', columnLength: null, key: 'checked', allowNull: '', defaultValue: '', columnComments: 'PK'},
+      {id: 1,tableId: null, state: '', columnName: 'GMT_CREATE', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '创建时间'},
+      {id: 2, tableId: null,state: '', columnName: 'GMT_MODIFIED', dataType: 'DATE', columnLength: null, key: '', allowNull: '', defaultValue: 'sysdate', columnComments: '修改时间'},
+      {id: 3, tableId: null,state: '', columnName: 'CREATOR', dataType: 'VARCHAR2', columnLength: 32, key: '', allowNull: 'checked', defaultValue: '', columnComments: '创建人'},
 
     ];
     return {systems, dbs, users, modules, schemas,coretables, projects, objects, tables, sequences, tableinfos, columns};

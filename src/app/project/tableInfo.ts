@@ -11,4 +11,5 @@ export class TableInfo{
   allowNull : string;
   defaultValue: string;
   columnComments: string;
+  tableId: number;
 }

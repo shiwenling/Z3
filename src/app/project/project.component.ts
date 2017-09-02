@@ -58,6 +58,10 @@ export class ProjectComponent implements OnInit {
   isSeeButton: boolean;
   nullchecked = [];
   isNew : boolean;
+  sequenceCommentsValue: string;//记录修改序列属性弹框中的序列描述
+  columnstart: number;
+  columnend : number;
+  endtem : number = 4;
 
   // 创建序列
   sequenceTitle: string; // 创建序列的title
@@ -199,6 +203,8 @@ export class ProjectComponent implements OnInit {
       }
 
       this.isNew = true;
+      this.endtem = 4;
+
 
 
 
@@ -236,8 +242,10 @@ export class ProjectComponent implements OnInit {
       this.isReadonly = false;  // 设置“表名”只读
       const inputs = tableColumn.getElementsByClassName('checkbox-key');
       const nullinputs = tableColumn.getElementsByClassName('checkbox-null');
+      const columns = this.tableinfos.length;
       const length =  inputs.length;
       const nullLength = this.nullchecked.length;
+      let sum = 0;
       for (let i=0; i<length; i++) {
         if( inputs[i].value == this.keyValue ){
           inputs[i].checked = true;
@@ -254,6 +262,25 @@ export class ProjectComponent implements OnInit {
         }
 
       };
+      for (let i=0; i<columns; i++){
+        if(this.tableinfos[i].tableId == this.tableid){
+          sum = sum + 1;
+
+        };
+      }
+      if (sum !==0){
+        for(let k=0; k<columns; k++){
+          if(this.tableinfos[k].tableId  == this.tableid){
+            this.columnstart = k;
+            this.columnend = k+sum;
+            break;
+          }
+        };
+      }else {
+        this.columnstart = 0;
+        this.columnend = 0;
+      }
+
 
     }else if (tit === '拷贝表') {
       this.tableTitle = '创建表';
@@ -284,7 +311,7 @@ export class ProjectComponent implements OnInit {
   //  判断创建表中columnname输入合法性
   checkValue(columnnameinput) {
     var value = columnnameinput.value;
-    const reg = new RegExp('^[a-zA-Z][a-zA-Z0-9_#]*$');
+    const reg = new RegExp('^[a-zA-Z0-9_#]*$');
     if(!reg.test(value)){
       columnnameinput.value ='';
       alert ('列名只能输入字母，数字和下划线')
@@ -304,8 +331,13 @@ export class ProjectComponent implements OnInit {
   saveTable(tableform,tableColumn,tablemodal,sequenceform) {
     const table = tableform.value;
     const columnInputs = tableColumn.getElementsByClassName('column-input');
+    const lengthInputs = tableColumn.getElementsByClassName('length-input');
     const commentInputs = tableColumn.getElementsByClassName('comment-input');
     const nullinputs = tableColumn.getElementsByClassName('checkbox-null');
+    const selectType = tableColumn.getElementsByClassName('selectType');
+    const key = tableColumn.getElementsByClassName('checkbox-key');
+    const defaultInputs = tableColumn.getElementsByClassName('default-input');
+    const columns: number = this.tableinfos.length;
     const length =  columnInputs.length;
     let sum1 = 0;
     let sum2 = 0;
@@ -381,7 +413,7 @@ export class ProjectComponent implements OnInit {
         }
 
         $(tablemodal).modal('hide');
-        this.objectService.getTableInfos().subscribe(tableinfos => this.tableinfos = tableinfos);
+        // this.objectService.getTableInfos().subscribe(tableinfos => this.tableinfos = tableinfos);
         tableform.reset();
       }
 
@@ -389,16 +421,26 @@ export class ProjectComponent implements OnInit {
       if (tableform.valid && sum1 == 0 && sum2 == 0) {
         object.objectType ='表';
         object.changeType = '新建';
-        for (this.tableinfo of this.tableinfos) {
-          this.tableinfo.state = '新增';
-        }
-        this.objectService.create(this.tableinfo).subscribe( tableinfo => {
-          this.tableinfos.push(this.tableinfo);
-        } );
+        object.tableId = Math.round(100 * Math.random());
+        object.id = table.tableId;
 
         this.objectService.create(object).subscribe( object => {
           this.objects.push(object);
         } );
+        for ( let j:number =0; j<length; j++){
+          this.tableinfos[columns + j]  ={
+            id: columns + j ,
+            tableId: table.tableId,
+            state: '新增',
+            columnName: columnInputs[j].value,
+            dataType: selectType[j].value,
+            columnLength: lengthInputs[j].value,
+            key: key[j].checked == true ? 'checked' : '',
+            allowNull: nullinputs[j].checked == true ? 'checked ': '',
+            defaultValue: defaultInputs[j].value,
+            columnComments:commentInputs[j].value,
+          }
+        }
 
         const sequence = sequenceform.value;
         const itemValueToSet = table.select;
@@ -407,10 +449,11 @@ export class ProjectComponent implements OnInit {
         sequence.objectName = table.tableSequence;
         this.tableofSequence = sequence.sequenceName;
         this.tablekeyValue =  object.tablePk;
+        // sequence.sequencecomments = '';
         if ( object.select !== '不使用序列'){
           this.tableselectSequence = '选择已有序列';
 
-          sequence.sequencecomments =  sequence.sequencecomments ? sequence.sequencecomments : ('Create in Table ' + object.objectName);
+          sequence.sequencecomments =  this.sequenceCommentsValue ? this.sequenceCommentsValue : ('Create in Table ' + object.objectName);
         }else {
           this.tableselectSequence = object.select;
           sequence.sequencecomments =  '';
@@ -431,24 +474,19 @@ export class ProjectComponent implements OnInit {
         }
 
         $(tablemodal).modal('hide');
-        this.objectService.getTableInfos().subscribe(tableinfos => this.tableinfos = tableinfos);
         tableform.reset();
+        this.sequenceCommentsValue = '';
       }
     }
-
-    // let trs = tableColumn.getElementsByTagName('tr');
-    // let trlength = trs.length;
-    // for (let i=5; i<trlength; i++) {
-    //   tableColumn.deleteRow(i);
-    // }
   }
   addColumn(tableColumn) {
-    let columnlength = tableColumn.getElementsByClassName('checkbox-key').length +1 ;
-    let lastId =columnlength -1;
+    let columnlength = this.tableinfos.length ;
+    let lastId =columnlength ;
     let newColumn =  {
       id: lastId,
+      tableId: this.tableid,
       state: '',
-      columnName: 'NEW'+ (lastId-3),
+      columnName: 'NEW',
       dataType: 'VARCHAR2',
       columnLength: null,
       key: '',
@@ -457,6 +495,11 @@ export class ProjectComponent implements OnInit {
       columnComments: ''};
     this.objectService.createColumn(newColumn).subscribe( tableinfos => {
       this.tableinfos.push(newColumn);
+    });
+    this.endtem = this.endtem + 1;
+    this.columnend = this.columnend + 1;
+    this.objectService.createColumnTem(newColumn).subscribe( columns => {
+      this.columns.push(newColumn);
     });
   }
   // 创建表中表名大写
@@ -470,29 +513,53 @@ export class ProjectComponent implements OnInit {
   // 保存创建表中数据类型
   changeDataType(option, select,tablecolumn){
     let selects = tablecolumn.getElementsByClassName('selectType');
+    let ids = tablecolumn.getElementsByClassName('id');
     let length = selects.length;
     for (let i=0; i<length; i++) {
       if(selects[i].value === option){
-        this.tableinfos[i].dataType = option;
-        this.objectService.createColumn(this.tableinfos[i]).subscribe( tableinfo => {
-          this.tableinfos.push(this.tableinfos[i]);
-        } );
+        this.tableinfo.id = ids[i].innerHTML;
+        this.tableinfos[this.tableinfo.id].dataType = option;
       }
     }
 
 
   }
   //  保存创建表中表格列中数据
-  saveInputChange(input, tableColumn){
+  saveLengthInput(input, tableColumn){
     let inputValue = input.value;
     let inputs = tableColumn.getElementsByClassName('length-input');
+    let ids = tableColumn.getElementsByClassName('id');
     let inputLength = inputs.length;
     for (let i=0; i<inputLength; i++) {
       if(inputs[i].value === inputValue){
-        this.tableinfos[i].columnLength = input.value;
-        this.objectService.createColumn(this.tableinfos[i]).subscribe( tableinfo => {
-          this.tableinfos.push(this.tableinfos[i]);
-        } );
+        this.tableinfo.id = ids[i].innerHTML;
+        this.tableinfos[ this.tableinfo.id ].columnLength = input.value;
+      }
+    }
+  }
+  saveDefaultInputChange(input, tableColumn){
+    let inputValue = input.value;
+    let inputs = tableColumn.getElementsByClassName('default-input');
+    let ids = tableColumn.getElementsByClassName('id');
+    let inputLength = inputs.length;
+    for (let i=0; i<inputLength; i++) {
+      if(inputs[i].value === inputValue){
+        this.tableinfo.id = ids[i].innerHTML;
+        this.tableinfos[ this.tableinfo.id ].defaultValue = input.value;
+
+      }
+    }
+  }
+  saveInputChange(input, tableColumn){
+    let inputValue = input.value;
+    let inputs = tableColumn.getElementsByClassName('comment-input');
+    let ids = tableColumn.getElementsByClassName('id');
+    let inputLength = inputs.length;
+    for (let i=0; i<inputLength; i++) {
+      if(inputs[i].value === inputValue){
+        this.tableinfo.id = ids[i].innerHTML;
+        this.tableinfos[ this.tableinfo.id ].columnComments = input.value;
+
       }
     }
   }
@@ -504,14 +571,13 @@ export class ProjectComponent implements OnInit {
     let inputValue = columnnameinput.value;
     let inputs = tableColumn.getElementsByClassName('checkbox-key');
     let columns = tableColumn.getElementsByClassName('column-input');
+    let ids = tableColumn.getElementsByClassName('id');
     let inputLength = inputs.length;
     for (let i=0; i<inputLength; i++) {
       let value = columns[i].value;
       if(value === inputValue){
-        this.tableinfos[i].columnName = columnnameinput.value;
-        this.objectService.createColumn(this.tableinfos[i]).subscribe( tableinfo => {
-          this.tableinfos.push(this.tableinfos[i]);
-        } );
+        this.tableinfo.id = ids[i].innerHTML;
+        this.tableinfos[ this.tableinfo.id ].columnName = columnnameinput.value;
       }
       if (inputs[i].checked == true ) {
         if (value === inputValue){
@@ -762,6 +828,7 @@ export class ProjectComponent implements OnInit {
   saveTableSequence(sequenceform,editsequencemodal) {
     const sequence = sequenceform.value;
     this.sequenceName = sequence.sequenceName.toUpperCase();
+    this.sequenceCommentsValue = sequence.sequencecomments;
     if(sequence.sequenceName == '' || sequence.minValue == null || sequence.sequencecomments ==''){
       return;
     }else {

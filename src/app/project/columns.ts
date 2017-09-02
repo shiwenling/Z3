@@ -2,7 +2,7 @@
  * Created by TP on 2017/8/30.
  */
 export class Column{
-  columnId: number;
+  id: number;
   state : string;
   columnName: string;
   dataType: string;
@@ -11,4 +11,5 @@ export class Column{
   allowNull : string;
   defaultValue: string;
   columnComments: string;
+  tableId: number;
 }
