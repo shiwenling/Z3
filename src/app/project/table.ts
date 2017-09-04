@@ -13,5 +13,6 @@ export class Table{
   tablePk: string;
   tableDateFunction: string;
   tableSequence: string;
+  sequenceId: number;
 
 }

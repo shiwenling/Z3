@@ -78,7 +78,7 @@
 }
 /*修改序列之弹框再往上弹框   修改序列属性modal*/
 /*为modal添加阴影背景*/
-#createSequence, #createTable, #seeTable, #compareTable, #compareSequence{
+#createSequence, #createTable, #seeTable, #compareTable, #compareSequence, #editTableSequence{
   background-color: rgba(128,128,128,0.3);
 }
 

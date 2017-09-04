@@ -10,5 +10,7 @@ export class Object {
   changePeople:string;
   gmtModified: string;
   comments: string;
+  sequenceId: number;
+  key: string;
 
 }

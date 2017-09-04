@@ -87,7 +87,7 @@ export class ProjectComponent implements OnInit {
   sequencecommentsValue: string;
   isMaxValueMin: boolean;
   isMinValueMax: boolean;
-
+  sequenceid : number;
 
 
   selected: boolean;   // 修改现有表modal设置“采集表”和“归档表”二选一
@@ -100,6 +100,7 @@ export class ProjectComponent implements OnInit {
   ) {
     this.tableform = fb.group({
       tableId: [''],
+      sequenceId: [''],
       tableName: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9_]*$')]],  // 中英文、数字、下划线
       tablePk: ['', Validators.required],
       tableDateFunction: ['业务数据'],
@@ -137,6 +138,14 @@ export class ProjectComponent implements OnInit {
         i = i;
       }else{
         i++;
+      }
+    }
+  }
+  chooseSequence(option,tableform){
+    for (this.object of this.objects){
+      if (this.object.objectName == option){
+        this.sequenceid = this.object.id;
+
       }
     }
   }
@@ -197,6 +206,7 @@ export class ProjectComponent implements OnInit {
       this.isEdit = 'true';
       this.datafunction = '业务数据';
       this.tableid = null;
+      this.sequenceid = null;
       this.tableComment = '';
       for (this.tableinfo of this.tableinfos) {
         this.tableinfo.state = '';
@@ -204,9 +214,6 @@ export class ProjectComponent implements OnInit {
 
       this.isNew = true;
       this.endtem = 4;
-
-
-
 
     }else if ( tit === '修改操作') {
       this.isNew = false;
@@ -220,7 +227,12 @@ export class ProjectComponent implements OnInit {
       this.datafunction = object.dataFunction;
       this.tableComment = object.comments;
       this.tableid = object.id;
-      this.itemValueToSet = this.tableselectSequence;
+      this.sequenceid = object.sequenceId;
+      if ( this.sequenceid ){
+        this.itemValueToSet = '选择已有序列';
+      }else {
+        this.itemValueToSet = '不使用序列';
+      }
       if (this.itemValueToSet == '不使用序列'){
         this.isHiddenSeqName = true;
 
@@ -231,23 +243,33 @@ export class ProjectComponent implements OnInit {
           this.tableofSequence = 'SQL_' +  this.tablenameValue;
         }
       }
-      this. selectSequence= this.tableofSequence;
-      this.keyValue =this.tablekeyValue;
-
-      for (this.tableinfo of this.tableinfos) {
-        this.tableinfo.state = '新增';
+      for(object of this.objects){
+        if ( object.sequenceId == this.sequenceid ){
+           for (object of this.objects){
+             if(object.id == this.sequenceid){
+               this.selectSequence = object.objectName;
+             }
+           }
+        }
       }
+      for(object of this.objects){
+        if (object.id == this.tableid){
+          this.keyValue = object.key;
+        }
+      }
+
 
       this.isHidden = false;  // 隐藏“序列”一行
       this.isReadonly = false;  // 设置“表名”只读
       const inputs = tableColumn.getElementsByClassName('checkbox-key');
       const nullinputs = tableColumn.getElementsByClassName('checkbox-null');
+      const columninputs = tableColumn.getElementsByClassName('column-input');
       const columns = this.tableinfos.length;
       const length =  inputs.length;
       const nullLength = this.nullchecked.length;
       let sum = 0;
       for (let i=0; i<length; i++) {
-        if( inputs[i].value == this.keyValue ){
+        if( columninputs[i].value == this.keyValue ){
           inputs[i].checked = true;
         }else {
           inputs[i].checked = false;
@@ -367,53 +389,46 @@ export class ProjectComponent implements OnInit {
     object.objectName = object.tableName.toUpperCase();
     object.comments = object.tablecomments;
     object.dataFunction = object.tableDateFunction;
+    object.key = object.tablePk;
+
     if (object.id) {
       if(tableform.valid && sum1 == 0 && sum2 == 0){
+
+        if ( table.select !== '不使用序列'){
+          // this.tableselectSequence = '选择已有序列';
+          if (table.select == '创建新序列'){
+            const sequence = sequenceform.value;
+            sequence.sequenceId = Math.round(1000 * Math.random());
+            sequence.id =  sequence.sequenceId;
+            sequence.objectName = table.tableSequence;
+            sequence.sequencecomments =  sequence.sequencecomments ? sequence.sequencecomments : ('Create in Table ' + object.objectName);
+            this.sequencecommentsValue = sequence.sequencecomments;
+            sequence.comments = sequence.sequencecomments;
+              sequence.objectType ='序列';
+              sequence.changeType = '新建';
+              this.objectService.create(sequence).subscribe( object => {
+                this.objects.push(sequence);
+              } );
+          // }else {
+            // this.tablekeyValue =  object.tablePk;
+          }
+        }else {
+          table.sequenceId = null;
+
+        }
         this.objectService.update(object, object.id).subscribe(object => {
           for (this.object of this.objects) {
             if (this.object.id === object.id) {
               this.object.objectName = object.objectName
               this.object.comments = object.comments;
               this.object.dataFunction = object.dataFunction;
-
+              this.object.key = object.key;
+              this.object.sequenceId = object.sequenceId;
             }
           }
         });
-        if ( table.select !== '不使用序列'){
-          this.tableselectSequence = '选择已有序列';
-          this.tableofSequence =  table.tableSequence;
-          if (table.select == '创建新序列'){
-            const sequence = sequenceform.value;
-            const itemValueToSet = table.select;
-            sequence.id =  sequence.sequenceId;
-            // sequence.sequenceName = 'SQL'+ table.tableName;
-            sequence.objectName = table.tableSequence;
-            this.tableofSequence = table.tableSequence;
-            this.tablekeyValue =  object.tablePk;
-            sequence.sequencecomments =  sequence.sequencecomments ? sequence.sequencecomments : ('Create in Table ' + object.objectName);
-            this.sequencecommentsValue = sequence.sequencecomments;
-            sequence.comments = sequence.sequencecomments;
-            // if(sequence.sequenceName == '' || sequence.minValue == null || sequence.sequencecomments == ''){
-            //   return;
-            // }else {
-              sequence.objectType ='序列';
-              sequence.changeType = '新建';
-              this.objectService.create(sequence).subscribe( object => {
-                this.objects.push(sequence);
-              } );
-            // }
-
-
-          }else {
-            this.tablekeyValue =  object.tablePk;
-          }
-        }else {
-          this.tableselectSequence = table.select;
-
-        }
 
         $(tablemodal).modal('hide');
-        // this.objectService.getTableInfos().subscribe(tableinfos => this.tableinfos = tableinfos);
         tableform.reset();
       }
 
@@ -421,12 +436,16 @@ export class ProjectComponent implements OnInit {
       if (tableform.valid && sum1 == 0 && sum2 == 0) {
         object.objectType ='表';
         object.changeType = '新建';
-        object.tableId = Math.round(100 * Math.random());
-        object.id = table.tableId;
 
-        this.objectService.create(object).subscribe( object => {
-          this.objects.push(object);
-        } );
+        object.tableId = Math.round(1000 * Math.random());
+        object.key = table.tablePk;
+        object.id = table.tableId;
+        const sequence = sequenceform.value;
+        const itemValueToSet = table.select;
+        sequence.id =  sequence.sequenceId;
+        sequence.sequenceName = table.tableSequence;
+        sequence.objectName = table.tableSequence;
+
         for ( let j:number =0; j<length; j++){
           this.tableinfos[columns + j]  ={
             id: columns + j ,
@@ -442,36 +461,29 @@ export class ProjectComponent implements OnInit {
           }
         }
 
-        const sequence = sequenceform.value;
-        const itemValueToSet = table.select;
-        sequence.id =  sequence.sequenceId;
-        sequence.sequenceName = table.tableSequence;
-        sequence.objectName = table.tableSequence;
-        this.tableofSequence = sequence.sequenceName;
-        this.tablekeyValue =  object.tablePk;
-        // sequence.sequencecomments = '';
         if ( object.select !== '不使用序列'){
-          this.tableselectSequence = '选择已有序列';
-
           sequence.sequencecomments =  this.sequenceCommentsValue ? this.sequenceCommentsValue : ('Create in Table ' + object.objectName);
+          if(object.select == '选择已有序列'){
+            table.sequenceId = this.sequenceid;
+          }
         }else {
-          this.tableselectSequence = object.select;
           sequence.sequencecomments =  '';
         }
-        // sequence.sequencecomments =  sequence.sequencecomments ? sequence.sequencecomments : ('Create in Table ' + object.objectName);
         this.sequencecommentsValue = sequence.sequencecomments;
         sequence.comments = sequence.sequencecomments;
-        if (!sequence.id && itemValueToSet == '创建新序列' ){
-          // if(sequence.sequenceName == '' || sequence.minValue == null || sequence.sequencecomments == ''){
-          //   return;
-          // }else {
+        if ( itemValueToSet == '创建新序列' ){
+            object.sequenceId =  Math.round(1000 * Math.random());
             sequence.objectType ='序列';
             sequence.changeType = '新建';
+            sequence.sequenceId = object.sequenceId ;
+            sequence.id = sequence.sequenceId;
             this.objectService.create(sequence).subscribe( object => {
               this.objects.push(sequence);
             } );
-          // }
         }
+        this.objectService.create(object).subscribe( object => {
+          this.objects.push(object);
+        } );
 
         $(tablemodal).modal('hide');
         tableform.reset();
@@ -479,7 +491,7 @@ export class ProjectComponent implements OnInit {
       }
     }
   }
-  addColumn(tableColumn) {
+  addColumn() {
     let columnlength = this.tableinfos.length ;
     let lastId =columnlength ;
     let newColumn =  {
@@ -511,7 +523,7 @@ export class ProjectComponent implements OnInit {
 
   }
   // 保存创建表中数据类型
-  changeDataType(option, select,tablecolumn){
+  changeDataType(option, tablecolumn){
     let selects = tablecolumn.getElementsByClassName('selectType');
     let ids = tablecolumn.getElementsByClassName('id');
     let length = selects.length;
@@ -575,10 +587,10 @@ export class ProjectComponent implements OnInit {
     let inputLength = inputs.length;
     for (let i=0; i<inputLength; i++) {
       let value = columns[i].value;
-      if(value === inputValue){
-        this.tableinfo.id = ids[i].innerHTML;
-        this.tableinfos[ this.tableinfo.id ].columnName = columnnameinput.value;
-      }
+      // if(value === inputValue){
+      //   this.tableinfo.id = ids[i].innerHTML;
+      //   this.tableinfos[ this.tableinfo.id ].columnName = columnnameinput.value;
+      // }
       if (inputs[i].checked == true ) {
         if (value === inputValue){
           this.keyValue =  columnnameinput.value;
@@ -602,6 +614,7 @@ export class ProjectComponent implements OnInit {
   chooseOne(tableColumn, input) {
     let inputs = tableColumn.getElementsByClassName('checkbox-key');
     let nullInputs = tableColumn.getElementsByClassName('checkbox-null');
+    let columnInputs = tableColumn.getElementsByClassName('column-input');
     let inputLength = inputs.length;
     let j = 0;
     for ( let i=0; i< inputLength; i++) {
@@ -611,7 +624,8 @@ export class ProjectComponent implements OnInit {
         //   this.tableinfos.push(this.tableinfos[i]);
         // } );
         j = i;
-        this.keyValue = input.value.toUpperCase();
+        // this.keyValue = input.value.toUpperCase();
+        this.keyValue = columnInputs[i].value.toUpperCase();
         nullInputs[j].checked = false;
         nullInputs[j].disabled = true;
         for (let k=0; k<inputLength ; k++) {
@@ -696,6 +710,7 @@ export class ProjectComponent implements OnInit {
       // this.sequenceMinValue = null;
       this.sequencecommentsValue = '';
       this.isSeeButton = false;
+      this.sequenceIdValue = null;
 
     }else if (tit === '查看序列属性') {
       this.sequenceTitle = '查看序列属性';
@@ -707,6 +722,18 @@ export class ProjectComponent implements OnInit {
       this.isCacheReadonly = true;
       this.isDescribeReadonly = true;
       this.isSeeButton = true;
+      // this.sequenceIdValue = tableValue.sequenceId;
+      this.sequenceMinValue = 1;
+      this.selfGrowValue = 1;
+      this.sequenceCacheValue =20;
+      for (this.object of this.objects){
+        if(this.sequenceNameValue == this.object.objectName){
+          this.sequencecommentsValue = this.object.comments;
+          this.sequenceIdValue =  this.object.id;
+        }
+
+      }
+
 
     }
   }
@@ -741,32 +768,6 @@ export class ProjectComponent implements OnInit {
       this.sequenceMinValue = 1;
       this.selfGrowValue =1;
       this.sequenceCacheValue =20;
-
-    // } else if (tit === '修改序列属性') {
-    //   this.sequenceTitle = '修改序列属性';
-    //   this.sequenceNameValue = 'SQL_';  // 修改序列属性的序列名称为'SQL_'+'表名'
-    //   this.isSeqReadonly = false;  // 表单是否“只读”
-    //   this.isSelfGrowReadonly = false;
-    //   this.isCacheReadonly = false;
-    //   this.isDescribeReadonly = false;
-    //   if ( this.isHidden === true ) {
-    //     this.isHiddenTopSeq = false;   // 是否隐藏最上面“序列”一行
-    //     this.isHiddenTopSeqName = true;  // 是否隐藏“序列名”一行
-    //
-    //   }else if ( this.isHidden === false ) {
-    //     this.isHiddenTopSeq = true;   // 是否隐藏最上面“序列”一行
-    //     this.isHiddenTopSeqName = true;  // 是否隐藏“序列名”一行
-    //   }
-    //
-    // }else if (tit === '查看序列属性') {
-    //   this.sequenceTitle = '查看序列属性';
-    //   this.isHiddenTopSeq = true;   // 是否隐藏最上面“序列”一行
-    //   this.isHiddenTopSeqName = true; // 是否隐藏最上面“序列名”一行
-    //   this.sequenceNameValue = 'SQL_';  // 修改序列属性的序列名称为'SQL_'+'表名'
-    //   this.isSeqReadonly = true;  // 表单是否“只读”
-    //   this.isSelfGrowReadonly = true;
-    //   this.isCacheReadonly = true;
-    //   this.isDescribeReadonly = true;
 
     }else if (tit === '归档序列修改') {
       this.sequenceTitle = '修改序列属性';
@@ -880,16 +881,18 @@ export class ProjectComponent implements OnInit {
   selectOption(sequenceValue: string, tableform, select) {
     if (sequenceValue === '创建新序列') {
       this.sequenceName = 'SQL_' + tableform.value.tableName.toUpperCase();   // 修改序列属性的序列名称为'SQL_'+'表名'
+      tableform.value.tableSequence =  this.sequenceName;
       this.isEditButton = false;    // 是否隐藏修改按钮
       this.isHiddenSeqName = false;  // 是否隐藏“序列名”
+      this.sequenceid = null;
     }else if ( sequenceValue === '选择已有序列') {
       this.isEditButton = true;
       this.isHiddenSeqName = false;
       this.objectService.getObjects().subscribe();
       this.selectoption(select);
-
     }else if (sequenceValue === '不使用序列') {
       this.isHiddenSeqName = true;
+      this.sequenceid = null;
     }
   }
   // 根据不同的序列设置是否隐藏序列名
